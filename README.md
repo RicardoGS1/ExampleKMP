@@ -10,6 +10,6 @@ Desktop, iOS, Android and Web
 4. Navigation Compose
 
 # Structure.
-Data
-Domain
-Presentation
+1. Data
+2. Domain
+3. Presentation
