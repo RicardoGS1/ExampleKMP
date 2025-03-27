@@ -10,8 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.virtualworld.multiplatformiot.ui.HomeScreen
-import com.virtualworld.multiplatformiot.ui.MainScreen
+import com.virtualworld.multiplatformiot.presentation.ui.HomeScreen
+import com.virtualworld.multiplatformiot.presentation.ui.MainScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
