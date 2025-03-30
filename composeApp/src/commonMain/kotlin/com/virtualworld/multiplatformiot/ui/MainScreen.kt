@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot.presentation.ui
+package com.virtualworld.multiplatformiot.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
