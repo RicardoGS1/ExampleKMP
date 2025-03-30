@@ -126,12 +126,6 @@ kotlin {
     }
 }
 
-//composeCompiler {
-//    featureFlags = setOf(
-//        ComposeFeatureFlag.StrongSkipping,
-//        ComposeFeatureFlag.OptimizeNonSkippingGroups
-//    )
-//}
 
 android {
     namespace = "com.virtualworld.multiplatformiot"
