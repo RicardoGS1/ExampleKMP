@@ -6,24 +6,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.virtualworld.multiplatformiot.ui.HomeScreen
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
+import com.virtualworld.multiplatformiot.feature.menu.navigations.Menu
+import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutes
+import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocal
+import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.conectionLocalRoute
 
-@OptIn(KoinExperimentalAPI::class)
+
 @Composable
 fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
 
     NavHost(
         navController,
-        startDestination = RouteHome.route,
+        startDestination = Menu,
         modifier = Modifier.padding(paddingValues)
     ) {
 
-        composable(RouteHome.route) {
-            HomeScreen(homeViewModel = koinViewModel())
-        }
+
+        menuRoutes(
+            goToLocalConection = { navController.navigate(ConectionLocal) },
+            goToInternetConection = {},
+            goToBluetoothConection = {}
+        )
+
+        conectionLocalRoute(
+
+        )
+
 
 
     }

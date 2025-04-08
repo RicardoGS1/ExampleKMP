@@ -29,3 +29,10 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":ui:core")
+
+include(":data:core")
+include(":data:conectionLocal")
+include(":domain:conectionLocal")
+include(":feature:conectionLocal")
+include(":feature:menu")

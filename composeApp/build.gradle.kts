@@ -12,6 +12,9 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
 
+    alias(libs.plugins.ksp)
+
+
 }
 
 kotlin {
@@ -21,7 +24,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -32,9 +35,9 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -54,13 +57,13 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
+
+            //UI CORE
 
             //ID
             implementation(libs.koin.android)
@@ -68,18 +71,22 @@ kotlin {
             //NETWORK
             implementation(libs.ktor.client.android)
 
+            implementation(libs.kstore.file)
+
+
         }
 
 
 
         commonMain.dependencies {
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(projects.ui.core)
+            implementation(projects.feature.conectionLocal)
+            implementation(projects.feature.menu)
+
+            //UI CORE
+
+            //VIEWMODEL
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -100,6 +107,7 @@ kotlin {
             implementation(libs.coil.compose)
 
 
+            implementation(libs.kstore)
 
         }
 
@@ -108,22 +116,33 @@ kotlin {
 
             //NETWORK
             implementation(libs.ktor.client.darwin)
+
+            implementation(libs.kstore.file)
+
         }
 
 
         desktopMain.dependencies {
 
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+            // UI CORE
 
             //NETWORK
             implementation(libs.ktor.client.java)
-            
+
+            implementation(libs.kstore.file)
+
         }
 
 
+        wasmJsMain.dependencies {
+
+            implementation(libs.kstore.storage)
+
+        }
+
 
     }
+
 }
 
 
@@ -172,3 +191,7 @@ compose.desktop {
         }
     }
 }
+
+
+
+
