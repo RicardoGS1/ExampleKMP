@@ -3,13 +3,10 @@ package com.virtualworld.multiplatformiot.feature.menu
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.virtualworld.multiplatformiot.ui.core.localPaddingCommon
+import com.virtualworld.multiplatformiot.ui.core.component.ButtonMenu
 
 
 @Composable
@@ -25,28 +22,24 @@ internal fun MenuScreen(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-            val buttonModifier = Modifier.padding( localPaddingCommon.current.normal)
 
-            Button(
+            ButtonMenu(
                 onClick = goToLocalConection,
-                buttonModifier
-            ) {
-                Text("LocalConnections")
-            }
+                modifier = Modifier,
+                text = "LocalConnections"
+            )
 
-            Button(
+            ButtonMenu(
                 onClick = goToInternetConection,
-                buttonModifier
-            ) {
-                Text("InternetConnections")
-            }
+                modifier = Modifier,
+                text = "InternetConnections"
+            )
 
-            Button(
+            ButtonMenu(
                 onClick = goToBluetoothConection,
-                buttonModifier
-            ) {
-                Text("BluetoothConnections")
-            }
+                modifier = Modifier,
+                text = "BluetoothConnections"
+            )
 
 
         }
