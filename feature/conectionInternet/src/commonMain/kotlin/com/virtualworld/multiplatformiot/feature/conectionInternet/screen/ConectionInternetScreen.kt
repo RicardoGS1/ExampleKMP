@@ -1,4 +1,4 @@
-package com.wirtualworld.multiplatformiot.feature.conectionLocal.screen
+package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +9,7 @@ import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.component.ButtonBack
 
 @Composable
-internal fun ConectionLocalScreen (viewModel: ConectionLocalViewModel, popBackStack: () -> Unit) {
+fun ConectionInternetScreen (viewModel: ConectionInternetViewModel, popBackStack:() -> Unit){
 
     Box(modifier = Modifier.fillMaxSize().padding(MyAppTheme.padding.tiny)){
 
@@ -18,6 +18,7 @@ internal fun ConectionLocalScreen (viewModel: ConectionLocalViewModel, popBackSt
         )
 
     }
+
 
 
 }

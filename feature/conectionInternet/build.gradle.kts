@@ -14,7 +14,7 @@ plugins {
 
 kotlin {
 
-
+    //Android
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -22,45 +22,29 @@ kotlin {
         }
     }
 
+    //Ios
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "FeatureConectionLocal"
+            baseName = "FeatureConectionInternet"
             isStatic = true
         }
     }
 
+    //DeskTop
     jvm("desktop")
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
+
 
     sourceSets {
 
         commonMain.dependencies {
 
             implementation(projects.ui.core)
-            implementation(projects.domain.conectionLocal)
+            //implementation(projects.domain.conectionLocal)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -79,11 +63,11 @@ kotlin {
 
 
     }
+
 }
 
-
 android {
-    namespace = "com.virtualworld.multiplatformiot.feature.connectionLocal"
+    namespace = "com.virtualworld.multiplatformiot.feature.conectionInternet"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

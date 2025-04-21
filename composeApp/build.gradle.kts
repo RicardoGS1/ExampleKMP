@@ -82,6 +82,7 @@ kotlin {
 
             implementation(projects.ui.core)
             implementation(projects.feature.conectionLocal)
+            implementation(projects.feature.conectionInternet)
             implementation(projects.feature.menu)
 
             //UI CORE
