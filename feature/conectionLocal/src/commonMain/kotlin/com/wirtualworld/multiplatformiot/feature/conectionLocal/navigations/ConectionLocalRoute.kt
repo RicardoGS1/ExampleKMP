@@ -11,14 +11,14 @@ import org.koin.compose.viewmodel.koinViewModel
 data object ConectionLocal
 
 
-fun NavGraphBuilder.conectionLocalRoute(){
+fun NavGraphBuilder.conectionLocalRoute(popBackStack: () -> Unit) {
 
     composable <ConectionLocal> {
 
         val viewModel: ConectionLocalViewModel = koinViewModel()
 
         ConectionLocalScreen(
-            viewModel = viewModel
+            viewModel = viewModel,popBackStack
         )
 
     }

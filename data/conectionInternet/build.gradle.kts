@@ -6,9 +6,6 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlin.serialization)
 
 }
 
@@ -28,7 +25,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "FeatureConectionLocal"
+            baseName = "DataConectinInternet"
             isStatic = true
         }
     }
@@ -59,22 +56,10 @@ kotlin {
 
         commonMain.dependencies {
 
-            implementation(projects.ui.core)
-            implementation(projects.domain.conectionLocal)
+            implementation(projects.data.core)
 
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.composeVM)
-
-            //VIEWMODEL
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-
-            //NAVIGATION
-            implementation(libs.androidx.navigation.compose)
-
-            //SERIALISATION
-            implementation(libs.kotlinx.serialization)
         }
 
 
@@ -83,7 +68,7 @@ kotlin {
 
 
 android {
-    namespace = "com.virtualworld.multiplatformiot.feature.connectionLocal"
+    namespace = "com.virtualworld.multiplatformiot.data.conectionInternet"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
