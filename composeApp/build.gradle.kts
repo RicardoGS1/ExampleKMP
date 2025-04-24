@@ -147,11 +147,11 @@ kotlin {
         }
 
 
-        wasmJsMain.dependencies {
-
-            implementation(libs.kstore.storage)
-
-        }
+//        wasmJsMain.dependencies {
+//
+//            implementation(libs.kstore.storage)
+//
+//        }
 
 
     }
