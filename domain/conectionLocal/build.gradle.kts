@@ -48,6 +48,7 @@ kotlin {
 
             implementation(projects.data.conectionLocal)
 
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
         }
 
