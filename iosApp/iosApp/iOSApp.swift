@@ -1,25 +1,25 @@
 import SwiftUI
+import Firebase
 
 
 
-
-//class AppDelegate: NSObject, UIApplicationDelegate {
- // func application(_ application: UIApplication,
-  //                 didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                  didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
  
-      //FirebaseApp.configure()
+      FirebaseApp.configure()
       
     
 
-//    return true
-//  }
-//}
+    return true
+  }
+}
 
 @main
 struct iOSApp: App {
     
-    // register app delegate for Firebase setup
-   //   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+   //  register app delegate for Firebase setup
+      @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     
     //init(){
