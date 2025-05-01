@@ -1,11 +1,12 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.googleServices)
 
 }
 
@@ -13,7 +14,6 @@ kotlin {
 
 
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -32,38 +32,53 @@ kotlin {
 
     jvm("desktop")
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
 
     sourceSets {
+
+        androidMain.dependencies {
+
+            //FIREBASE
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
+            implementation(libs.firebase.firestore.ktx)
+
+
+        }
 
         commonMain.dependencies {
 
             implementation(projects.data.core)
 
+
+            implementation(libs.kotlinx.coroutines.core)
+
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
+
+            //NETWORK
+            implementation(project.dependencies.platform(libs.ktor.bom))
+            implementation(libs.ktor.client.core)
+            implementation(libs.coil.network.ktor)
+
+
+            //FIREBASE
+            implementation(libs.gitlive.firebase.firestore)
+
+            implementation(libs.kotlinx.serialization)
+        }
+
+
+        androidUnitTest.dependencies {
+            implementation(libs.junit)
+            implementation(libs.mockk)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.arch.core.testing)
+            implementation(libs.kotlin.test)
         }
 
 
     }
+
+
 }
 
 
