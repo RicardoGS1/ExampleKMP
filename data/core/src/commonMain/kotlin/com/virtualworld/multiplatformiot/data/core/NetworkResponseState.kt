@@ -1,4 +1,4 @@
-package com.virtualworld.conectioninternet.data.conectionInternet
+package com.virtualworld.multiplatformiot.data.core
 
 sealed class NetworkResponseState<out T : Any> {
 

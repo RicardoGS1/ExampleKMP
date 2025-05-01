@@ -2,6 +2,7 @@ package com.virtualworld.conectioninternet.data.conectionInternet
 
 
 
+import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import dev.gitlive.firebase.firestore.DocumentSnapshot
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.QuerySnapshot

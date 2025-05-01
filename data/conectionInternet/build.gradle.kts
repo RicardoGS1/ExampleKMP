@@ -47,6 +47,7 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.data.core)
+            implementation(projects.domain.conectionInternet)
 
 
             implementation(libs.kotlinx.coroutines.core)

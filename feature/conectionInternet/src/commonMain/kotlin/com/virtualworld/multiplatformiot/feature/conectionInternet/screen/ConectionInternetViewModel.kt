@@ -2,11 +2,8 @@ package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.multiplatformiot.domain.conectionInternet.ResponseState
-import com.virtualworld.multiplatformiot.domain.conectionInternet.UseCaseInternet
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
+import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.UseCaseInternet
 import kotlinx.coroutines.launch
 
 class ConectionInternetViewModel( private val useCaseInternet: UseCaseInternet) : ViewModel() {

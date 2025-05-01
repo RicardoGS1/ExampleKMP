@@ -87,9 +87,13 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.ui.core)
+
             implementation(projects.feature.conectionLocal)
             implementation(projects.feature.conectionInternet)
             implementation(projects.feature.menu)
+
+            implementation(projects.data.conectionInternet)
+            implementation(projects.data.conectionLocal)
 
             //UI CORE
 

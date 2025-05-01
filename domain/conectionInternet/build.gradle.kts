@@ -1,36 +1,17 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-
-
 }
 
 kotlin {
 
-
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "DomainConectionInternet"
-            isStatic = true
-        }
-    }
-
-    jvm("desktop")
-
-
+    jvm()
 
     sourceSets {
 
         commonMain.dependencies {
 
-
-            implementation(projects.data.conectionInternet)
+            implementation(projects.data.core)
 
             implementation(libs.kotlinx.coroutines.core)
 

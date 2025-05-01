@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot.domain.conectionInternet
+package com.virtualworld.multiplatformiot.domain.conectionInternet.model
 
 sealed class ResponseState<out T : Any> {
 
