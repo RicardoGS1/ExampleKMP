@@ -44,7 +44,7 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.ui.core)
-            //implementation(projects.domain.conectionLocal)
+            implementation(projects.domain.conectionInternet)
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
