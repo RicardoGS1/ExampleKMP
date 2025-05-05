@@ -1,7 +1,7 @@
 package com.virtualworld.conectioninternet.data.conectionInternet
 
 import com.virtualworld.multiplatformiot.dataCoreModule
-import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepocitoryInternet
+import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.module.dsl.singleOf
@@ -15,7 +15,7 @@ val dataConectionInternetModule = module {
 
     singleOf(::RemoteDataSource)
 
-    single<RepocitoryInternet> {  RepositoryInternetImp (get()) }
+    single<RepositoryInternet> {  RepositoryInternetImp (get()) }
 
 
 
