@@ -17,7 +17,11 @@ import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.component.ButtonBack
 
 @Composable
-fun ConectionInternetScreen(viewModel: ConectionInternetViewModel, popBackStack: () -> Unit, detailArduinoScreen: (arduino:ArduinoDomain) -> Unit) {
+fun ConectionInternetScreen(
+    popBackStack: () -> Unit,
+    goToDetailArduino: (String) -> Unit,
+    viewModel: ConectionInternetViewModel,
+) {
 
     val arduinos by viewModel.arduinosState.collectAsState()
 
@@ -38,31 +42,26 @@ fun ConectionInternetScreen(viewModel: ConectionInternetViewModel, popBackStack:
                 }
 
                 is ArduinosState.Success -> {
-                    ColumArduinos(arduinos as ArduinosState.Success<List<ArduinoDomain>>,detailArduinoScreen)
-
+                    ColumArduinos(
+                        arduinos = arduinos as ArduinosState.Success<List<ArduinoDomain>>,
+                        goToDetailArduino = goToDetailArduino
+                    )
                 }
             }
-
-
         }
-
     }
-
-
 }
 
 @Composable
 fun ColumArduinos(
     arduinos: ArduinosState.Success<List<ArduinoDomain>>,
-    detailArduinoScreen: (ArduinoDomain) -> Unit
+    goToDetailArduino: (String) -> Unit
 ) {
-
     Column {
-        arduinos.arduinos.forEach {
-            Button(onClick = { detailArduinoScreen(arduinos.arduinos[1]) }  ) {
-                Text(it.name)
+        arduinos.arduinos.forEach { arduino ->
+            Button(onClick = { goToDetailArduino(arduino.name) }) {
+                Text(arduino.name)
             }
         }
     }
-
 }

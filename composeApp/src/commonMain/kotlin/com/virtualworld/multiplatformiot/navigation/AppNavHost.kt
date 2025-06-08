@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.ConectionInternet
-import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.conectionInternetRoute
+import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.ConectionInternetNavigation
+import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.conectionInternetGraph
 import com.virtualworld.multiplatformiot.feature.menu.navigations.Menu
 import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutes
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocal
@@ -26,7 +26,7 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
 
         menuRoutes(
             goToLocalConection = { navController.navigate(ConectionLocal) },
-            goToInternetConection = {navController.navigate(ConectionInternet)},
+            goToInternetConection = { navController.navigate(ConectionInternetNavigation.ConectionInternet) },
             goToBluetoothConection = {}
         )
 
@@ -34,13 +34,11 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             popBackStack = { navController.popBackStack() }
         )
 
-        conectionInternetRoute(
-            popBackStack = { navController.popBackStack() }
+        conectionInternetGraph(
+            navController = navController
         )
 
-
-
-
     }
+
 
 }

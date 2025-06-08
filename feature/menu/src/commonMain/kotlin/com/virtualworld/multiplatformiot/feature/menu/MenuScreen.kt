@@ -27,19 +27,19 @@ internal fun MenuScreen(
             ButtonMenu(
                 onClick = goToLocalConection,
                 modifier = Modifier,
-                text = "LocalConnections"
+                text = "Local Connections"
             )
 
             ButtonMenu(
                 onClick = goToInternetConection,
                 modifier = Modifier,
-                text = "InternetConnections"
+                text = "Internet Connections"
             )
 
             ButtonMenu(
                 onClick = goToBluetoothConection,
                 modifier = Modifier,
-                text = "BluetoothConnections"
+                text = "Bluetooth Connections"
             )
 
 
