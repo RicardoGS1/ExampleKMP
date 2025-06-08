@@ -76,31 +76,5 @@ MultiplatformIoT/
 - Optimización para navegadores modernos
 - PWA support
 
-## 🚀 Comenzando
-
-1. Clona el repositorio
-```bash
-git clone https://github.com/tuusuario/MultiplatformIoT.git
-```
-
-2. Abre el proyecto en Android Studio o IntelliJ IDEA
-
-3. Sincroniza el proyecto con Gradle
-
-4. Ejecuta la aplicación en tu plataforma preferida
-
 ## 📱 Capturas de Pantalla
 
-[Aquí irían las capturas de pantalla de la aplicación]
-
-## 🤝 Contribuir
-
-Las contribuciones son bienvenidas. Por favor, lee las guías de contribución antes de enviar un pull request.
-
-## 📄 Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## 📞 Contacto
-
-[Tus datos de contacto o redes sociales]
