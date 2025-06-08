@@ -19,7 +19,7 @@ Una aplicación multiplataforma moderna para el control y monitoreo de dispositi
 - **Kotlin Serialization**: Serialización de datos eficiente y type-safe
 
 ### Arquitectura y Patrones
-- **Clean Architecture**: Separación clara de responsabilidades en capas (Data, Domain, Presentation)
+- **Clean Architecture**: Separación clara de responsabilidades en capas (Data, Domain, Presentation) MultiModule
 - **MVVM**: Patrón de arquitectura para una mejor separación de la lógica de UI y negocio
 - **Repository Pattern**: Para abstracción de fuentes de datos
 - **Navigation Component**: Sistema de navegación type-safe y predecible
@@ -42,7 +42,7 @@ Una aplicación multiplataforma moderna para el control y monitoreo de dispositi
   - Caché inteligente
   - Soporte para Compose
 
-## 🏗️ Estructura del Proyecto
+## 🏗️ Estructura del Proyecto Multi-Modulo
 
 ```
 MultiplatformIoT/
