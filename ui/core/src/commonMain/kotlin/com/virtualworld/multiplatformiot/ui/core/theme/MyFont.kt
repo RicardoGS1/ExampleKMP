@@ -5,6 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import multiplatformiot.ui.core.generated.resources.Res
 import multiplatformiot.ui.core.generated.resources.my_font_primary
 import org.jetbrains.compose.resources.Font
@@ -41,6 +42,8 @@ val localMyAppTypography = staticCompositionLocalOf {
 fun typography() =
 
     MyTypography(
+
+        //TITLE
         titleLarge = TextStyle(
             fontFamily = FontFamily(
                 Font(
@@ -65,13 +68,16 @@ fun typography() =
                 )
             )
         ),
+
+        //BODY
         bodyLarge = TextStyle(
             fontFamily = FontFamily(
                 Font(
                     Res.font.my_font_primary,
                     FontWeight.Normal
                 )
-            )
+            ),
+            lineHeight = 18.sp
         ),
         bodyMedium = TextStyle(
             fontFamily = FontFamily(
@@ -79,7 +85,8 @@ fun typography() =
                     Res.font.my_font_primary,
                     FontWeight.Normal
                 )
-            )
+            ),
+            lineHeight = 20.sp
         ),
         bodySmall = TextStyle(
             fontFamily = FontFamily(
@@ -87,8 +94,11 @@ fun typography() =
                     Res.font.my_font_primary,
                     FontWeight.Normal
                 )
-            )
+            ),
+            lineHeight = 22.sp
         ),
+
+        //LABEL
         labelLarge = TextStyle.Default,
         labelMedium = TextStyle.Default,
         labelSmall = TextStyle.Default,
