@@ -8,6 +8,8 @@ interface RepositoryInternet {
 
     fun getAllArduinos(usuario:String): Flow<NetworkResponseState<List<Arduino>>>
 
+    fun getArduinos(usuario:String, name:String): Flow<NetworkResponseState<Arduino>>
+
 
 
 }

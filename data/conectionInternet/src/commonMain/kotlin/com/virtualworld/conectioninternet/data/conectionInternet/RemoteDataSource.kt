@@ -36,5 +36,25 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
         }
     }
 
+    fun getArduino(usuario: String, name:String): Flow<NetworkResponseState<Arduino>> = flow {
+        try {
+
+            emit(NetworkResponseState.Loading)
+
+            firestore.collection("usuarios").document(usuario)
+                .collection("arduinos").document(name).snapshots.collect { querySnapshot ->
+
+                    val arduino = querySnapshot.data<Arduino>().copy(name = name)
+
+
+                        emit(NetworkResponseState.Success(arduino))
+                    }
+
+
+        } catch (e: Exception) {
+            emit(NetworkResponseState.Error(e))
+        }
+    }
+
 
 }

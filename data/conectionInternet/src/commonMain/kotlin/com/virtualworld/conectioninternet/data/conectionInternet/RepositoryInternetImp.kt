@@ -12,5 +12,9 @@ class RepositoryInternetImp ( private val remoteDataSource: RemoteDataSource): R
        return remoteDataSource.getAllArduino(usuario)
     }
 
+    override fun getArduinos(usuario: String, name: String): Flow<NetworkResponseState<Arduino>> {
+        return remoteDataSource.getArduino(usuario, name)
+    }
+
 
 }
