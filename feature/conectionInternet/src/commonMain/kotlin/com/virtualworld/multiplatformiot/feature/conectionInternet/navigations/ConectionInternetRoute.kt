@@ -9,6 +9,7 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.C
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.ConectionInternetScreen
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.ConectionInternetViewModel
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.DetailArduinoScreen
+import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.DetailArduinoViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.conectionInternetGraph(
@@ -36,12 +37,12 @@ fun NavGraphBuilder.conectionInternetGraph(
             }
         )
     ) { backStackEntry ->
-
         val arduinoName = backStackEntry.arguments?.getString(ARDUINO_NAME_ARG) ?: ""
-
+        val viewModel: DetailArduinoViewModel = koinViewModel()
         DetailArduinoScreen(
             arduinoName = arduinoName,
-            popBackStack = { navController.popBackStack() }
+            popBackStack = { navController.popBackStack() },
+            viewModel = viewModel
         )
     }
 }
