@@ -45,7 +45,7 @@ class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) :
 
                             val arduinocorrect = ArduinoDomain(
                                 name = arduino.result.name,
-                                state1 = mapOf( arduino.result.state1.entries.first().toPair() , arduino.result.state2.entries.first().toPair(),arduino.result.state3.entries.first().toPair())
+                                state1 = arduino.result.state1
                             )
 
                             _arduinos.update { ArduinosState.Success(arduinocorrect) }
@@ -60,9 +60,20 @@ class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) :
         }
     }
 
-    fun updateState(key: String, newValue: Boolean) {
-
-
+    fun updateState (key: String, newValue: Boolean) {
+        viewModelScope.launch {
+            try {
+                when (val currentState = _arduinos.value) {
+                    is ArduinosState.Success -> {
+                        val currentArduino = currentState.arduinos
+                        getArduinoUseCase.updateArduinoState("usuario1", currentArduino.name!!, key, newValue)
+                    }
+                    else -> {} // No hacemos nada si no estamos en estado Success
+                }
+            } catch (e: Exception) {
+                _arduinos.value = ArduinosState.Error(e)
+            }
+        }
     }
 
 

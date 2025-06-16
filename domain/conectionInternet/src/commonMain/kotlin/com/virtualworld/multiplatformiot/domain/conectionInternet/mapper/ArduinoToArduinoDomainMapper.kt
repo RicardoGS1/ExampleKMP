@@ -1,16 +1,26 @@
 package com.virtualworld.multiplatformiot.domain.conectionInternet.mapper
 
-import com.virtualworld.multiplatformiot.data.core.dto.Arduino
+import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
+import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.conectionInternet.model.StateObjectDomain
 
-fun Arduino.mapperToDomain(): ArduinoDomain {
+fun ArduinoData.mapperToDomain(): ArduinoDomain {
 
-    return (ArduinoDomain(
-        name = this.name,
-        state1 = this.state1,
-        state2 = this.state2,
-        state3 = this.state3
-    ))
+    val stateMap = this.objetos?.associate { stateObject ->
 
+        stateObject.keyObjeto!! to StateObjectDomain(nombre =  stateObject.nombre , estado =  stateObject.estado)
+
+    }
+
+    return ArduinoDomain(
+        name = this.nameArduino,
+        state1 = stateMap
+    )
+}
+
+fun StateObject.mapperToStateObjectDomain():StateObjectDomain{
+
+  return  StateObjectDomain(this.nombre,this.estado)
 
 }

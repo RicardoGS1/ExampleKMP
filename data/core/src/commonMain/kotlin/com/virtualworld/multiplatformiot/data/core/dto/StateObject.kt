@@ -4,12 +4,18 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Arduino(
-    val name: String ="",
-    val state1: Map<String, Boolean> = mapOf(),
-    val state2: Map<String, Boolean> = mapOf(),
-    val state3: Map<String, Boolean> = mapOf(),
-
+data class StateObject(
+    var keyObjeto: String? = null,
+    var nombre: String? = null,
+    var estado: Boolean? = null
 )
 
+
+@Serializable
+data class ArduinoData(
+
+    var nameArduino: String? = null,
+    //var objetos:List<StateObject>? = emptyList()
+    var objetos: List< StateObject>? = emptyList()
+)
 

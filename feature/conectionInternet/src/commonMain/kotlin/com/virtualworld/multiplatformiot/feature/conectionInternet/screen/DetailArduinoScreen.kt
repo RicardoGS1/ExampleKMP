@@ -3,6 +3,7 @@ package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.StateObject
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -83,11 +84,11 @@ private fun ArduinoDetailContent(
                 style = MaterialTheme.typography.titleMedium
             )
 
-            arduino.state1.forEach { state->
+            arduino.state1?.forEach { state->
                 EstadoRow(
-                    label = state.key,
-                    checked = state.value,
-                    onCheckedChange = { onEstado1Change(state.key, state.value) }
+                    label = state.value.nombre.toString(),
+                    checked = state.value.estado!!,
+                    onCheckedChange = { onEstado1Change(state.key, state.value.estado !!)  }
                 )
             }
 

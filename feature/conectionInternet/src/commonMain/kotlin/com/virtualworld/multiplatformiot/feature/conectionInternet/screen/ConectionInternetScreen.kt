@@ -59,8 +59,8 @@ fun ColumArduinos(
 ) {
     Column {
         arduinos.arduinos.forEach { arduino ->
-            Button(onClick = { goToDetailArduino(arduino.name) }) {
-                Text(arduino.name)
+            Button(onClick = { goToDetailArduino(arduino.name!!) }) {
+                Text(arduino.name!!)
             }
         }
     }
