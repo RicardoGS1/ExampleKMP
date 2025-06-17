@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 
     alias(libs.plugins.ksp)
+    id("com.google.gms.google-services")
+    //libs.plugins.googleServices
 
 
 }
@@ -71,8 +73,12 @@ kotlin {
             //NETWORK
             implementation(libs.ktor.client.android)
 
+            //KSTORE
             implementation(libs.kstore.file)
 
+            //FIREBASE
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
+            implementation(libs.firebase.firestore.ktx)
 
         }
 
@@ -81,8 +87,13 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.ui.core)
+
             implementation(projects.feature.conectionLocal)
+            implementation(projects.feature.conectionInternet)
             implementation(projects.feature.menu)
+
+            implementation(projects.data.conectionInternet)
+            implementation(projects.data.conectionLocal)
 
             //UI CORE
 
@@ -94,20 +105,26 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
 
             //ID
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.composeVM)
-            //implementation(project.dependencies.platform(libs.koin.bom))
 
             //NETWORK
+            implementation(project.dependencies.platform(libs.ktor.bom))
             implementation(libs.ktor.client.core)
             implementation(libs.coil.network.ktor)
 
             //COIL
             implementation(libs.coil.compose)
 
-
+            //KSTORE
             implementation(libs.kstore)
+
+            //FIREBASE
+            implementation(libs.gitlive.firebase.firestore)
+
+
 
         }
 
@@ -134,11 +151,11 @@ kotlin {
         }
 
 
-        wasmJsMain.dependencies {
-
-            implementation(libs.kstore.storage)
-
-        }
+//        wasmJsMain.dependencies {
+//
+//            implementation(libs.kstore.storage)
+//
+//        }
 
 
     }
@@ -178,6 +195,7 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    implementation(libs.androidx.foundation.android)
 }
 
 compose.desktop {
