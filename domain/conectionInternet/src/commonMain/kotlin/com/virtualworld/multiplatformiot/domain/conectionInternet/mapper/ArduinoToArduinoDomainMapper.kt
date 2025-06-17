@@ -7,10 +7,11 @@ import com.virtualworld.multiplatformiot.domain.conectionInternet.model.StateObj
 
 fun ArduinoData.mapperToDomain(): ArduinoDomain {
 
-    val stateMap = this.objetos?.associate { stateObject ->
+    val stateMap: MutableMap<String,StateObjectDomain> = emptyMap<String,StateObjectDomain>().toMutableMap()
 
-        stateObject.keyObjeto!! to StateObjectDomain(nombre =  stateObject.nombre , estado =  stateObject.estado)
+    this.objetos?.forEach { stateObject ->
 
+        stateMap[stateObject.key] = StateObjectDomain(nombre =  stateObject.value.nombre , estado =  stateObject.value.estado)
     }
 
     return ArduinoDomain(

@@ -60,13 +60,15 @@ class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) :
         }
     }
 
-    fun updateState (key: String, newValue: Boolean) {
+    fun updateState (key: String) {
+
+
         viewModelScope.launch {
             try {
                 when (val currentState = _arduinos.value) {
                     is ArduinosState.Success -> {
                         val currentArduino = currentState.arduinos
-                        getArduinoUseCase.updateArduinoState("usuario1", currentArduino.name!!, key, newValue)
+                        getArduinoUseCase.updateArduinoState(currentArduino.name!!, key)
                     }
                     else -> {} // No hacemos nada si no estamos en estado Success
                 }

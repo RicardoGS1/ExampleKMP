@@ -1,6 +1,8 @@
 package com.virtualworld.multiplatformiot.domain.conectionInternet.usecase
 
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
+import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
+import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.conectionInternet.mapper.mapperToDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.mapper.mapperToStateObjectDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
@@ -35,8 +37,12 @@ class GetArduinoUseCase (private val repositoryInternet: RepositoryInternet){
         }
     }
 
-    suspend fun updateArduinoState(usuario: String, arduinoName: String, key: String, newValue: Boolean): ResponseState<StateObjectDomain> {
-        return when (val response = repositoryInternet.updateArduinoState(usuario, arduinoName, key, newValue)) {
+    suspend fun updateArduinoState( arduinoName: String, key: String): ResponseState<StateObjectDomain> {
+
+        val arduinoData = ArduinoData ( nameArduino = arduinoName, objetos = mapOf( key to StateObject()) )
+
+
+        return when (val response = repositoryInternet.updateArduinoState( arduinoData)) {
             is NetworkResponseState.Loading -> ResponseState.Loading
             is NetworkResponseState.Error -> ResponseState.Error(response.exception)
             is NetworkResponseState.Success -> ResponseState.Success(response.result.mapperToStateObjectDomain())

@@ -47,13 +47,14 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
                 .collection("objetos").snapshots.collect { querySnapshot ->
 
                     val objetos = querySnapshot.documents.map { documentSnapshot ->
-                        documentSnapshot.data<StateObject>().copy(keyObjeto = documentSnapshot.id)
+
+                        val stateObject = documentSnapshot.data<StateObject>() //.copy(keyObjeto = documentSnapshot.id)
+
+                        Pair(documentSnapshot.id,stateObject)
+
                     }
 
-                    val arduino = ArduinoData(nameArduino = name, objetos = objetos)
-
-                    println(arduino)
-
+                    val arduino = ArduinoData(nameArduino = name, objetos = objetos.toMap())
 
                     emit(NetworkResponseState.Success(arduino))
                 }
@@ -64,17 +65,18 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
         }
     }
 
-    suspend fun updateArduinoState(usuario: String, arduinoName: String, key: String, newValue: Boolean): NetworkResponseState<StateObject> {
+    suspend fun updateArduinoState(arduinoData:ArduinoData): NetworkResponseState<StateObject> {
         return try {
 
-            val arduinoRef = firestore.collection("usuarios").document(usuario)
-                .collection("arduinos").document(arduinoName).collection("objetos").document(key)
+            val objectStateRef = firestore.collection("usuarios").document("usuario1")
+                .collection("arduinos").document(arduinoData.nameArduino!!).collection("objetos").document(
+                    arduinoData.objetos?.keys!!.first())
 
-            val arduino = arduinoRef.get().data<StateObject>()
+            val objectState = objectStateRef.get().data<StateObject>()
 
-            val updatedState = StateObject(arduino.keyObjeto, arduino.nombre, !arduino.estado!!)
+            val updatedState = StateObject( objectState.nombre, !objectState.estado!!)
 
-            arduinoRef.update(updatedState)
+            objectStateRef.update(updatedState)
 
             NetworkResponseState.Success(updatedState)
         } catch (e: Exception) {

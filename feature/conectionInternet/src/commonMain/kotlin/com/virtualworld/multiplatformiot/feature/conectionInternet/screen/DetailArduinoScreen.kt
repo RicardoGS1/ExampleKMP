@@ -52,7 +52,7 @@ fun DetailArduinoScreen(
                     val arduino = (arduinos as ArduinosState.Success<ArduinoDomain>).arduinos
                     ArduinoDetailContent(
                         arduino = arduino,
-                        onEstado1Change = {key, newValue -> viewModel.updateState(key, newValue) },
+                        onEstado1Change = {key -> viewModel.updateState(key) },
                     )
                 }
             }
@@ -63,7 +63,7 @@ fun DetailArduinoScreen(
 @Composable
 private fun ArduinoDetailContent(
     arduino: ArduinoDomain,
-    onEstado1Change: (String, Boolean) -> Unit,
+    onEstado1Change: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -88,7 +88,7 @@ private fun ArduinoDetailContent(
                 EstadoRow(
                     label = state.value.nombre.toString(),
                     checked = state.value.estado!!,
-                    onCheckedChange = { onEstado1Change(state.key, state.value.estado !!)  }
+                    onCheckedChange = { onEstado1Change(state.key)  }
                 )
             }
 
