@@ -13,6 +13,9 @@ sealed class ConectionInternetNavigation(val route: String) {
         fun createRoute(arduinoName: String) = "detailArduino/$arduinoName"
     }
 
+    @Serializable
+    data object AddArduino : ConectionInternetNavigation("addArduino")
+
     companion object {
         const val ARDUINO_NAME_ARG = "arduinoName"
     }

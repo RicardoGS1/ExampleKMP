@@ -20,6 +20,7 @@ import com.virtualworld.multiplatformiot.ui.core.component.ButtonBack
 fun ConectionInternetScreen(
     popBackStack: () -> Unit,
     goToDetailArduino: (String) -> Unit,
+    goToAddArduino: () -> Unit,
     viewModel: ConectionInternetViewModel,
 ) {
 
@@ -44,7 +45,8 @@ fun ConectionInternetScreen(
                 is ArduinosState.Success -> {
                     ColumArduinos(
                         arduinos = arduinos as ArduinosState.Success<List<ArduinoDomain>>,
-                        goToDetailArduino = goToDetailArduino
+                        goToDetailArduino = goToDetailArduino,
+                        goToAddArduino = goToAddArduino
                     )
                 }
             }
@@ -55,13 +57,17 @@ fun ConectionInternetScreen(
 @Composable
 fun ColumArduinos(
     arduinos: ArduinosState.Success<List<ArduinoDomain>>,
-    goToDetailArduino: (String) -> Unit
+    goToDetailArduino: (String) -> Unit,
+    goToAddArduino: () -> Unit
 ) {
     Column {
         arduinos.arduinos.forEach { arduino ->
             Button(onClick = { goToDetailArduino(arduino.name!!) }) {
                 Text(arduino.name!!)
             }
+        }
+        Button(onClick = { goToAddArduino() }) {
+            Text("Agregar Arduino")
         }
     }
 }

@@ -4,6 +4,7 @@ import com.virtualworld.multiplatformiot.ProductEmptyException
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
+import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -81,6 +82,36 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
             NetworkResponseState.Success(updatedState)
         } catch (e: Exception) {
             NetworkResponseState.Error(e)
+        }
+    }
+
+    suspend fun addArduino(arduino: ArduinoDomain) {
+
+        val arduinoRef = firestore.collection("usuarios")
+            .document("usuario1")
+            .collection("arduinos")
+            .document(arduino.name!!)
+
+
+
+        // (Opcional) Guarda datos generales del Arduino
+        arduinoRef.set( mapOf("name" to arduino.name!!))
+
+
+
+        // Guarda cada estado como un documento en la subcolección "objetos"
+        arduino.state1?.forEach { (key, stateObject) ->
+
+            println(arduinoRef)
+
+            val objetoRef = arduinoRef.collection("objetos").document(key)
+
+            val data = mapOf(
+                "nombre" to stateObject.nombre,
+                "estado" to stateObject.estado
+            )
+
+            objetoRef.set(data)
         }
     }
 }

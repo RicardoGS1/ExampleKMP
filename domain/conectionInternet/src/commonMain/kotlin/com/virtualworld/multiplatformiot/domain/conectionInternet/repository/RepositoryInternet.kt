@@ -14,4 +14,6 @@ interface RepositoryInternet {
 
     suspend fun updateArduinoState(arduinoData: ArduinoData): NetworkResponseState<StateObject>
 
+    suspend fun addArduino(arduino: ArduinoDomain)
+
 }
