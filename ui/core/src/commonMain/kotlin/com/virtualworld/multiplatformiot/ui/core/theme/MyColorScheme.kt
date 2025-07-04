@@ -7,13 +7,13 @@ import androidx.compose.ui.graphics.Color
 
 
 // Vibrant Blues
-val vibrantBlue = Color(0xFF007BFF)        // Vibrant Blue
+val vibrantBlue = Color( 0xFF8B6DE9)        // Vibrant Blue
 val white = Color(0xFFFFFFFF)             // White
 val lightBlue = Color(0xFFE0EEFF)          // Light Blue variant
 val darkBlue = Color(0xFF00244D)           // Dark Blue
 
 // Vibrant Oranges
-val vibrantOrange = Color(0xFFFFA500)      // Vibrant Orange
+val vibrantOrange = Color(0xFF007BFF)      // Vibrant Orange
 val black = Color(0xFF000000)
 
 
