@@ -10,6 +10,8 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.Conect
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.ConectionInternetViewModel
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.DetailArduinoScreen
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.DetailArduinoViewModel
+import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.AddArduinoScreen
+import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.AddArduinoViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.conectionInternetGraph(
@@ -22,9 +24,14 @@ fun NavGraphBuilder.conectionInternetGraph(
 
         ConectionInternetScreen(
             popBackStack = { navController.popBackStack() },
+
             goToDetailArduino = { arduinoName ->
                 navController.navigate(ConectionInternetNavigation.DetailArduino(arduinoName).createRoute(arduinoName))
             },
+            goToAddArduino = {
+                navController.navigate(ConectionInternetNavigation.AddArduino.route)
+            },
+
             viewModel = viewModel,
         )
     }
@@ -45,5 +52,22 @@ fun NavGraphBuilder.conectionInternetGraph(
             viewModel = viewModel
         )
     }
+
+    composable(
+        route = ConectionInternetNavigation.AddArduino.route) {
+        val viewModel: AddArduinoViewModel = koinViewModel()
+        AddArduinoScreen(
+            popBackStack = { navController.popBackStack() },
+            viewModel = viewModel
+        )
+    }
+
+//    composable<ConectionInternetNavigation.AddArduino> {
+//        val viewModel: AddArduinoViewModel = koinViewModel()
+//        AddArduinoScreen(
+//            popBackStack = { navController.popBackStack() },
+//            viewModel = viewModel
+//        )
+//    }
 }
 
