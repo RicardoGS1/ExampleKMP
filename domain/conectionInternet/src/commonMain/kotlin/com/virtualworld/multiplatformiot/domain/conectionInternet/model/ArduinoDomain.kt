@@ -15,6 +15,7 @@ data class StateObjectDomain(
 data class ArduinoDomain (
 
     val name: String? ="",
+    val active: Boolean = true,
     val state1: Map<String, StateObjectDomain>? = mapOf(),
 
 )
