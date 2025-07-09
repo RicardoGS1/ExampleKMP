@@ -23,7 +23,6 @@ fun ButtonBack(onClick: () -> Unit){
         onClick = onClick,
         modifier = Modifier
             .clip(CircleShape)
-            .background(color) // Color de fondo
     ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
