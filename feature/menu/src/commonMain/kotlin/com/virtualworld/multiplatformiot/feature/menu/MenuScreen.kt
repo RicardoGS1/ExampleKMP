@@ -57,25 +57,27 @@ internal fun MenuScreen(
 
         TopBarCanva(true)
 
-        TopBarMenu()
+        Box(modifier = Modifier.fillMaxSize().padding(vertical = 32.dp)) {
 
-        when (arduinoActiveInternet) {
-            is StateScreenMenu.Error -> {}
-            is StateScreenMenu.Loading -> {}
-            is StateScreenMenu.Success<*> -> {
+            TopBarMenu()
 
-                val activate = arduinoActiveInternet as StateScreenMenu.Success
+            when (arduinoActiveInternet) {
+                is StateScreenMenu.Error -> {}
+                is StateScreenMenu.Loading -> {}
+                is StateScreenMenu.Success<*> -> {
 
-                AllConnections(
-                    goToInternetConection,
-                    goToLocalConection,
-                    goToBluetoothConection,
-                    activate.arduinos
+                    val activate = arduinoActiveInternet as StateScreenMenu.Success
 
-                )
+                    AllConnections(
+                        goToInternetConection,
+                        goToLocalConection,
+                        goToBluetoothConection,
+                        activate.arduinos
+
+                    )
+                }
             }
         }
-
 
     }
 }
