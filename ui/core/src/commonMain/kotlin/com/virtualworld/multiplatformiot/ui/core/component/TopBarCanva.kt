@@ -4,8 +4,11 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,70 +19,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 
 @Composable
 fun TopBarCanva(
-    arcEnable: Boolean,
-    modifier: Modifier = Modifier,
-) {
+    endArcAnimated: Float,
+    endSizeRect: Dp,
+    sizeArc: Dp,
+    animateRec: Boolean = true,
 
+    ) {
 
-    val canvasSize = 300.dp
     val color = MyAppTheme.colorScheme.primary
-    var animar by remember { mutableStateOf(arcEnable) }
+
+    var durationAnimationRect by remember { mutableStateOf(1500) }
+
+    durationAnimationRect = if (animateRec) 1500 else 0
+
+    println("1")
+    println("2")
 
 
     val arcoAlturaAnimada by animateFloatAsState(
-
-        targetValue = if (animar) 0.0f else 0.3f,
+        targetValue = endArcAnimated,
         animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing)
-
     )
 
-    LaunchedEffect(Unit) {
-        animar = !animar
-    }
+
+    val sizeRectAnimated by animateFloatAsState(
+        targetValue = endSizeRect.value,
+        animationSpec = tween(durationMillis = durationAnimationRect, easing = FastOutSlowInEasing)
+    )
 
 
-    Canvas(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(canvasSize)
-    ) {
-
-        // Crea el degradado
+    Box() {
         val brush = Brush.horizontalGradient(
             colors = listOf(
-
-                color.copy(alpha = 0.6f),
-                color
-            ),
-            startX = 0f,
-            endX = size.width
+                color.copy(alpha = 0.6f), color
+            ), startX = 0f, endX = 400f
         )
 
+        Box(modifier = Modifier.fillMaxWidth().height(sizeRectAnimated.dp).background(brush)) {}
 
-        val rectWidth = size.width
-        val rectHeight = size.height * 0.7f
-        val arcoAltura = size.height * arcoAlturaAnimada
+        Canvas(
+            modifier = Modifier.fillMaxWidth().padding(top = sizeRectAnimated.dp - sizeArc / 2).height(sizeArc)
+        ) {
+            val rectHeight = size.height
+            val rectWidth = size.width
 
-        drawRect(
-            brush = brush,
-            topLeft = Offset(0f, 0f),
-            size = androidx.compose.ui.geometry.Size(rectWidth, rectHeight)
-        )
-
-        drawArc(
-            brush = brush,
-            startAngle = 0f,
-            sweepAngle = 180f,
-            useCenter = true,
-            topLeft = Offset(0f, rectHeight - arcoAltura / 2),
-            size = Size(rectWidth, arcoAltura)
-        )
-
+            drawArc(
+                brush = brush,
+                startAngle = 0f,
+                sweepAngle = 180f,
+                useCenter = true,
+                topLeft = Offset(0f, (rectHeight * (1 - arcoAlturaAnimada)) / 2),
+                size = Size(rectWidth, rectHeight * arcoAlturaAnimada)
+            )
+        }
     }
-
 }

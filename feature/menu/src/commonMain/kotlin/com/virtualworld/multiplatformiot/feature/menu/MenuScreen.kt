@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.component.TopBarCanva
 
@@ -47,15 +46,11 @@ internal fun MenuScreen(
     menuViewModel: MenuViewModel
 ) {
 
+    val arduinoActiveInternet by menuViewModel.arduinoActivesInternet.collectAsState()
+
     LaunchedEffect(Unit){
         menuViewModel.getStatesArduinosInternet()
     }
-
-    val arduinoActiveInternet by menuViewModel.arduinoActivesInternet.collectAsState()
-
-    Box(Modifier.fillMaxSize().background(Color(0xFFF2F2F2))) {
-
-        TopBarCanva(true)
 
         Box(modifier = Modifier.fillMaxSize().padding(vertical = 32.dp)) {
 
@@ -80,7 +75,7 @@ internal fun MenuScreen(
         }
 
     }
-}
+
 
 
 @Composable
