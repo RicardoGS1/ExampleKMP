@@ -4,29 +4,33 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.ConectionInternetNavigation
 import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.conectionInternetGraph
-import com.virtualworld.multiplatformiot.feature.menu.navigations.Menu
+import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutes
-import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocal
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.conectionLocalRoute
 
 
 @Composable
-fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
+fun AppNavHost(
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+    valueScroll: (Dp) -> Unit,
+) {
 
     NavHost(
         navController,
-        startDestination = Menu,
+        startDestination = MenuNavigation.Menu.route,
         modifier = Modifier.padding(paddingValues)
     ) {
 
 
         menuRoutes(
-            goToLocalConection = { navController.navigate(ConectionLocal) },
-            goToInternetConection = { navController.navigate(ConectionInternetNavigation.ConectionInternet) },
+            goToLocalConection = { navController.navigate("conectionLocal") },
+            goToInternetConection = { navController.navigate(ConectionInternetNavigation.ConectionInternet.route) },
             goToBluetoothConection = {}
         )
 
@@ -35,7 +39,7 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
         )
 
         conectionInternetGraph(
-            navController = navController
+            navController = navController,valueScroll
         )
 
     }

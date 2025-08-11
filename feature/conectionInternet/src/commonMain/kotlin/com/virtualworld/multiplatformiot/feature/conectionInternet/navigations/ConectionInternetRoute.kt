@@ -1,5 +1,6 @@
 package com.virtualworld.multiplatformiot.feature.conectionInternet.navigations
 
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -15,10 +16,11 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.AddArd
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.conectionInternetGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    valueScroll: (Dp) -> Unit
 ) {
 
-    composable<ConectionInternetNavigation.ConectionInternet> {
+    composable(ConectionInternetNavigation.ConectionInternet.route) {
 
         val viewModel: ConectionInternetViewModel = koinViewModel()
 
@@ -26,11 +28,14 @@ fun NavGraphBuilder.conectionInternetGraph(
             popBackStack = { navController.popBackStack() },
 
             goToDetailArduino = { arduinoName ->
-                navController.navigate(ConectionInternetNavigation.DetailArduino(arduinoName).createRoute(arduinoName))
+                navController.navigate(ConectionInternetNavigation.DetailArduino(arduinoName).createRoute( arduinoName ))
             },
             goToAddArduino = {
                 navController.navigate(ConectionInternetNavigation.AddArduino.route)
             },
+
+            valueScroll = valueScroll,
+
 
             viewModel = viewModel,
         )
@@ -45,6 +50,8 @@ fun NavGraphBuilder.conectionInternetGraph(
         )
     ) { backStackEntry ->
         val arduinoName = backStackEntry.arguments?.getString(ARDUINO_NAME_ARG) ?: ""
+
+
         val viewModel: DetailArduinoViewModel = koinViewModel()
         DetailArduinoScreen(
             arduinoName = arduinoName,
