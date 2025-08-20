@@ -13,7 +13,7 @@ data object ConectionLocal
 
 fun NavGraphBuilder.conectionLocalRoute(popBackStack: () -> Unit) {
 
-    composable <ConectionLocal> {
+    composable("conectionLocal") {
 
         val viewModel: ConectionLocalViewModel = koinViewModel()
 

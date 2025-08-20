@@ -14,6 +14,7 @@ data class StateObject(
 data class ArduinoData(
 
     var nameArduino: String? = null,
+    var active: Boolean = true,
     var objetos: Map<String, StateObject>? = emptyMap()
 )
 

@@ -47,6 +47,7 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.ui.core)
+            implementation(projects.domain.conectionInternet)
 
             //KOIN
             implementation(project.dependencies.platform(libs.koin.bom))

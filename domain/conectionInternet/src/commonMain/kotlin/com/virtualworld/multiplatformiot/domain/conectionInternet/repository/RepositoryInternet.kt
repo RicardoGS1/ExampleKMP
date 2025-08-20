@@ -16,4 +16,6 @@ interface RepositoryInternet {
 
     suspend fun addArduino(arduino: ArduinoDomain)
 
+    fun getArduinoActivate (usuario: String) : Flow<NetworkResponseState<List<ArduinoData>>>
+
 }

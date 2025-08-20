@@ -95,7 +95,7 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
 
         // (Opcional) Guarda datos generales del Arduino
-        arduinoRef.set( mapOf("name" to arduino.name!!))
+        arduinoRef.set( mapOf("name" to arduino.name!!,"active" to arduino.active))
 
 
 
@@ -114,4 +114,6 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
             objetoRef.set(data)
         }
     }
+
+
 }
