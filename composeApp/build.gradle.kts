@@ -90,6 +90,7 @@ kotlin {
 
             implementation(projects.feature.conectionLocal)
             implementation(projects.feature.conectionInternet)
+            implementation(projects.feature.connectionBluetooth)
             implementation(projects.feature.menu)
 
             implementation(projects.data.conectionInternet)
