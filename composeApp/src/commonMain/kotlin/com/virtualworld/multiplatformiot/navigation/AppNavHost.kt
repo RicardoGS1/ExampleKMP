@@ -45,7 +45,8 @@ fun AppNavHost(
         )
 
         connectionBluetoothGraph(
-            navController = navController
+            navController = navController,
+            valueScroll = valueScroll
         )
 
     }
