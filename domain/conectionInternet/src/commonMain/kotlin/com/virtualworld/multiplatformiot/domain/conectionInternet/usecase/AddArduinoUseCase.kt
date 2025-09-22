@@ -1,7 +1,7 @@
 package com.virtualworld.multiplatformiot.domain.conectionInternet.usecase
 
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.StateObjectDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
 
 class AddArduinoUseCase(private val repositoryInternet: RepositoryInternet) {
