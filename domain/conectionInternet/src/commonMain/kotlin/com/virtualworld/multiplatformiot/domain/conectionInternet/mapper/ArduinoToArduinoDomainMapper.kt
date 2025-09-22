@@ -2,8 +2,8 @@ package com.virtualworld.multiplatformiot.domain.conectionInternet.mapper
 
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.StateObjectDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 
 fun ArduinoData.mapperToDomain(): ArduinoDomain {
 
