@@ -1,23 +1,16 @@
 package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoUseCase
-import com.virtualworld.multiplatformiot.feature.conectionInternet.models.ArduinosState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.toMap
-import kotlin.collections.toMutableMap
 
 
 class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) : ViewModel() {
