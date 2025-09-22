@@ -94,6 +94,7 @@ kotlin {
             implementation(projects.feature.menu)
 
             implementation(projects.data.conectionInternet)
+            implementation(projects.data.connectionBluetooth)
             implementation(projects.data.conectionLocal)
 
             //UI CORE

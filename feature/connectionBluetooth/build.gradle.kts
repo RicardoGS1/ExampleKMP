@@ -40,14 +40,16 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
-
-
+            // Android Bluetooth dependencies
+          //  implementation(libs.android.bluetooth)
+            implementation(libs.androidx.core.ktx)
         }
 
         commonMain.dependencies {
 
             implementation(projects.ui.core)
-            implementation(projects.domain.conectionInternet)
+            implementation(projects.domain.connectionBluetooth)
+
 
             //KOIN
             implementation(project.dependencies.platform(libs.koin.bom))

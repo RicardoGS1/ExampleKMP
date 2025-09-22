@@ -14,7 +14,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "DomainConectionsInternet"
+            baseName = "DomainCore"
             isStatic = true
         }
     }
@@ -22,9 +22,6 @@ kotlin {
     sourceSets {
 
         commonMain.dependencies {
-
-            implementation(projects.data.core)
-            implementation(projects.domain.core)
 
             implementation(libs.kotlinx.coroutines.core)
 

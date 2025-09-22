@@ -45,6 +45,8 @@ kotlin {
 
         commonMain.dependencies {
 
+            api(projects.domain.core)
+
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)

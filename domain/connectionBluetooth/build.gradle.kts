@@ -14,7 +14,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "DomainConectionsInternet"
+            baseName = "DomainConnectionBluetooth"
             isStatic = true
         }
     }
