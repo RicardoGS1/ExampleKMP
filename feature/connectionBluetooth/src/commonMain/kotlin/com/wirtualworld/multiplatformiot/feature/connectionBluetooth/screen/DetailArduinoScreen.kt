@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
+package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,27 +10,32 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.virtualworld.multiplatformiot.ui.core.component.ArduinoDetailContent
 import com.virtualworld.multiplatformiot.ui.core.component.TopBarMenuDetail
 
 @Composable
-fun DetailArduinoScreen(
+fun DetailArduinoScreenu(
     arduinoName: String,
+    arduinoAddress: String,
     popBackStack: () -> Unit,
-    viewModel: DetailArduinoViewModel
+    viewModel: DetailArduinoViewModelB
 ) {
-    val arduinoDetail by viewModel.arduinosState.collectAsState()
 
-    LaunchedEffect(arduinoName) {
-        viewModel.getArduino(arduinoName)
+
+    val arduinoDetail by viewModel.arduinosState.collectAsStateWithLifecycle()
+    val updateState = { numberState: String -> viewModel.updateState(numberState,arduinoAddress) }
+
+    println("mmm${arduinoDetail}")
+
+
+
+    LaunchedEffect(arduinoAddress) {
+        viewModel.getArduino(arduinoAddress)
     }
-
-    val updateState = { keyState: String -> viewModel.updateState(keyState) }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-
-        // TopBarCanva(ArcoState.CloseArc(140.dp) )
 
         Box(modifier = Modifier.fillMaxWidth().padding(top = 32.dp)) {
             TopBarMenuDetail(popBackStack, arduinoName)
@@ -41,3 +46,10 @@ fun DetailArduinoScreen(
 
     }
 }
+
+
+
+
+
+
+

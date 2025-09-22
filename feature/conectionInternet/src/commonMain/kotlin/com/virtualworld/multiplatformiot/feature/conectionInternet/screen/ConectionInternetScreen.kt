@@ -27,11 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
-import com.virtualworld.multiplatformiot.feature.conectionInternet.models.ArduinosState
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.component.ButtonBack
 import com.virtualworld.multiplatformiot.ui.core.component.ListViewArduino
+import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 
 @Composable
 fun ConectionInternetScreen(
