@@ -136,6 +136,9 @@ android-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", v
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 gitlive-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
 
+#ANDROID BLUETOOTH
+android-bluetooth = { group = "android.bluetooth", name = "bluetooth", version = "1.0.0" }
+
 
 
 
