@@ -1,3 +1,4 @@
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,7 +7,7 @@ plugins {
 
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.googleServices)
+   // alias(libs.plugins.googleServices)
 
 }
 
@@ -15,7 +16,7 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -30,10 +31,16 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
 
     sourceSets {
+
+        val desktopMain by getting
 
         androidMain.dependencies {
 
@@ -68,14 +75,22 @@ kotlin {
             implementation(libs.kotlinx.serialization)
         }
 
+        desktopMain.dependencies {
 
-        androidUnitTest.dependencies {
-            implementation(libs.junit)
-            implementation(libs.mockk)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.androidx.arch.core.testing)
-            implementation(libs.kotlin.test)
+
+
+
         }
+
+
+
+//        androidUnitTest.dependencies {
+//            implementation(libs.junit)
+//            implementation(libs.mockk)
+//            implementation(libs.kotlinx.coroutines.test)
+//            implementation(libs.androidx.arch.core.testing)
+//            implementation(libs.kotlin.test)
+//        }
 
 
     }

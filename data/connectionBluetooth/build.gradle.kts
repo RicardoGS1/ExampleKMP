@@ -18,7 +18,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -33,16 +33,27 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
 
 
     sourceSets {
 
         androidMain.dependencies {
-           // implementation(libs.android.bluetooth)
+            // implementation(libs.android.bluetooth)
             implementation(libs.androidx.core.ktx)
         }
+
+        val desktopMain by getting
+
+        desktopMain.dependencies {
+                implementation("com.fazecast:jSerialComm:2.10.4")
+            }
+
 
         commonMain.dependencies {
 
@@ -55,8 +66,6 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
         }
-
-
 
 
     }
