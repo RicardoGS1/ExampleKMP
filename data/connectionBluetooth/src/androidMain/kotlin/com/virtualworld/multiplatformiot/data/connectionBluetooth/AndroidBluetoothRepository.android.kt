@@ -20,17 +20,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import org.koin.mp.KoinPlatform.getKoin
+import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.io.OutputStream
 import java.util.UUID
 
@@ -66,17 +64,13 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
         return withContext(Dispatchers.IO) {
 
-
             if (!hasBluetoothPermission()) {
                 return@withContext emptyList()
             }
 
-
             val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
 
             val devices = mutableListOf<BluetoothDeviceDomain>()
-
-
 
 
             pairedDevices?.forEach { device ->
@@ -89,7 +83,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                 )
             }
 
-             devices
+            devices
 
         }
     }
@@ -98,7 +92,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     actual override suspend fun connectToDevice(address: String): ResponseState<Boolean> {
 
-      return  withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 // Verificar permisos
                 if (!hasBluetoothPermission()) {
@@ -109,7 +103,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                 if (!isBluetoothEnabled()) {
                     return@withContext ResponseState.Error(Exception("Bluetooth is not enabled"))
                 }
-                println("intentandoconectar con direccion")
+
                 // Obtener el dispositivo por dirección
                 val device = bluetoothAdapter?.getRemoteDevice(address)
                     ?: return@withContext ResponseState.Error(Exception("Device not found"))
@@ -195,7 +189,14 @@ actual class ImplBluetoothRepository : BluetoothRepository {
             // El Arduino solo responde cuando se le pregunta:
             sendCommand("GET_STATES\n")
 
-            val states = readArduinoStates() // Tu función de lectura existente
+            println("4")
+
+
+
+            val states = readArduinoStates(inputStream) // Tu función de lectura existente
+
+            println("6")
+
 
             val arduinoDomain = ArduinoDomain(
                 name = currentObservingArduinoName, active = true, state1 = states
@@ -213,10 +214,6 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                 )
             )
 
-        } catch (e: Exception) {
-            // Otros errores
-            // closeConnection() // Considera las implicaciones
-            ResponseState.Error(e)
         }
     }
 
@@ -231,79 +228,167 @@ actual class ImplBluetoothRepository : BluetoothRepository {
             } catch (e: IOException) {
                 throw Exception("Error sending command: ${e.message}")
             }
+            println("3")
         }
     }
 
+    private fun readArduinoStates(inputStream: InputStream?): Map<String, StateObjectDomain> {
 
-    private fun readArduinoStates(): Map<String, StateObjectDomain> {
+        if (inputStream == null) return emptyMap()
+
+        // 1. Envolver el InputStream para lectura de líneas
+        // Usamos InputStreamReader para manejar la codificación de caracteres (UTF-8 es común)
+        // y BufferedReader para el método readLine()
+        val reader = BufferedReader(InputStreamReader(inputStream))
         val states = mutableMapOf<String, StateObjectDomain>()
-        val response = StringBuilder()
+        var readingStates = false // Bandera para saber si estamos dentro de la sección
+        val timeout = 5000L // 5 segundos de timeout
+        val startTime = System.currentTimeMillis()
 
         try {
-            // Leer respuesta línea por línea con timeout
-            val buffer = ByteArray(1024)
-            var bytesRead: Int
-            var timeout = 5000 // 5 segundos de timeout
-            var startTime = System.currentTimeMillis()
+            // 2. Bucle principal de lectura línea por línea
+            while (System.currentTimeMillis() - startTime < timeout) {
+                // readLine() es un método bloqueante, pero es el más fiable
+                // para datos basados en texto con delimitadores de línea (\n).
+                // Lo hacemos no-bloqueante comprobando primero si hay datos.
 
-            // Esperar a que llegue la respuesta completa
-            Thread.sleep(500) // Dar tiempo al Arduino para responder
+               println (inputStream.available())
+                if (inputStream.available() > 0 || readingStates) {
+                    val line = reader.readLine() // Esto bloqueará hasta que haya una línea completa o timeout (depende de la implementación subyacente)
 
-            while ((inputStream?.available()
-                    ?: 0) > 0 || (System.currentTimeMillis() - startTime) < timeout
-            ) {
-                if (inputStream?.available() ?: 0 > 0) {
-                    bytesRead = inputStream?.read(buffer) ?: 0
-                    if (bytesRead > 0) {
-                        response.append(String(buffer, 0, bytesRead))
-                        startTime =
-                            System.currentTimeMillis() // Reset timeout cuando recibimos datos
+                    println((inputStream.available() > 0).toString() + "j" + "" + readingStates)
+
+                    if (line == null) {
+                        // Si readLine devuelve null, la conexión se cerró inesperadamente
+                        throw IOException("Connection closed while reading.")
                     }
-                } else {
-                    Thread.sleep(100) // Pequeña pausa para no saturar la CPU
-                }
-            }
 
-            // Parsear la respuesta
-            val responseText = response.toString()
-            println("Arduino response: $responseText")
+                    val trimmedLine = line.trim()
+                    println("Received line: $trimmedLine") // Log de depuración
 
-            // Buscar la sección de estados actuales
-            val startIndex = responseText.indexOf("CURRENT_STATES")
-            val endIndex = responseText.indexOf("END_CURRENT_STATES")
+                    when (trimmedLine) {
+                        "CURRENT_STATES" -> {
+                            readingStates = true
+                            continue // Saltar al inicio del bucle
+                        }
+                        "END_CURRENT_STATES" -> {
+                            readingStates = false
+                            break // Hemos terminado de leer, salir del bucle while
+                        }
+                        else -> {
+                            // 3. Parsing de la línea si estamos dentro de la sección
+                            if (readingStates && trimmedLine.contains("state") && trimmedLine.contains(":")) {
+                                val parts = trimmedLine.split(":")
+                                if (parts.size == 2) {
+                                    val stateName = parts[0].trim()
+                                    // Asegúrate de manejar el caso donde Arduino puede enviar caracteres extra
+                                    val stateValue = parts[1].trim().toIntOrNull()
 
-            if (startIndex != -1 && endIndex != -1) {
-                val statesSection = responseText.substring(startIndex, endIndex)
-                val lines = statesSection.split("\n")
-
-                for (line in lines) {
-                    if (line.contains("state") && line.contains(":")) {
-                        val parts = line.split(":")
-                        if (parts.size == 2) {
-                            val stateName = parts[0].trim()
-                            val stateValue = parts[1].trim().toIntOrNull()
-
-                            if (stateValue != null) {
-                                states[stateName] = StateObjectDomain(
-                                    nombre = stateName, //state1
-                                    estado = stateValue == 1
-                                )
+                                    if (stateValue != null) {
+                                        states[stateName] = StateObjectDomain(
+                                            nombre = stateName,
+                                            estado = stateValue == 1
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
+                } else {
+                    // Si no hay datos, esperamos un poco y comprobamos el timeout
+                    Thread.sleep(50)
                 }
-            } else {
-
-                throw Exception("Error de formato")
-
             }
 
+            if (readingStates) {
+                // Esto significa que el timeout ocurrió antes de recibir END_CURRENT_STATES
+                throw Exception("Timeout: END_CURRENT_STATES not received.")
+            }
+
+
         } catch (e: IOException) {
-            throw Exception("Error reading Arduino response: ${e.message}")
+            throw Exception("Error de lectura/conexión: ${e.message}")
+        } catch (e: Exception) {
+            throw e // Relanzar cualquier otro error de parsing o timeout
         }
 
+        println("Parsing complete. Read ${states.size} states.")
         return states
     }
+
+
+//    private fun readArduinoStates(): Map<String, StateObjectDomain> {
+//        val states = mutableMapOf<String, StateObjectDomain>()
+//        val response = StringBuilder()
+//
+//        try {
+//            // Leer respuesta línea por línea con timeout
+//            val buffer = ByteArray(1024)
+//            var bytesRead: Int
+//            var timeout = 5000 // 5 segundos de timeout
+//            var startTime = System.currentTimeMillis()
+//
+//            // Esperar a que llegue la respuesta completa
+//            Thread.sleep(500) // Dar tiempo al Arduino para responder
+//
+//            //(inputStream?.available() ?: 0) > 0 ||
+//
+//            while (
+//                (System.currentTimeMillis() - startTime) < timeout
+//            ) {
+//                if (inputStream?.available() ?: 0 > 0) {
+//                    bytesRead = inputStream?.read(buffer) ?: 0
+//                    if (bytesRead > 0) {
+//                        response.append(String(buffer, 0, bytesRead))
+//                        startTime =
+//                            System.currentTimeMillis() // Reset timeout cuando recibimos datos
+//                    }
+//                } else {
+//                    Thread.sleep(100) // Pequeña pausa para no saturar la CPU
+//                }
+//            }
+//
+//            // Parsear la respuesta
+//            val responseText = response.toString()
+//            println("Arduino response: $responseText")
+//
+//            // Buscar la sección de estados actuales
+//            val startIndex = responseText.indexOf("CURRENT_STATES")
+//            val endIndex = responseText.indexOf("END_CURRENT_STATES")
+//
+//            if (startIndex != -1 && endIndex != -1) {
+//                val statesSection = responseText.substring(startIndex, endIndex)
+//                val lines = statesSection.split("\n")
+//
+//                for (line in lines) {
+//                    if (line.contains("state") && line.contains(":")) {
+//                        val parts = line.split(":")
+//                        if (parts.size == 2) {
+//                            val stateName = parts[0].trim()
+//                            val stateValue = parts[1].trim().toIntOrNull()
+//
+//                            if (stateValue != null) {
+//                                states[stateName] = StateObjectDomain(
+//                                    nombre = stateName, //state1
+//                                    estado = stateValue == 1
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            } else {
+//
+//                throw Exception("Error de formato")
+//
+//            }
+//
+//        } catch (e: IOException) {
+//            throw Exception("Error reading Arduino response: ${e.message}")
+//        }
+//
+//        println("5")
+//        return states
+//    }
 
 
     private fun closeConnection() {

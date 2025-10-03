@@ -15,11 +15,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -106,7 +108,13 @@ fun ConnectionBluetoothScreen(
 
             when (arduinos) {
                 is ArduinosState.Error -> {
-                    Text((arduinos as ArduinosState.Error).exception.message.toString())
+                    Column(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally) {
+                        Text((arduinos as ArduinosState.Error).exception.message.toString())
+                        IconButton( onClick = { viewModel.loadPairedDevices() } ) {
+                            Icon(Icons.Default.Refresh, contentDescription = "Refrescar")
+                        }
+                    }
+
                 }
 
                 is ArduinosState.Loading -> {
@@ -119,13 +127,6 @@ fun ConnectionBluetoothScreen(
                         (arduinos as ArduinosState.Success<List<BluetoothDeviceDomain>>).arduinos.map {
                             it.name.toString() to it.isConnected
                         }
-
-                    val completeGoToDetailArduino = {
-
-                    }
-
-
-
 
                     ListViewArduino(
                         arduinos = pairNameState,

@@ -24,7 +24,7 @@ class ConnectionBluetoothViewModel(
         loadPairedDevices()
     }
 
-    private fun loadPairedDevices() {
+    fun loadPairedDevices() {
         viewModelScope.launch {
 
             val devices = getPairedDevicesUseCase()
@@ -42,7 +42,4 @@ class ConnectionBluetoothViewModel(
         }
     }
 
-    fun refreshDevices() {
-        loadPairedDevices()
-    }
 }

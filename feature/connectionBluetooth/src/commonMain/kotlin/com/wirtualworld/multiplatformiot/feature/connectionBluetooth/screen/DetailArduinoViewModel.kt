@@ -42,6 +42,8 @@ class DetailArduinoViewModelB(
 
                     if (arduinoConnect.result) {
 
+                        println("kkkkk+"+arduinoConnect.result)
+
                         getArduinoUseCase.getArduino().collect { responseArduinoDetail ->
 
                             _arduinosState.value = ArduinosState.Loading

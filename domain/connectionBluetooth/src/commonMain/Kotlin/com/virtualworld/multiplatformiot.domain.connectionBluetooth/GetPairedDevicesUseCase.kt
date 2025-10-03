@@ -8,30 +8,26 @@ class GetPairedDevicesUseCase(
 
         return try {
 
-            val bluetoothDeviceDomainFilter = bluetoothRepository.getPairedDevices()
-                .filter {
-                    it.name.startsWith("Arduino", ignoreCase = true)
+            val allPairedDevices = bluetoothRepository.getPairedDevices()
 
-                }
+            if (allPairedDevices.isEmpty()) {
+                return ResponseState.Error(Exception("No se encontraron dispositivos Bluetooth emparejados. Verifique el permiso bluetooth."))
+            }
 
-            ResponseState.Success(bluetoothDeviceDomainFilter)
+            val filteredDevices = allPairedDevices.filter {
+                it.name.startsWith("Arduino", ignoreCase = true) ||
+                        it.name.startsWith("desktop", ignoreCase = true) ||
+                        it.name.contains("hc-05", ignoreCase = true)
+            }
+
+            if (filteredDevices.isEmpty()) {
+                return ResponseState.Error(Exception("Ninguno de los dispositivos emparejados es compatible."))
+            }
+
+            ResponseState.Success(filteredDevices)
 
         } catch (e: Exception) {
-
             ResponseState.Error(e)
-
         }
-
-//        return ResponseState.Success(
-//            listOf(
-//                BluetoothDeviceDomain("Arduino Uno", "00:11:22:AA:BB:CC"),
-//                BluetoothDeviceDomain("My Phone", "11:22:33:DD:EE:FF"),
-//                BluetoothDeviceDomain("arduino_mega", "22:33:44:GG:HH:II"),
-//                BluetoothDeviceDomain("Headphones", "33:44:55:JJ:KK:LL"),
-//                BluetoothDeviceDomain("ARDUINO NANO", "44:55:66:MM:NN:OO")
-//            )
-//        )
-
-
     }
 } 
