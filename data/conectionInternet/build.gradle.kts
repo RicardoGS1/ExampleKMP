@@ -57,6 +57,9 @@ kotlin {
             implementation(projects.domain.conectionInternet)
             implementation(projects.domain.core)
 
+            api(libs.ktor.client.core)
+            api("io.ktor:ktor-http:2.3.11")
+
 
             implementation(libs.kotlinx.coroutines.core)
 
@@ -65,7 +68,6 @@ kotlin {
 
             //NETWORK
             implementation(project.dependencies.platform(libs.ktor.bom))
-            implementation(libs.ktor.client.core)
             implementation(libs.coil.network.ktor)
 
 

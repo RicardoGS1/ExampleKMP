@@ -61,6 +61,8 @@ kotlin {
             implementation(projects.domain.connectionBluetooth)
             implementation(projects.domain.core)
 
+            api("io.ktor:ktor-http:2.3.11")
+
             implementation(libs.kotlinx.coroutines.core)
 
             implementation(project.dependencies.platform(libs.koin.bom))

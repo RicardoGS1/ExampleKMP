@@ -6,8 +6,9 @@ import androidx.compose.ui.window.application
 import com.google.firebase.FirebasePlatform
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseOptions
+import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.initialize
-
+import org.koin.core.component.getScopeId
 
 fun main() = application {
 
@@ -33,12 +34,16 @@ fun main() = application {
         apiKey = "AIzaSyBqVQi5_zsr88KTKG4N9QcQ5GAsslD_Esc",
     )
 
-    Firebase.initialize(Application(), options)
 
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "MultiplatformIoT",
-    ) {
+    try {
+        Firebase.initialize(Application(),options =  options)
+
+    } catch (e: Throwable) {
+        println("Error al iniciar GitLive Firebase para desktop: ${e.message}")
+        e.printStackTrace() // ¡ESENCIAL para la depuración!
+    }
+
+    Window(onCloseRequest = ::exitApplication, title = "MultiplatformIoT") {
         App()
     }
 }

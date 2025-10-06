@@ -59,7 +59,7 @@ internal fun MenuScreen(
             when (arduinoActiveInternet) {
                 is StateScreenMenu.Error -> {}
                 is StateScreenMenu.Loading -> {}
-                is StateScreenMenu.Success<*> -> {
+                is StateScreenMenu.Success -> {
 
                     val activate = arduinoActiveInternet as StateScreenMenu.Success
 
