@@ -33,9 +33,16 @@ include(":ui:core")
 
 include(":data:core")
 include(":data:conectionLocal")
+include(":data:conectionInternet")
+include(":data:connectionBluetooth")
+
 include(":domain:conectionLocal")
 include(":domain:conectionInternet")
+include(":domain:connectionBluetooth")
+include(":domain:core")
+
 include(":feature:conectionLocal")
 include(":feature:menu")
 include(":feature:conectionInternet")
-include(":data:conectionInternet")
+include(":feature:connectionBluetooth")
+

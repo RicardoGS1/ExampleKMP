@@ -1,6 +1,4 @@
-package com.virtualworld.multiplatformiot.feature.conectionInternet.models
-
-
+package com.virtualworld.multiplatformiot.ui.core.models
 
 sealed class ArduinosState<out T> {
 

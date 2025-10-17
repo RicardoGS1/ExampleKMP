@@ -4,7 +4,10 @@ import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class GetArduinoActivateUseCase (private val repositoryInternet: RepositoryInternet) {
@@ -29,7 +32,7 @@ class GetArduinoActivateUseCase (private val repositoryInternet: RepositoryInter
 
             }
 
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
 

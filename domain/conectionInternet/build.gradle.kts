@@ -6,7 +6,11 @@ plugins {
 
 kotlin {
 
-    jvm()
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
     listOf(
         iosX64(),
@@ -24,6 +28,7 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.data.core)
+            implementation(projects.domain.core)
 
             implementation(libs.kotlinx.coroutines.core)
 

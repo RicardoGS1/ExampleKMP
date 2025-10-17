@@ -3,7 +3,7 @@ package com.virtualworld.conectioninternet.data.conectionInternet
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
 import kotlinx.coroutines.flow.Flow
 

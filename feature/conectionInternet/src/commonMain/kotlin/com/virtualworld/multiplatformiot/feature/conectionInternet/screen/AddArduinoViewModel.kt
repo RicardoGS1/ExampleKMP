@@ -3,7 +3,7 @@ package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.AddArduinoUseCase
-import com.virtualworld.multiplatformiot.feature.conectionInternet.models.ArduinosState
+import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

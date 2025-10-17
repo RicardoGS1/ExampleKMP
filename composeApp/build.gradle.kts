@@ -1,17 +1,14 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlin.serialization)
 
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     id("com.google.gms.google-services")
     //libs.plugins.googleServices
@@ -23,7 +20,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -38,7 +35,11 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop") {
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
 //    @OptIn(ExperimentalWasmDsl::class)
 //    wasmJs {
@@ -90,10 +91,14 @@ kotlin {
 
             implementation(projects.feature.conectionLocal)
             implementation(projects.feature.conectionInternet)
+            implementation(projects.feature.connectionBluetooth)
             implementation(projects.feature.menu)
 
             implementation(projects.data.conectionInternet)
+            implementation(projects.data.connectionBluetooth)
             implementation(projects.data.conectionLocal)
+
+            implementation(libs.kotlinx.coroutines.core)
 
             //UI CORE
 
@@ -123,7 +128,7 @@ kotlin {
 
             //FIREBASE
             implementation(libs.gitlive.firebase.firestore)
-
+           // implementation(libs.firebase.app)
 
 
         }
@@ -148,6 +153,22 @@ kotlin {
 
             implementation(libs.kstore.file)
 
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+
+            // FIREBASE JVM support for Desktop
+            implementation(libs.firebase.java.sdk)
+
+            // SQLite JDBC nativo para Firestore (persistencia)
+            implementation("org.xerial:sqlite-jdbc:3.45.3.0")
+
+           // implementation("com.google.firebase:firebase-admin:9.2.0")
+
+            // Logging binding for SLF4J (prevents 'No SLF4J providers were found')
+           // runtimeOnly("org.slf4j:slf4j-simple:2.0.13")
+
+            // Optional: Conscrypt for improved TLS/ALPN with gRPC (prevents 'Unable to find Conscrypt')
+            // implementation("org.conscrypt:conscrypt-openjdk-uber:2.5.2")
         }
 
 
@@ -202,10 +223,26 @@ compose.desktop {
     application {
         mainClass = "com.virtualworld.multiplatformiot.MainKt"
 
+        // Asegurar disponibilidad de java.management y java.sql en runtime
+        jvmArgs += listOf(
+            "--add-modules=java.management,java.sql",
+            "--enable-native-access=ALL-UNNAMED"
+        )
+
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.virtualworld.multiplatformiot"
             packageVersion = "1.0.0"
+
+            macOS {
+                bundleID =
+                    "com.virtualworld.multiplatformiot.desktop" // ID único del bundle para macOS
+                // Opcional: Especificar icono
+                // iconFile.set(project.file("src/desktopMain/resources/icon.icns"))
+            }
+
+            // Incluir módulos en la imagen de runtime
+            modules("java.management", "java.sql","jdk.unsupported")
         }
     }
 }

@@ -1,3 +1,4 @@
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,7 +7,7 @@ plugins {
 
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.googleServices)
+   // alias(libs.plugins.googleServices)
 
 }
 
@@ -15,7 +16,7 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -30,10 +31,16 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
 
     sourceSets {
+
+        val desktopMain by getting
 
         androidMain.dependencies {
 
@@ -48,6 +55,10 @@ kotlin {
 
             implementation(projects.data.core)
             implementation(projects.domain.conectionInternet)
+            implementation(projects.domain.core)
+
+            api(libs.ktor.client.core)
+            api("io.ktor:ktor-http:2.3.11")
 
 
             implementation(libs.kotlinx.coroutines.core)
@@ -57,7 +68,6 @@ kotlin {
 
             //NETWORK
             implementation(project.dependencies.platform(libs.ktor.bom))
-            implementation(libs.ktor.client.core)
             implementation(libs.coil.network.ktor)
 
 
@@ -67,14 +77,22 @@ kotlin {
             implementation(libs.kotlinx.serialization)
         }
 
+        desktopMain.dependencies {
 
-        androidUnitTest.dependencies {
-            implementation(libs.junit)
-            implementation(libs.mockk)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.androidx.arch.core.testing)
-            implementation(libs.kotlin.test)
+
+
+
         }
+
+
+
+//        androidUnitTest.dependencies {
+//            implementation(libs.junit)
+//            implementation(libs.mockk)
+//            implementation(libs.kotlinx.coroutines.test)
+//            implementation(libs.androidx.arch.core.testing)
+//            implementation(libs.kotlin.test)
+//        }
 
 
     }
