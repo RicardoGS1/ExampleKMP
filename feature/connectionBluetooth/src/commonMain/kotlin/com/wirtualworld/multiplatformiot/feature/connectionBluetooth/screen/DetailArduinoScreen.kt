@@ -26,9 +26,6 @@ fun DetailArduinoScreenu(
     val arduinoDetail by viewModel.arduinosState.collectAsStateWithLifecycle()
     val updateState = { numberState: String -> viewModel.updateState(numberState,arduinoAddress) }
 
-    println("mmm${arduinoDetail}")
-
-
 
     LaunchedEffect(arduinoAddress) {
         viewModel.getArduino(arduinoAddress)

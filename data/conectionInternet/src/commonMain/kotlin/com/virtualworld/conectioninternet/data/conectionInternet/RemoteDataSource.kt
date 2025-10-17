@@ -7,35 +7,83 @@ import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
 
-    fun getAllArduino(usuario: String): Flow<NetworkResponseState<List<ArduinoData>>> = flow {
-        try {
+//    fun getAllArduino(usuario: String): Flow<NetworkResponseState<List<ArduinoData>>> = flow {
+//        try {
+//
+//            emit(NetworkResponseState.Loading)
+//
+//            firestore.collection("usuarios").document(usuario)
+//                .collection("arduinos").snapshots.collect { querySnapshot ->
+//
+//                    val listArduino = querySnapshot.documents.map { documentSnapshot ->
+//                        documentSnapshot.data<ArduinoData>().copy(nameArduino = documentSnapshot.id)
+//                    }
+//
+//                    println(listArduino)
+//
+//                    if (listArduino.isEmpty()) {
+//                        throw ProductEmptyException()
+//                    } else {
+//                        emit(NetworkResponseState.Success(listArduino))
+//                    }
+//                }
+//
+//        } catch (e: Exception) {
+//            emit(NetworkResponseState.Error(e))
+//        }
+//    }
 
-            emit(NetworkResponseState.Loading)
+    fun getAllArduino(usuario: String): Flow<NetworkResponseState<List<ArduinoData>>> {
 
-            firestore.collection("usuarios").document(usuario)
-                .collection("arduinos").snapshots.collect { querySnapshot ->
+        val a = firestore.collection("usuarios").document(usuario)
 
-                    val listArduino = querySnapshot.documents.map { documentSnapshot ->
-                        documentSnapshot.data<ArduinoData>().copy(nameArduino = documentSnapshot.id)
-                    }
+        println(a)
 
-                    println(listArduino)
+       // return flow {  emit( NetworkResponseState.Loading )}
 
-                    if (listArduino.isEmpty()) {
-                        throw ProductEmptyException()
-                    } else {
-                        emit(NetworkResponseState.Success(listArduino))
-                    }
+        return firestore.collection("usuarios").document(usuario)
+            .collection("arduinos")
+            .snapshots // Esto ya es un Flow<QuerySnapshot>
+            .map { querySnapshot -> // Transforma cada emisión del QuerySnapshot
+                val listArduino = querySnapshot.documents.map { documentSnapshot ->
+                    documentSnapshot.data<ArduinoData>().copy(nameArduino = documentSnapshot.id)
                 }
+                println("Desde snapshots.map: $listArduino")
+                if (listArduino.isEmpty()) {
+                    // Opción 1: Emitir un estado de éxito con lista vacía
+                    // NetworkResponseState.Success(emptyList<ArduinoData>())
+                    // Opción 2: O si quieres tratar "vacío" como un caso especial que podría ser un error o estado diferente
+                    throw ProductEmptyException() // Esto será capturado por .catch
+                } else {
+                    NetworkResponseState.Success(listArduino)
+                }
+            }
 
-        } catch (e: Exception) {
-            emit(NetworkResponseState.Error(e))
-        }
+
+
+
+
+            //.onStart {  emit(NetworkResponseState.Loading) } // Emitir Loading al inicio de la recolección de este Flow
+//            .catch { e -> // Capturar excepciones de la transformación o del Flow de snapshots
+//                if (e is ProductEmptyException) {
+//                    // Puedes manejar ProductEmptyException de forma diferente si quieres
+//                    // Por ejemplo, emitir un estado específico para "vacío" o el error como está
+//                    emit(NetworkResponseState.Error(e)) // O un estado específico: NetworkResponseState.Empty
+//                } else {
+//                    emit(NetworkResponseState.Error(e))
+//                }
+//            }
+        // Opcionalmente, puedes añadir .flowOn(Dispatchers.IO) si la librería de Firestore
+        // no garantiza que las callbacks/emisiones del snapshot ocurran en un hilo de fondo.
+        // GitLive Firebase suele manejar esto bien.
     }
 
     fun getArduino(usuario: String, name: String): Flow<NetworkResponseState<ArduinoData>> = flow {

@@ -42,23 +42,24 @@ class DetailArduinoViewModelB(
 
                     if (arduinoConnect.result) {
 
-                        println("kkkkk+"+arduinoConnect.result)
+                        println("kkkkk+" + arduinoConnect.result)
+
+                        _arduinosState.value = ArduinosState.Loading
 
                         getArduinoUseCase.getArduino().collect { responseArduinoDetail ->
-
-                            _arduinosState.value = ArduinosState.Loading
 
 
                             when (responseArduinoDetail) {
                                 is ResponseState.Error -> {
-                                    ArduinosState.Error(responseArduinoDetail.exception)
+                                    _arduinosState.value = ArduinosState.Error(responseArduinoDetail.exception)
                                 }
 
                                 is ResponseState.Success<ArduinoDomain> -> {
-                                    _arduinosState.value =
-                                        ArduinosState.Success(responseArduinoDetail.result)
 
-                                    println("vm${arduinosState.value}")
+                                    _arduinosState.value = ArduinosState.Success(responseArduinoDetail.result)
+
+
+                                    println("vnm${_arduinosState.value}")
                                 }
                             }
 

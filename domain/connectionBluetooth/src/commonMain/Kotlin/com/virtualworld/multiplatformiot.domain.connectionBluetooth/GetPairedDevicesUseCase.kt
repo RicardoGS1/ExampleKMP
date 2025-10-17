@@ -20,11 +20,11 @@ class GetPairedDevicesUseCase(
                         it.name.contains("hc-05", ignoreCase = true)
             }
 
-            if (filteredDevices.isEmpty()) {
-                return ResponseState.Error(Exception("Ninguno de los dispositivos emparejados es compatible."))
-            }
+//            if (filteredDevices.isEmpty()) {
+//                return ResponseState.Error(Exception("Ninguno de los dispositivos emparejados es compatible."))
+//            }
 
-            ResponseState.Success(filteredDevices)
+            ResponseState.Success(allPairedDevices)
 
         } catch (e: Exception) {
             ResponseState.Error(e)
