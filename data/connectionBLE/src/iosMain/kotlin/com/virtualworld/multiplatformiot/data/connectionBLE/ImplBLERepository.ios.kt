@@ -1,7 +1,7 @@
-package com.virtualworld.multiplatformiot.data.connectionBluetooth
+package com.virtualworld.multiplatformiot.data.connectionBLE
 
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothDeviceDomain
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothRepository
+import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BLEDeviceDomain
+import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BLERepository
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
 import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
@@ -43,7 +43,7 @@ import platform.darwin.NSObject
 import platform.darwin.dispatch_get_main_queue
 
 
-actual class ImplBluetoothRepository : BluetoothRepository {
+actual class ImplBLERepository : BLERepository {
 
     // CoroutineScope para gestionar las operaciones en segundo plano.
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -76,7 +76,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
     // --- IMPLEMENTACIÓN DE getPairedDevices ---
 
-    actual override suspend fun getPairedDevices(): List<BluetoothDeviceDomain> {
+    actual override suspend fun getPairedDevices(): List<BLEDeviceDomain> {
 
         // Verifico que el Bluetooth esté encendido.
         if (centralManager.state != CBManagerStatePoweredOn) {
@@ -86,14 +86,14 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         }
 
         // Deferred que se completará cuando el escaneo termine.
-        val scanCompletable = CompletableDeferred<List<BluetoothDeviceDomain>>()
+        val scanCompletable = CompletableDeferred<List<BLEDeviceDomain>>()
 
-        val discoveredDevices = mutableSetOf<BluetoothDeviceDomain>()
+        val discoveredDevices = mutableSetOf<BLEDeviceDomain>()
 
         //collect in ios
         // Asignamos una función al delegado para que nos notifique cuando encuentre un dispositivo.
         bluetoothDelegate.onPeripheralDiscovered = { peripheral ->
-            val device = BluetoothDeviceDomain(
+            val device = BLEDeviceDomain(
                 name = peripheral.name ?: "Dispositivo Desconocido",
                 address = peripheral.identifier.UUIDString // La dirección en iOS es el UUID del periférico.
             )
@@ -171,7 +171,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         // 1. Verificamos que estamos conectados a un periférico
         val peripheral = connectedPeripheral ?: run {
             emit(ResponseState.Error(Exception("No hay ningún periférico conectado.")))
-           // close()
+            // close()
             return@flow
         }
 
