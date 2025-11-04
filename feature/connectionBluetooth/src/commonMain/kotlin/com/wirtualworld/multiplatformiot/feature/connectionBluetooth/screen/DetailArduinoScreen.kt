@@ -1,4 +1,4 @@
-package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic
+package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,19 +1,19 @@
-package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic
+package com.wirtualworld.multiplatformiot.feature.connectionBLE.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ConnectToArduinoUseCase
+import com.virtualworld.connectionBLE.ConnectToArduinoUseCase
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.GetArduinoUseCase
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.SetChangerStateUseCase
+import com.virtualworld.connectionBLE.GetArduinoUseCase
+import com.virtualworld.connectionBLE.ResponseState
+import com.virtualworld.connectionBLE.SetChangerStateUseCase
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class DetailArduinoViewModelB(
+class DetailArduinoBLEViewModel(
     private val getArduinoUseCase: GetArduinoUseCase,
     private val setChangerStateUseCase: SetChangerStateUseCase,
     private val connectToArduinoUseCase: ConnectToArduinoUseCase
