@@ -9,8 +9,8 @@ sealed class ConnectionBluetoothNavigation(val route: String) {
     @Serializable
     data object ConnectionBluetooth : ConnectionBluetoothNavigation("connectionBluetooth")
 
-    @Serializable
-    data object ConnectionBluetoothLE : ConnectionBluetoothNavigation("connectionBluetoothLE")
+//    @Serializable
+//    data object ConnectionBluetoothLE : ConnectionBluetoothNavigation("connectionBluetoothLE")
 
     @Serializable
     data class DetailArduino(val arduinoName: String, val arduinoAddress: String) :
