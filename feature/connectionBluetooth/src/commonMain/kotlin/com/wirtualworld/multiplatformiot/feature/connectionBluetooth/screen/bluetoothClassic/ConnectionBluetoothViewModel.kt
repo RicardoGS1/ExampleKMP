@@ -1,4 +1,4 @@
-package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen
+package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

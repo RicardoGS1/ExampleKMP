@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,17 +24,30 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
-import com.virtualworld.multiplatformiot.ui.core.component.TopBarCanva
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.runtime.remember
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.Modifier
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntSize
 
 
 @Composable
@@ -43,39 +55,23 @@ internal fun MenuScreen(
     goToLocalConection: () -> Unit,
     goToInternetConection: () -> Unit,
     goToBluetoothConection: () -> Unit,
+    goToBluetoothLEConection: () -> Unit,
     menuViewModel: MenuViewModel
 ) {
 
-    val arduinoActiveInternet by menuViewModel.arduinoActivesInternet.collectAsState()
 
-    LaunchedEffect(Unit){
-        menuViewModel.getStatesArduinosInternet()
+    Box(modifier = Modifier.fillMaxSize().padding(vertical = 32.dp)) {
+
+        TopBarMenu()
+
+        AllConnections(
+            goToInternetConection,
+            goToLocalConection,
+            goToBluetoothConection,
+            goToBluetoothLEConection
+        )
     }
-
-        Box(modifier = Modifier.fillMaxSize().padding(vertical = 32.dp)) {
-
-            TopBarMenu()
-
-            when (arduinoActiveInternet) {
-                is StateScreenMenu.Error -> {}
-                is StateScreenMenu.Loading -> {}
-                is StateScreenMenu.Success -> {
-
-                    val activate = arduinoActiveInternet as StateScreenMenu.Success
-
-                    AllConnections(
-                        goToInternetConection,
-                        goToLocalConection,
-                        goToBluetoothConection,
-                        activate.arduinos
-
-                    )
-                }
-            }
-        }
-
-    }
-
+}
 
 
 @Composable
@@ -101,18 +97,15 @@ fun TopBarMenu() {
                 }
             }
             Box(
-                modifier = Modifier
-                    .size(48.dp) // Tamaño del círculo
-                    .clip(CircleShape)
-                    .background(Color.White) // Color de fondo del círculo
+                modifier = Modifier.size(48.dp) // Tamaño del círculo
+                    .clip(CircleShape).background(Color.White) // Color de fondo del círculo
 
             ) {
                 Icon(
                     imageVector = MyAppTheme.myIcons.person,
                     contentDescription = "",
-                    tint = Color.Black, // O el color que prefieras para el icono
-                    modifier = Modifier
-                        .fillMaxSize()
+                    tint = Color.Black,
+                    modifier = Modifier.fillMaxSize()
                         .padding(1.dp) // Espaciado interno del icono dentro del círculo
                 )
             }
@@ -132,161 +125,245 @@ fun TopBarMenu() {
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AllConnections(
     goToInternetConection: () -> Unit,
     goToLocalConection: () -> Unit,
     goToBluetoothConection: () -> Unit,
-    activate: Map<String, Int>,
+    goToBluetoothLEConection: () -> Unit,
+) {
 
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth().padding(top = 140.dp)) {
 
-    ) {
-
-
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 140.dp)
-            .padding(horizontal = MyAppTheme.padding.large)
-
-    ) {
-
-
-        // Tarjeta Internet
-        CardConnections(
-            title = "Internet",
-            icon = MyAppTheme.myIcons.internet,
-            color = MyAppTheme.colorScheme.primary,
-            arduinosOn = activate["activate"]!!,
-            arduinosOff = activate["deactivate"]!!,
-            onInfo = {},
-            goTo = goToInternetConection,
-
+        val connections = remember {
+            listOf(
+                "internet" to goToInternetConection,
+                "local" to goToLocalConection,
+                "bluetooth" to goToBluetoothConection,
+                "ble" to goToBluetoothLEConection
             )
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        val columns = if (maxWidth > 600.dp) 2 else 1
 
-        // Tarjeta Bluetooth
-        CardConnections(
-            title = "Bluetooth",
-            icon = MyAppTheme.myIcons.bluetooth, // Cambia por un icono de Bluetooth si lo tienes
-            color = MyAppTheme.colorScheme.primary,
-            arduinosOn = 1,
-            arduinosOff = 1,
-            onInfo = {},
-            goTo = goToBluetoothConection,
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columns),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MyAppTheme.padding.large),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(
+                connections,
+                key = { it.first }) { (type, goTo) -> // <-- 2. Añade una 'key' para mejor rendimiento
+                // modificador animateItemPlacement() para la animación de desplazamiento
+                val cardModifier =
+                    Modifier.animateItem(
+                        fadeInSpec = null,
+                        fadeOutSpec = null,
+                        placementSpec = tween(durationMillis = 500) // Animación de 0.5 segundos
+                    )
 
-            )
+                when (type) {
+                    "internet" -> CardConnections(
+                        modifier = cardModifier,
+                        type = "Internet",
+                        detail = "Firebase",
+                        icon = MyAppTheme.myIcons.internet,
+                        color = MyAppTheme.colorScheme.primary,
+                        onInfo = "Debes conectarel modulo Arduino o ESP32 a la base de datos usando apiKey: \"AIzaSyBqVQi5_zsr88KTKG4N9QcQ5GAsslD_Esc\" y projectId: \"multiplatformiot\" para mas detalles visita el repo https://github.com/RicardoGS1/ExampleKMP ",
+                        goTo = goTo,
+                    )
+
+                    "local" -> CardConnections(
+                        modifier = cardModifier,
+                        type = "Red Local",
+                        detail = "Wifi",
+                        icon = MyAppTheme.myIcons.internet,
+                        color = MyAppTheme.colorScheme.primary,
+                        onInfo = "Para mas informacion sobre esta conexion visita el repo https://github.com/RicardoGS1/ExampleKMP",
+                        goTo = goTo,
+                    )
+
+                    "bluetooth" -> CardConnections(
+                        modifier = cardModifier,
+                        type = "Bluetooth",
+                        detail = "Classic",
+                        icon = MyAppTheme.myIcons.bluetooth,
+                        color = MyAppTheme.colorScheme.primary,
+                        onInfo = "Para usar la conexión Bluetooth classic debes comenzar el nombre el modulo del arduino o el ESP32 con \"arduino\" para mas detalles de la configuración visita el repo https://github.com/RicardoGS1/ExampleKMP  ",
+                        goTo = goTo,
+                    )
+
+                    "ble" -> CardConnections(
+                        modifier = cardModifier,
+                        type = "Bluetooth",
+                        detail = "Low Energy",
+                        icon = MyAppTheme.myIcons.bluetooth,
+                        color = MyAppTheme.colorScheme.primary,
+                        onInfo = "Para la conexion Bluetooth Low Energy debes comenzar el nombre del modulo del arduino o el ESP32 con \"arduino\" usar el servicio \"0000181C-1234-1000-8000-00805F9B34FB\" para configurar las caracteristicas visita el repo https://github.com/RicardoGS1/ExampleKMP ",
+                        goTo = goTo,
+                    )
+                }
+            }
+        }
     }
 }
 
 
 @Composable
 fun CardConnections(
-    title: String,
+    modifier: Modifier = Modifier,
+    type: String,
+    detail: String,
     icon: ImageVector,
     color: Color,
-    arduinosOn: Int,
-    arduinosOff: Int,
-    onInfo: () -> Unit,
+    onInfo: String,
     goTo: () -> Unit,
+) {
+    // 1. Estado para controlar si la tarjeta está girada o no.
+    // Uso rememberSaveable para que el estado sobreviva a rotaciones de pantalla.
+    var isFlipped by rememberSaveable { mutableStateOf(false) }
 
-    ) {
+    // 2. Animación del valor de rotación en el eje Y.
+    val rotationY by animateFloatAsState(
+        targetValue = if (isFlipped) 180f else 0f,
+        animationSpec = tween(durationMillis = 600), // Duración de la animación
+        label = "rotationY"
+    )
+
+    //  Estado para almacenar el tamaño del anverso (lado frontal)
+    var frontSize by remember { mutableStateOf(IntSize.Zero) }
+
+
     Card(
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(0.dp),
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
+        modifier = modifier
+            .fillMaxWidth()
+            // 3. Aplicamos la rotación aquí. No la propagamos dentro de la tarjeta.
+            .graphicsLayer {
+                this.rotationY = rotationY
+                // Opcional: añade un efecto de cámara para que el giro se vea más 3D
+                cameraDistance = 12f * density
+            },
+        colors = CardDefaults.cardColors(containerColor = Color.White),
 
-
-        Column(
-            modifier = Modifier.padding(MyAppTheme.padding.large)
-        ) {
-
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
-            ) {
-
-
-                Column() {
-
-                    Text("Tipo", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(title, style = MyAppTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    Text(
-                        "Arduinos", color = Color.Gray, style = MaterialTheme.typography.bodySmall
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Row() {
-                        Icon(
-                            Icons.Default.AddCircle,
-                            contentDescription = "On",
-                            tint = Color.Green,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            "$arduinosOn",
-                            color = Color.Gray,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Icon(
-                            Icons.Default.AddCircle,
-                            contentDescription = "Off",
-                            tint = Color.Red,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text("$arduinosOff", color = Color.Gray)
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .size(64.dp) // Tamaño del círculo
-                        .clip(CircleShape)
-                        .background(color) // Color de fondo del círculo
-
-                ) {
-                    Icon(
-                        icon,
-                        contentDescription = title,
-                        tint = Color.White, // O el color que prefieras para el icono
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp) // Espaciado interno del icono dentro del círculo
-                    )
-                }
-
+        onClick = {
+            if (isFlipped) {
+                isFlipped = !isFlipped
+            } else {
+                goTo()
             }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-
-                Icon(
-                    MyAppTheme.myIcons.info,
-                    contentDescription = "",
-                    modifier = Modifier.size(32.dp)
-                )
-
-                IconButton(
-                    onClick = goTo,
-                ) {
-                    Icon(Icons.Default.ArrowForward, contentDescription = "")
-                }
-
-            }
-
-
         }
+    ) {
+        // Lógica para mostrar el anverso o el reverso
 
-
+        if (rotationY <= 90f) {
+            // MOSTRAMOS EL ANVERSO
+            Column(
+                modifier = Modifier
+                    .graphicsLayer { this.rotationY = 0f }
+                    // 2. Medimos el tamaño del anverso y lo guardamos
+                    .onSizeChanged { frontSize = it }
+            ) {
+                CardFrontContent(
+                    type, detail, icon, color,
+                    goTo = goTo, // Pasamos el goTo al botón de flecha
+                    onInfoClick = { isFlipped = true } // El icono de info gira la tarjeta
+                )
+            }
+        } else {
+            // MOSTRAMOS EL REVERSO
+            Column(
+                modifier = Modifier
+                    .graphicsLayer { this.rotationY = 180f }
+                    // 3. Aplicamos el tamaño medido del anverso al reverso
+                    .size(
+                        width = with(LocalDensity.current) { frontSize.width.toDp() },
+                        height = with(LocalDensity.current) { frontSize.height.toDp() }
+                    )
+            ) {
+                CardBackContent(onInfo)
+            }
+        }
     }
 }
+
+
+@Composable
+private fun CardFrontContent(
+    type: String,
+    detail: String,
+    icon: ImageVector,
+    color: Color,
+    goTo: () -> Unit,
+    onInfoClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(MyAppTheme.padding.large)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column {
+                Text("Conexión", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(type, style = MyAppTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(14.dp))
+                Text("Tipo", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(detail, style = MyAppTheme.typography.titleSmall)
+            }
+            Box(
+                modifier = Modifier.size(64.dp).clip(CircleShape).background(color)
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = type,
+                    tint = Color.White,
+                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                MyAppTheme.myIcons.info,
+                contentDescription = "Info",
+                modifier = Modifier
+                    .size(32.dp)
+                    .clickable(onClick = onInfoClick), // Hacemos el icono clickeable
+                tint = MyAppTheme.colorScheme.secondary
+            )
+            IconButton(onClick = goTo) {
+                Icon(Icons.Default.ArrowForward, contentDescription = "Go to connection")
+            }
+        }
+    }
+}
+
+// Composable para el DORSO de la tarjeta (el texto de información)
+@Composable
+private fun CardBackContent(infoText: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(MyAppTheme.padding.large),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = infoText,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.Black
+        )
+    }
+}
+
+
