@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot.domain.connectionBluetooth
+package com.virtualworld.connectionBLE
 
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
 import kotlinx.coroutines.flow.Flow

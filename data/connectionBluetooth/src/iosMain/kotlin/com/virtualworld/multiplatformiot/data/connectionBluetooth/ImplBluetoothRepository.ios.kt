@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 actual class ImplBluetoothRepository actual constructor() :
     BluetoothRepository {
     actual override suspend fun getPairedDevices(): List<BluetoothDeviceDomain> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     actual override suspend fun connectToDevice(address: String): ResponseState<Boolean> {

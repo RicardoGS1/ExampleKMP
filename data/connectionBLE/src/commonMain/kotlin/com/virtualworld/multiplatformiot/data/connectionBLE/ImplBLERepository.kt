@@ -1,9 +1,9 @@
 package com.virtualworld.multiplatformiot.data.connectionBLE
 
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BLEDeviceDomain
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BLERepository
+import com.virtualworld.connectionBLE.BLEDeviceDomain
+import com.virtualworld.connectionBLE.BLERepository
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
+import com.virtualworld.connectionBLE.ResponseState
 import kotlinx.coroutines.flow.Flow
 
 expect class ImplBLERepository() : BLERepository {

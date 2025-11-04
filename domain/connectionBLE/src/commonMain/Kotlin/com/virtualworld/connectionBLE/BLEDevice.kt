@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot.domain.connectionBluetooth
+package com.virtualworld.connectionBLE
 
 data class BLEDeviceDomain(
     val name: String,

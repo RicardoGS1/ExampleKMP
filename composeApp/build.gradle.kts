@@ -92,11 +92,13 @@ kotlin {
             implementation(projects.feature.conectionLocal)
             implementation(projects.feature.conectionInternet)
             implementation(projects.feature.connectionBluetooth)
+            implementation(projects.feature.connectionBLE)
             implementation(projects.feature.menu)
 
             implementation(projects.data.conectionInternet)
             implementation(projects.data.connectionBluetooth)
             implementation(projects.data.conectionLocal)
+            implementation(projects.data.connectionBLE)
 
             implementation(libs.kotlinx.coroutines.core)
 
