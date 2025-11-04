@@ -1,4 +1,4 @@
-package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen
+package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,13 +7,10 @@ import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.GetArduinoUseCase
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.SetChangerStateUseCase
-import com.virtualworld.multiplatformiot.ui.core.component.StatesArduino
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DetailArduinoViewModelB(

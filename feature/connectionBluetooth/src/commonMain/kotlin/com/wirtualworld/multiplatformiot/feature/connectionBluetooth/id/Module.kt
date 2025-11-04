@@ -4,8 +4,9 @@ import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ConnectToArd
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.GetArduinoUseCase
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.GetPairedDevicesUseCase
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.SetChangerStateUseCase
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.ConnectionBluetoothViewModel
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.DetailArduinoViewModelB
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothLE.ConnectionBluetoothLEViewModel
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic.ConnectionBluetoothViewModel
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic.DetailArduinoViewModelB
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -21,5 +22,6 @@ val featureConnectionBluetoothModule = module {
 
     // ViewModels
     viewModelOf(::ConnectionBluetoothViewModel)
+    viewModelOf(::ConnectionBluetoothLEViewModel)
     viewModelOf(::DetailArduinoViewModelB)
 }

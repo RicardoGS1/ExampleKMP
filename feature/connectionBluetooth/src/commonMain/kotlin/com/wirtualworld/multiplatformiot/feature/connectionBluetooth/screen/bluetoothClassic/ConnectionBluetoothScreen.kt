@@ -1,29 +1,19 @@
-package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen
+package com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.waterfall
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,7 +35,6 @@ import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 fun ConnectionBluetoothScreen(
     popBackStack: () -> Unit,
     goToDetailArduino: (String, String) -> Unit,
-    goToAddArduino: () -> Unit,
     viewModel: ConnectionBluetoothViewModel,
     valueScroll: (Dp) -> Unit,
 ) {
@@ -82,68 +71,46 @@ fun ConnectionBluetoothScreen(
     valueScroll(canvasSize.value)
 
 
-    Scaffold(
-        containerColor = Color.Transparent, floatingActionButton = {
-            FloatingActionButton(
-                onClick = { goToAddArduino() },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add, contentDescription = "Agregar Arduino"
-                )
-            }
-        }, contentWindowInsets = WindowInsets.waterfall
-    ) { paddingValues ->
-
-
-        Box(modifier = Modifier.fillMaxWidth().padding(top = 32.dp)) {
-            TopBarMenu(popBackStack)
-        }
-
-
-        Box(
-            modifier = Modifier.fillMaxSize().padding(top = 120.dp)
-        ) {
-
-            when (arduinos) {
-                is ArduinosState.Error -> {
-                    Column(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally) {
-                        Text((arduinos as ArduinosState.Error).exception.message.toString())
-                        IconButton( onClick = { viewModel.loadPairedDevices() } ) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Refrescar")
-                        }
-                    }
-
-                }
-
-                is ArduinosState.Loading -> {
-                    CircularProgressIndicator()
-                }
-
-                is ArduinosState.Success -> {
-
-                    val pairNameState =
-                        (arduinos as ArduinosState.Success<List<BluetoothDeviceDomain>>).arduinos.map {
-                            it.name.toString() to it.isConnected
-                        }
-
-                    ListViewArduino(
-                        arduinos = pairNameState,
-                        goToDetailArduino = selectArduinoName,
-                        goToAddArduino = goToAddArduino,
-                        listState = listState,
-                    )
-                }
-            }
-        }
+    Box(modifier = Modifier.fillMaxWidth().padding(top = 32.dp)) {
+        TopBarMenu(popBackStack)
     }
 
 
-}
+    Box(
+        modifier = Modifier.fillMaxSize().padding(top = 120.dp)
+    ) {
 
-fun getAddress(name: String) {
+        when (arduinos) {
+            is ArduinosState.Error -> {
+                Column(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally) {
+                    Text((arduinos as ArduinosState.Error).exception.message.toString())
+                    IconButton(onClick = { viewModel.loadPairedDevices() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refrescar")
+                    }
+                }
 
+            }
+
+            is ArduinosState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            is ArduinosState.Success -> {
+
+                val pairNameState =
+                    (arduinos as ArduinosState.Success<List<BluetoothDeviceDomain>>).arduinos.map {
+                        it.name.toString() to it.isConnected
+                    }
+
+                ListViewArduino(
+                    arduinos = pairNameState,
+                    goToDetailArduino = selectArduinoName,
+                    goToAddArduino = {},
+                    listState = listState,
+                )
+            }
+        }
+    }
 }
 
 

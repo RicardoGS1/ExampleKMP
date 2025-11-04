@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.ConectionInternetNavigation
 import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.conectionInternetGraph
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
-import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutes
+import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutesGraph
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.conectionLocalRoute
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.connectionBluetoothGraph
@@ -30,10 +30,11 @@ fun AppNavHost(
     ) {
 
 
-        menuRoutes(
+        menuRoutesGraph(
             goToLocalConection = { navController.navigate("conectionLocal") },
             goToInternetConection = { navController.navigate(ConectionInternetNavigation.ConectionInternet.route) },
-            goToBluetoothConection = {navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetooth.route)}
+            goToBluetoothConection = {navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetooth.route)},
+            goToBluetoothLEConection = {navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetoothLE.route)}
         )
 
         conectionLocalRoute(

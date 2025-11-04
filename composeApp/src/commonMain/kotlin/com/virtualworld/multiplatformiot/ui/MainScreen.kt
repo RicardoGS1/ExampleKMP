@@ -72,7 +72,6 @@ fun MainScreen() {
     Surface(modifier = Modifier.fillMaxSize()) {
 
         TopBarCanva(endArcAnimated, endSizeRect, sizeArc, animateRect)
-        println("jejeje")
 
         AppNavHost(navController, paddingSinBarValues, valueScroll)
 
