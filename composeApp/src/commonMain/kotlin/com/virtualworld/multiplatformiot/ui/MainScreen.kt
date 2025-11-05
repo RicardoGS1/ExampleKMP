@@ -22,6 +22,10 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.C
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.navigation.AppNavHost
 import com.virtualworld.multiplatformiot.ui.core.component.TopBarCanva
+import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocal
+import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocalNavigation
+import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.ConnectionBLENavigation
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +65,34 @@ fun MainScreen() {
                 endArcAnimated = 0f
             }
 
+            ConnectionBluetoothNavigation.ConnectionBluetooth.route -> {
+                animateRect = true
+                endArcAnimated = 0f
+            }
+
+            ConnectionBLENavigation.ConnectionBluetoothLE.route -> {
+                animateRect = true
+                endArcAnimated = 0f
+            }
+
+            ConectionLocalNavigation.ConectionLocal.route -> {
+                animateRect = true
+                endArcAnimated = 0f
+            }
+
             ConectionInternetNavigation.DetailArduino("").route -> {
+                animateRect = true
+                endArcAnimated = 0f
+                endSizeRect = 120.dp
+            }
+
+            ConnectionBluetoothNavigation.DetailArduino("","").route -> {
+                animateRect = true
+                endArcAnimated = 0f
+                endSizeRect = 120.dp
+            }
+
+            ConnectionBLENavigation.DetailArduino("","").route -> {
                 animateRect = true
                 endArcAnimated = 0f
                 endSizeRect = 120.dp
