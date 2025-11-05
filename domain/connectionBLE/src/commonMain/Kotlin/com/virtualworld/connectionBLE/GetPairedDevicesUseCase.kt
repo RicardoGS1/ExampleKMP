@@ -1,17 +1,17 @@
-package com.virtualworld.multiplatformiot.domain.connectionBluetooth
+package com.virtualworld.connectionBLE
 
 
 class GetPairedDevicesUseCase(
-    private val bluetoothRepository: BluetoothRepository
+    private val bluetoothRepository: BLERepository
 ) {
-    suspend operator fun invoke(): ResponseState<List<BluetoothDeviceDomain>> {
+    suspend operator fun invoke(): ResponseState<List<BLEDeviceDomain>> {
 
         return try {
 
             val allPairedDevices = bluetoothRepository.getPairedDevices()
 
             if (allPairedDevices.isEmpty()) {
-                return ResponseState.Error(Exception("No se encontraron dispositivos Bluetooth emparejados. Verifique el permiso bluetooth o actuelmente no esta activo este modulo para este tipo de dispisitivo "))
+                return ResponseState.Error(Exception("No se encontraron dispositivos Bluetooth emparejados. Verifique el permiso bluetooth."))
             }
 
             val filteredDevices = allPairedDevices.filter {

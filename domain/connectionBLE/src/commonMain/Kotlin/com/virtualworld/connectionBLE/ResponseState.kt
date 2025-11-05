@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot.domain.connectionBluetooth
+package com.virtualworld.connectionBLE
 
 sealed class ResponseState<out T : Any> {
 

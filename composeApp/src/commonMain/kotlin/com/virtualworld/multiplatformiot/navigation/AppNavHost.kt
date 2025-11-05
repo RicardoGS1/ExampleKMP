@@ -12,6 +12,8 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.c
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutesGraph
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.conectionLocalRoute
+import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.ConnectionBLENavigation
+import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.connectionBLEGraph
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.connectionBluetoothGraph
 
@@ -34,7 +36,7 @@ fun AppNavHost(
             goToLocalConection = { navController.navigate("conectionLocal") },
             goToInternetConection = { navController.navigate(ConectionInternetNavigation.ConectionInternet.route) },
             goToBluetoothConection = {navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetooth.route)},
-            goToBluetoothLEConection = {navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetoothLE.route)}
+            goToBluetoothLEConection = {navController.navigate(ConnectionBLENavigation.ConnectionBluetoothLE.route)}
         )
 
         conectionLocalRoute(
@@ -46,6 +48,11 @@ fun AppNavHost(
         )
 
         connectionBluetoothGraph(
+            navController = navController,
+            valueScroll = valueScroll
+        )
+
+        connectionBLEGraph(
             navController = navController,
             valueScroll = valueScroll
         )

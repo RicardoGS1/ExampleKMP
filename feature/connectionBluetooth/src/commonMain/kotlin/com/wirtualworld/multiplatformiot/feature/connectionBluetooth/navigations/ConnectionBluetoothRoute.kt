@@ -8,12 +8,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation.Companion.ARDUINO_ADDRESS_ARG
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation.Companion.ARDUINO_NAME_ARG
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothLE.ConnectionBluetoothLEViewModel
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic.ConnectionBluetoothScreen
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothLE.ConnectionBluetoothScreenLE
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic.ConnectionBluetoothViewModel
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic.DetailArduinoScreenu
-import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.bluetoothClassic.DetailArduinoViewModelB
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.ConnectionBluetoothScreen
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.ConnectionBluetoothViewModel
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.DetailArduinoScreenu
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.screen.DetailArduinoViewModelB
 import org.koin.compose.viewmodel.koinViewModel
 
 fun NavGraphBuilder.connectionBluetoothGraph(
@@ -36,20 +34,20 @@ fun NavGraphBuilder.connectionBluetoothGraph(
         )
     }
 
-    composable(ConnectionBluetoothNavigation.ConnectionBluetoothLE.route) {
-
-        val viewModel: ConnectionBluetoothLEViewModel = koinViewModel()
-
-        ConnectionBluetoothScreenLE(
-            popBackStack = { navController.popBackStack() },
-            goToDetailArduino = { arduinoName, arduinoAddress ->
-                navController.navigate(ConnectionBluetoothNavigation.DetailArduino(arduinoName,arduinoAddress).createRoute(arduinoName,arduinoAddress))
-            },
-            viewModel = viewModel,
-            valueScroll = valueScroll
-
-        )
-    }
+//    composable(ConnectionBluetoothNavigation.ConnectionBluetoothLE.route) {
+//
+//        val viewModel: ConnectionBluetoothLEViewModel = koinViewModel()
+//
+//        ConnectionBluetoothScreenLE(
+//            popBackStack = { navController.popBackStack() },
+//            goToDetailArduino = { arduinoName, arduinoAddress ->
+//                navController.navigate(ConnectionBluetoothNavigation.DetailArduino(arduinoName,arduinoAddress).createRoute(arduinoName,arduinoAddress))
+//            },
+//            viewModel = viewModel,
+//            valueScroll = valueScroll
+//
+//        )
+//    }
 
 
     composable(
