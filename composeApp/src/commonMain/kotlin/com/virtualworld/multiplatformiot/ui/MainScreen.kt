@@ -22,7 +22,6 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.C
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.navigation.AppNavHost
 import com.virtualworld.multiplatformiot.ui.core.component.TopBarCanva
-import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocal
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocalNavigation
 import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.ConnectionBLENavigation
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation
@@ -35,15 +34,14 @@ fun MainScreen() {
     val navController = rememberNavController()
 
     val paddingSinBarValues = WindowInsets.waterfall.asPaddingValues()
-    val paddingWhitBarValues = WindowInsets.safeDrawing.asPaddingValues()
 
-    var endArcAnimated by remember { mutableStateOf(0f) }
-    var endSizeRect by remember { mutableStateOf(200.dp) }
-    var sizeArc by remember { mutableStateOf(100.dp) }
+    var defaultArcSize by remember { mutableStateOf(120.dp) }
+    var defaultRectSize by remember { mutableStateOf(300.dp) }
+
     var animateRect by remember { mutableStateOf(true) }
 
     val valueScroll = { valueSize: Dp ->
-        endSizeRect = valueSize
+        defaultRectSize = valueSize
         if (valueSize != 200.dp)
             animateRect = false
     }
@@ -54,55 +52,56 @@ fun MainScreen() {
 
     LaunchedEffect(currentRoute) {
         when (currentRoute) {
+
             MenuNavigation.Menu.route -> {
                 animateRect = true
-                endArcAnimated = 1f
-                endSizeRect = 200.dp
+                defaultArcSize = 120.dp
+                defaultRectSize = 300.dp
             }
 
             ConectionInternetNavigation.ConectionInternet.route -> {
                 animateRect = true
-                endArcAnimated = 0f
+                defaultArcSize = 0.dp
             }
 
             ConnectionBluetoothNavigation.ConnectionBluetooth.route -> {
                 animateRect = true
-                endArcAnimated = 0f
+                defaultArcSize = 0.dp
             }
 
             ConnectionBLENavigation.ConnectionBluetoothLE.route -> {
                 animateRect = true
-                endArcAnimated = 0f
+                defaultArcSize = 0.dp
             }
 
             ConectionLocalNavigation.ConectionLocal.route -> {
                 animateRect = true
-                endArcAnimated = 0f
+                defaultArcSize = 0.dp
             }
 
             ConectionInternetNavigation.DetailArduino("").route -> {
                 animateRect = true
-                endArcAnimated = 0f
-                endSizeRect = 120.dp
+                defaultArcSize = 0.dp
+                defaultRectSize = 120.dp
             }
 
             ConnectionBluetoothNavigation.DetailArduino("","").route -> {
                 animateRect = true
-                endArcAnimated = 0f
-                endSizeRect = 120.dp
+                defaultArcSize = 0.dp
+                defaultRectSize = 120.dp
             }
 
             ConnectionBLENavigation.DetailArduino("","").route -> {
                 animateRect = true
-                endArcAnimated = 0f
-                endSizeRect = 120.dp
+                defaultArcSize = 0.dp
+                defaultRectSize = 120.dp
             }
         }
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
-        TopBarCanva(endArcAnimated, endSizeRect, sizeArc, animateRect)
+        TopBarCanva(defaultArcSize, defaultRectSize, animateRect)
 
         AppNavHost(navController, paddingSinBarValues, valueScroll)
 
