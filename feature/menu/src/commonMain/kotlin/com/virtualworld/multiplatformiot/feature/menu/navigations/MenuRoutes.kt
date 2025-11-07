@@ -30,7 +30,6 @@ fun NavGraphBuilder.menuRoutesGraph(
             goToInternetConection = goToInternetConection,
             goToBluetoothConection = goToBluetoothConection,
             goToBluetoothLEConection = goToBluetoothLEConection,
-            menuViewModel = viewModel
         )
 
     }

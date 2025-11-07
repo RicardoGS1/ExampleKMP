@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoUseCase
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +16,8 @@ import kotlinx.coroutines.launch
 class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) : ViewModel() {
 
 
-    private val _arduinos = MutableStateFlow<ArduinosState<ArduinoDomain>>(ArduinosState.Loading)
-    val arduinosState: StateFlow<ArduinosState<ArduinoDomain>> = _arduinos.asStateFlow()
+    private val _arduinos = MutableStateFlow<ArduinosState<ArduinoDomainModel>>(ArduinosState.Loading)
+    val arduinosState: StateFlow<ArduinosState<ArduinoDomainModel>> = _arduinos.asStateFlow()
 
     fun getArduino(arduinoName: String) {
         viewModelScope.launch {
@@ -36,7 +36,7 @@ class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) :
 
                         is ResponseState.Success -> {
 
-                            val arduinocorrect = ArduinoDomain(
+                            val arduinocorrect = ArduinoDomainModel(
                                 name = arduino.result.name,
                                 state1 = arduino.result.state1
                             )

@@ -23,13 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 
 @Composable
 fun ArduinoDetailContent(
-    arduinoDetail: ArduinosState<ArduinoDomain>,
+    arduinoDetail: ArduinosState<ArduinoDomainModel>,
     updateState: (String) -> Unit,
 ) {
 
@@ -83,7 +83,7 @@ fun ArduinoDetailContent(
 
 @Composable
 fun StatesArduino(
-    arduino: ArduinoDomain,
+    arduino: ArduinoDomainModel,
     onEstado1Change: (String) -> Unit,
 ) {
 

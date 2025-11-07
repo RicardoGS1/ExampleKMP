@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.UseCaseInternet
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +16,8 @@ class ConectionInternetViewModel(private val useCaseInternet: UseCaseInternet) :
 
 
     private val _arduinos =
-        MutableStateFlow<ArduinosState<List<ArduinoDomain>>>(ArduinosState.Loading)
-    val arduinosState: StateFlow<ArduinosState<List<ArduinoDomain>>> = _arduinos.asStateFlow()
+        MutableStateFlow<ArduinosState<List<ArduinoDomainModel>>>(ArduinosState.Loading)
+    val arduinosState: StateFlow<ArduinosState<List<ArduinoDomainModel>>> = _arduinos.asStateFlow()
 
 
     init {

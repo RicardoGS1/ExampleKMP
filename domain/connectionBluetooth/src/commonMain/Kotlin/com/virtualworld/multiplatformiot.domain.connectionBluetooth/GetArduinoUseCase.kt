@@ -1,12 +1,11 @@
 package com.virtualworld.multiplatformiot.domain.connectionBluetooth
 
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
-import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import kotlinx.coroutines.flow.Flow
 
 class GetArduinoUseCase(private val bluetoothRepository: BluetoothRepository) {
 
-    fun getArduino(): Flow<ResponseState<ArduinoDomain>> {
+    fun getArduino(): Flow<ResponseState<ArduinoDomainModel>> {
 
        return bluetoothRepository.getAllStatesFlow()
 

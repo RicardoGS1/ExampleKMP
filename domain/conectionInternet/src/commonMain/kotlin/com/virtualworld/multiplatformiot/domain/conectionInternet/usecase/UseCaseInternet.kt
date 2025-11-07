@@ -3,7 +3,7 @@ package com.virtualworld.multiplatformiot.domain.conectionInternet.usecase
 
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.domain.conectionInternet.mapper.mapperToDomain
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 class UseCaseInternet(private val repositoryInternet: RepositoryInternet) {
 
-    fun getAllArduinos(usuario: String): Flow<ResponseState<List<ArduinoDomain>>> {
+    fun getAllArduinos(usuario: String): Flow<ResponseState<List<ArduinoDomainModel>>> {
         return repositoryInternet.getAllArduinos(usuario).map {
 
             when (it) {
