@@ -390,7 +390,7 @@ private fun CardBackContent(infoText: String) {
     ) {
         Text(
             text = infoText,
-            style = MyAppTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodySmall,
             color = MyAppTheme.colorScheme.onSurface
         )
     }
