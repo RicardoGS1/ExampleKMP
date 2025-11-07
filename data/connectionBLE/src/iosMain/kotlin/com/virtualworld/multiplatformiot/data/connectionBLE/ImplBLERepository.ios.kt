@@ -86,9 +86,9 @@ actual class ImplBLERepository : BLERepository {
         }
 
         // Deferred que se completará cuando el escaneo termine.
-        val scanCompletable = CompletableDeferred<List<BLEDeviceDomain>>()
+        val scanCompletable = CompletableDeferred<List<ArduinoDomainModel>>()
 
-        val discoveredDevices = mutableSetOf<BLEDeviceDomain>()
+        val discoveredDevices = mutableSetOf<ArduinoDomainModel>()
 
         //collect in ios
         // Asignamos una función al delegado para que nos notifique cuando encuentre un dispositivo.

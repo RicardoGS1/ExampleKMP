@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 actual class ImplBLERepository actual constructor() :
     BLERepository {
-    actual override suspend fun getPairedDevices(): List<BLEDeviceDomain> {
+    actual override suspend fun getPairedDevices(): List<ArduinoDomainModel> {
        return emptyList()
     }
 
