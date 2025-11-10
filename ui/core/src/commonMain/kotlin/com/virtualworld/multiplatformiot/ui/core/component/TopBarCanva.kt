@@ -29,12 +29,27 @@ import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
  * @param defaultRectSize El tamaño (altura) objetivo al que el rectángulo se animará.
  * @param animateRec Determina si la animación del cambio de tamaño del rectángulo debe ejecutarse. Si es `false`, el cambio de tamaño es instantáneo (duración 0).
  */
+
+const val DEFAULT_RECT_HEIGHT_MENU = 300
+const val DEFAULT_ARC_HEIGHT_MENU = 120
+
+const val DEFAULT_RECT_HEIGHT_ARDUINOS = 200
+const val MIN_RECT_HEIGHT_ARDUINOS = 120
+const val DEFAULT_ARC_HEIGHT_ARDUINOS = 0
+
+const val DEFAULT_RECT_HEIGHT_DETAIL = 130
+const val DEFAULT_ARC_HEIGHT_DETAIL = 0
+
+
 @Composable
 fun TopBarCanva(
     defaultArcSize: Dp,
     defaultRectSize: Dp,
     animateRec: Boolean = true,
 ) {
+
+    println(defaultRectSize)
+
     // Obtenemos los colores necesarios del tema de forma dinámica
     val primaryColor = MyAppTheme.colorScheme.primary
     val primaryContainerColor = MyAppTheme.colorScheme.primaryContainer

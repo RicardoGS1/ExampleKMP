@@ -68,16 +68,16 @@ fun ArduinoDetailContent(
 
 
 
-        Box(
-            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
-                .background(MyAppTheme.colorScheme.primary).height(64.dp)
-        ) {
-
-
-            TextButton(onClick = {}, modifier = Modifier.align(Alignment.TopCenter)) {
-                Text("Add estado")
-            }
-        }
+//        Box(
+//            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+//                .background(MyAppTheme.colorScheme.primary).height(64.dp)
+//        ) {
+//
+//
+//            TextButton(onClick = {}, modifier = Modifier.align(Alignment.TopCenter)) {
+//                Text("Add estado")
+//            }
+//        }
     }
 }
 
