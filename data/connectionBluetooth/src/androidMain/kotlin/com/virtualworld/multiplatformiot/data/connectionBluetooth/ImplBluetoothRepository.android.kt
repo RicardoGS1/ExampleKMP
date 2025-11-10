@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothDeviceDomain
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothRepository
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,7 +59,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    actual override suspend fun getPairedDevices(): List<BluetoothDeviceDomain> {
+    actual override suspend fun getPairedDevices(): List<ArduinoDomainModel> {
 
 
         return withContext(Dispatchers.IO) {
@@ -70,12 +70,12 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
             val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
 
-            val devices = mutableListOf<BluetoothDeviceDomain>()
+            val devices = mutableListOf<ArduinoDomainModel>()
 
 
             pairedDevices?.forEach { device ->
                 devices.add(
-                    BluetoothDeviceDomain(
+                    ArduinoDomainModel(
                         name = device.name ?: "Unknown Device",
                         address = device.address,
                         isConnected = true // Por ahora asumimos que no está conectado
@@ -133,7 +133,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    actual override fun getAllStatesFlow(): Flow<ResponseState<ArduinoDomain>> {
+    actual override fun getAllStatesFlow(): Flow<ResponseState<ArduinoDomainModel>> {
 
         // flatMapLatest se usa para que si refreshTrigger emite un nuevo valor,
         // la operación interna (fetchCurrentStates) se cancele y se reinicie.
@@ -172,7 +172,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
     }
 
 
-    private suspend fun getAllStatesArduino(): ResponseState<ArduinoDomain> {
+    private suspend fun getAllStatesArduino(): ResponseState<ArduinoDomainModel> {
 
 
         if (bluetoothSocket == null || bluetoothSocket?.isConnected != true) {
@@ -198,10 +198,10 @@ actual class ImplBluetoothRepository : BluetoothRepository {
             println("6")
 
 
-            val arduinoDomain = ArduinoDomain(
-                name = currentObservingArduinoName, active = true, state1 = states
+            val arduinoDomainModel = ArduinoDomainModel(
+                name = currentObservingArduinoName!!, active = true, state1 = states
             )
-            ResponseState.Success(arduinoDomain)
+            ResponseState.Success(arduinoDomainModel)
 
         } catch (e: IOException) {
             // Errores de IO específicos de la lectura/escritura

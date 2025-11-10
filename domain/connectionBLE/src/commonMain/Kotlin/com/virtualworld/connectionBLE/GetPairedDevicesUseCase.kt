@@ -1,10 +1,12 @@
 package com.virtualworld.connectionBLE
 
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
+
 
 class GetPairedDevicesUseCase(
     private val bluetoothRepository: BLERepository
 ) {
-    suspend operator fun invoke(): ResponseState<List<BLEDeviceDomain>> {
+    suspend operator fun invoke(): ResponseState<List<ArduinoDomainModel>> {
 
         return try {
 
@@ -24,7 +26,7 @@ class GetPairedDevicesUseCase(
 //                return ResponseState.Error(Exception("Ninguno de los dispositivos emparejados es compatible."))
 //            }
 
-            ResponseState.Success(allPairedDevices)
+            ResponseState.Success(filteredDevices)
 
         } catch (e: Exception) {
             ResponseState.Error(e)

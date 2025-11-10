@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothDeviceDomain
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.GetPairedDevicesUseCase
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +17,8 @@ class ConnectionBluetoothViewModel(
 ) : ViewModel() {
 
     private val _arduinos =
-        MutableStateFlow<ArduinosState<List<BluetoothDeviceDomain>>>(ArduinosState.Loading)
-    val arduinosState: StateFlow<ArduinosState<List<BluetoothDeviceDomain>>> =
+        MutableStateFlow<ArduinosState<List<ArduinoDomainModel>>>(ArduinosState.Loading)
+    val arduinosState: StateFlow<ArduinosState<List<ArduinoDomainModel>>> =
         _arduinos.asStateFlow()
 
     init {
@@ -34,7 +35,7 @@ class ConnectionBluetoothViewModel(
                     _arduinos.value = ArduinosState.Error(devices.exception)
                 }
 
-                is ResponseState.Success<List<BluetoothDeviceDomain>> -> {
+                is ResponseState.Success<List<ArduinoDomainModel>> -> {
                     _arduinos.value = ArduinosState.Success(devices.result)
                 }
             }

@@ -27,9 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.virtualworld.connectionBLE.BLEDeviceDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.component.ButtonBack
-import com.virtualworld.multiplatformiot.ui.core.component.ListViewArduino
+import com.virtualworld.multiplatformiot.ui.core.component.ListViewArduinoStates
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 
 @Composable
@@ -46,72 +47,20 @@ fun ConnectionBLEScreen(
     val selectArduinoName = { name: String ->
 
         val address =
-            (arduinos as ArduinosState.Success<List<BLEDeviceDomain>>).arduinos.find { it.name == name }?.address.toString()
+            (arduinos as ArduinosState.Success<List<ArduinoDomainModel>>).arduinos.find { it.name == name }?.address.toString()
         goToDetailArduino(name, address)
 
     }
-
-    val listState = rememberLazyListState()
-
-    val scrollValue by remember {
-        derivedStateOf {
-            if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 160) listState.firstVisibleItemScrollOffset / 2
-            else {
-                80
-            }
-        }
-    }
-
-
-    val canvasSize = remember {
-        derivedStateOf {
-            (200 - scrollValue).dp
-        }
-    }
-
-    valueScroll(canvasSize.value)
-
 
     Box(modifier = Modifier.fillMaxWidth().padding(top = 32.dp)) {
         TopBarMenu(popBackStack)
     }
 
-
-    Box(
-        modifier = Modifier.fillMaxSize().padding(top = 120.dp)
-    ) {
-
-        when (arduinos) {
-            is ArduinosState.Error -> {
-                Column(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally) {
-                    Text((arduinos as ArduinosState.Error).exception.message.toString())
-                    IconButton(onClick = { viewModel.loadPairedDevices() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refrescar")
-                    }
-                }
-
-            }
-
-            is ArduinosState.Loading -> {
-                CircularProgressIndicator()
-            }
-
-            is ArduinosState.Success -> {
-
-                val pairNameState =
-                    (arduinos as ArduinosState.Success<List<BLEDeviceDomain>>).arduinos.map {
-                        it.name.toString() to it.isConnected
-                    }
-
-                ListViewArduino(
-                    arduinos = pairNameState,
-                    goToDetailArduino = selectArduinoName,
-                    goToAddArduino = {},
-                    listState = listState,
-                )
-            }
-        }
-    }
+    ListViewArduinoStates(
+        stateArduino = arduinos,
+        goToDetailArduino = selectArduinoName,
+        valueScroll = valueScroll,
+    )
 }
 
 

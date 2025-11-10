@@ -4,13 +4,11 @@ import com.virtualworld.multiplatformiot.ProductEmptyException
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 
 class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
@@ -133,7 +131,7 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
         }
     }
 
-    suspend fun addArduino(arduino: ArduinoDomain) {
+    suspend fun addArduino(arduino: ArduinoDomainModel) {
 
         val arduinoRef = firestore.collection("usuarios")
             .document("usuario1")

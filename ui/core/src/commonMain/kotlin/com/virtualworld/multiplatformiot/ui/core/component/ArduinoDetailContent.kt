@@ -23,13 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 
 @Composable
 fun ArduinoDetailContent(
-    arduinoDetail: ArduinosState<ArduinoDomain>,
+    arduinoDetail: ArduinosState<ArduinoDomainModel>,
     updateState: (String) -> Unit,
 ) {
 
@@ -68,22 +68,22 @@ fun ArduinoDetailContent(
 
 
 
-        Box(
-            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
-                .background(MyAppTheme.colorScheme.primary).height(64.dp)
-        ) {
-
-
-            TextButton(onClick = {}, modifier = Modifier.align(Alignment.TopCenter)) {
-                Text("Add estado")
-            }
-        }
+//        Box(
+//            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+//                .background(MyAppTheme.colorScheme.primary).height(64.dp)
+//        ) {
+//
+//
+//            TextButton(onClick = {}, modifier = Modifier.align(Alignment.TopCenter)) {
+//                Text("Add estado")
+//            }
+//        }
     }
 }
 
 @Composable
 fun StatesArduino(
-    arduino: ArduinoDomain,
+    arduino: ArduinoDomainModel,
     onEstado1Change: (String) -> Unit,
 ) {
 

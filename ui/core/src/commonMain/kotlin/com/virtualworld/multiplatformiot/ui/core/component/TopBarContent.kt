@@ -38,10 +38,7 @@ fun TopBarMenuDetail(popBackStack: () -> Unit, arduinoName: String) {
                 style = MyAppTheme.typography.titleLarge,
             )
 
-            Switch(
-                checked = true,
-                onCheckedChange = {}
-            )
+
         }
 
     }

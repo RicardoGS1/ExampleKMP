@@ -3,7 +3,7 @@ package com.virtualworld.multiplatformiot.data.connectionBLE
 import com.virtualworld.connectionBLE.BLEDeviceDomain
 import com.virtualworld.connectionBLE.BLERepository
 import com.virtualworld.connectionBLE.ResponseState
-import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomain
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -71,12 +71,12 @@ actual class ImplBLERepository : BLERepository {
     // Delegado para manejar eventos del periférico conectado (descubrimiento de servicios/características)
     private val peripheralDelegate = PeripheralDelegate()
 
-    private var dataArduinoActual: ArduinoDomain = ArduinoDomain()
+    private var dataArduinoActual: ArduinoDomainModel = ArduinoDomainModel()
 
 
     // --- IMPLEMENTACIÓN DE getPairedDevices ---
 
-    actual override suspend fun getPairedDevices(): List<BLEDeviceDomain> {
+    actual override suspend fun getPairedDevices(): List<ArduinoDomainModel> {
 
         // Verifico que el Bluetooth esté encendido.
         if (centralManager.state != CBManagerStatePoweredOn) {
@@ -86,14 +86,14 @@ actual class ImplBLERepository : BLERepository {
         }
 
         // Deferred que se completará cuando el escaneo termine.
-        val scanCompletable = CompletableDeferred<List<BLEDeviceDomain>>()
+        val scanCompletable = CompletableDeferred<List<ArduinoDomainModel>>()
 
-        val discoveredDevices = mutableSetOf<BLEDeviceDomain>()
+        val discoveredDevices = mutableSetOf<ArduinoDomainModel>()
 
         //collect in ios
         // Asignamos una función al delegado para que nos notifique cuando encuentre un dispositivo.
         bluetoothDelegate.onPeripheralDiscovered = { peripheral ->
-            val device = BLEDeviceDomain(
+            val device = ArduinoDomainModel(
                 name = peripheral.name ?: "Dispositivo Desconocido",
                 address = peripheral.identifier.UUIDString // La dirección en iOS es el UUID del periférico.
             )
@@ -166,7 +166,7 @@ actual class ImplBLERepository : BLERepository {
     }
 
 
-    actual override fun getAllStatesFlow(): Flow<ResponseState<ArduinoDomain>> = flow {
+    actual override fun getAllStatesFlow(): Flow<ResponseState<ArduinoDomainModel>> = flow {
 
         // 1. Verificamos que estamos conectados a un periférico
         val peripheral = connectedPeripheral ?: run {
@@ -243,7 +243,7 @@ actual class ImplBLERepository : BLERepository {
 
                 // 7. Emitir el resultado final
                 dataArduinoActual =
-                    ArduinoDomain(
+                    ArduinoDomainModel(
                         name = peripheral.name() ?: "Dispositivo",
                         active = !dataArduinoActual.active,
                         state1 = allStates

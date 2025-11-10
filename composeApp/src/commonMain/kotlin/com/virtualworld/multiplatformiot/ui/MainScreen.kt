@@ -21,7 +21,16 @@ import androidx.navigation.compose.rememberNavController
 import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.ConectionInternetNavigation
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.navigation.AppNavHost
+import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_ARC_HEIGHT_ARDUINOS
+import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_ARC_HEIGHT_DETAIL
+import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_ARC_HEIGHT_MENU
+import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_ARDUINOS
+import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_DETAIL
+import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_MENU
 import com.virtualworld.multiplatformiot.ui.core.component.TopBarCanva
+import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocalNavigation
+import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.ConnectionBLENavigation
+import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,16 +40,15 @@ fun MainScreen() {
     val navController = rememberNavController()
 
     val paddingSinBarValues = WindowInsets.waterfall.asPaddingValues()
-    val paddingWhitBarValues = WindowInsets.safeDrawing.asPaddingValues()
 
-    var endArcAnimated by remember { mutableStateOf(0f) }
-    var endSizeRect by remember { mutableStateOf(200.dp) }
-    var sizeArc by remember { mutableStateOf(100.dp) }
+    var defaultArcSize by remember { mutableStateOf(DEFAULT_ARC_HEIGHT_MENU.dp) }
+    var defaultRectSize by remember { mutableStateOf(DEFAULT_RECT_HEIGHT_MENU.dp) }
+
     var animateRect by remember { mutableStateOf(true) }
 
     val valueScroll = { valueSize: Dp ->
-        endSizeRect = valueSize
-        if (valueSize != 200.dp)
+        defaultRectSize = valueSize
+        if (valueSize != DEFAULT_RECT_HEIGHT_ARDUINOS.dp)
             animateRect = false
     }
 
@@ -50,28 +58,56 @@ fun MainScreen() {
 
     LaunchedEffect(currentRoute) {
         when (currentRoute) {
+
             MenuNavigation.Menu.route -> {
                 animateRect = true
-                endArcAnimated = 1f
-                endSizeRect = 200.dp
+                defaultArcSize = DEFAULT_ARC_HEIGHT_MENU.dp
+                defaultRectSize = DEFAULT_RECT_HEIGHT_MENU.dp
             }
 
             ConectionInternetNavigation.ConectionInternet.route -> {
                 animateRect = true
-                endArcAnimated = 0f
+                defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
+            }
+
+            ConnectionBluetoothNavigation.ConnectionBluetooth.route -> {
+                animateRect = true
+                defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
+            }
+
+            ConnectionBLENavigation.ConnectionBluetoothLE.route -> {
+                animateRect = true
+                defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
+            }
+
+            ConectionLocalNavigation.ConectionLocal.route -> {
+                animateRect = true
+                defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
             }
 
             ConectionInternetNavigation.DetailArduino("").route -> {
                 animateRect = true
-                endArcAnimated = 0f
-                endSizeRect = 120.dp
+                defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
+                defaultRectSize = DEFAULT_RECT_HEIGHT_DETAIL.dp
+            }
+
+            ConnectionBluetoothNavigation.DetailArduino("","").route -> {
+                animateRect = true
+                defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
+                defaultRectSize = DEFAULT_RECT_HEIGHT_DETAIL.dp
+            }
+
+            ConnectionBLENavigation.DetailArduino("","").route -> {
+                animateRect = true
+                defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
+                defaultRectSize = DEFAULT_RECT_HEIGHT_DETAIL.dp
             }
         }
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
-        TopBarCanva(endArcAnimated, endSizeRect, sizeArc, animateRect)
+        TopBarCanva(defaultArcSize, defaultRectSize, animateRect)
 
         AppNavHost(navController, paddingSinBarValues, valueScroll)
 

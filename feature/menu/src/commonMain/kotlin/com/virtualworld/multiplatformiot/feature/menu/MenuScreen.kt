@@ -56,13 +56,15 @@ internal fun MenuScreen(
     goToInternetConection: () -> Unit,
     goToBluetoothConection: () -> Unit,
     goToBluetoothLEConection: () -> Unit,
-    menuViewModel: MenuViewModel
 ) {
 
 
-    Box(modifier = Modifier.fillMaxSize().padding(vertical = 32.dp)) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .padding(vertical = 32.dp)
+    ) {
 
-        TopBarMenu()
+        ContainerTopBarMenu()
 
         AllConnections(
             goToInternetConection,
@@ -75,7 +77,7 @@ internal fun MenuScreen(
 
 
 @Composable
-fun TopBarMenu() {
+fun ContainerTopBarMenu() {
 
     val canvasSize = 300.dp
 
@@ -90,7 +92,8 @@ fun TopBarMenu() {
             Row {
                 repeat(3) {
                     Box(
-                        modifier = Modifier.size(10.dp).background(Color.White, CircleShape)
+                        modifier = Modifier.size(10.dp)
+                            .background(Color.White, CircleShape)
                             .padding(end = 4.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -98,13 +101,14 @@ fun TopBarMenu() {
             }
             Box(
                 modifier = Modifier.size(48.dp) // Tamaño del círculo
-                    .clip(CircleShape).background(Color.White) // Color de fondo del círculo
+                    .clip(CircleShape)
+                    .background(Color.White) // Color de fondo del círculo
 
             ) {
                 Icon(
                     imageVector = MyAppTheme.myIcons.person,
                     contentDescription = "",
-                    tint = Color.Black,
+                    tint = Color.DarkGray,
                     modifier = Modifier.fillMaxSize()
                         .padding(1.dp) // Espaciado interno del icono dentro del círculo
                 )
@@ -113,10 +117,12 @@ fun TopBarMenu() {
 
 
         Text(
-            text = "Conexciones",
+            text = "Conexiones",
             color = Color.White,
             style = MyAppTheme.typography.titleLarge,
-            modifier = Modifier.align(Alignment.CenterStart).padding(start = 24.dp)
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 24.dp)
         )
 
     }
@@ -155,8 +161,7 @@ internal fun AllConnections(
         ) {
             items(
                 connections,
-                key = { it.first }) { (type, goTo) -> // <-- 2. Añade una 'key' para mejor rendimiento
-                // modificador animateItemPlacement() para la animación de desplazamiento
+                key = { it.first }) { (type, goTo) ->
                 val cardModifier =
                     Modifier.animateItem(
                         fadeInSpec = null,
@@ -171,7 +176,7 @@ internal fun AllConnections(
                         detail = "Firebase",
                         icon = MyAppTheme.myIcons.internet,
                         color = MyAppTheme.colorScheme.primary,
-                        onInfo = "Debes conectarel modulo Arduino o ESP32 a la base de datos usando apiKey: \"AIzaSyBqVQi5_zsr88KTKG4N9QcQ5GAsslD_Esc\" y projectId: \"multiplatformiot\" para mas detalles visita el repo https://github.com/RicardoGS1/ExampleKMP ",
+                        onInfo = "Debes conectar el modulo Arduino o ESP32 a la base de datos usando apiKey: \"AIzaSyBqVQi5_zsr88KTKG4N9QcQ5GAsslD_Esc\" y projectId: \"multiplatformiot\" para mas detalles visita el repo https://github.com/RicardoGS1/ExampleKMP ",
                         goTo = goTo,
                     )
 
@@ -247,7 +252,7 @@ fun CardConnections(
                 // Opcional: añade un efecto de cámara para que el giro se vea más 3D
                 cameraDistance = 12f * density
             },
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MyAppTheme.colorScheme.surface),
 
         onClick = {
             if (isFlipped) {
@@ -309,22 +314,43 @@ private fun CardFrontContent(
             verticalAlignment = Alignment.Top
         ) {
             Column {
-                Text("Conexión", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    "Conexión",
+                    color = MyAppTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
+                )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(type, style = MyAppTheme.typography.titleMedium)
+                Text(
+                    type,
+                    color = MyAppTheme.colorScheme.onSurface,
+                    style = MyAppTheme.typography.titleMedium
+                )
                 Spacer(modifier = Modifier.height(14.dp))
-                Text("Tipo", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    "Tipo",
+                    color = MyAppTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
+                )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(detail, style = MyAppTheme.typography.titleSmall)
+                Text(
+                    detail,
+                    color = MyAppTheme.colorScheme.onSurface,
+                    style = MyAppTheme.typography.titleSmall
+                )
             }
             Box(
-                modifier = Modifier.size(64.dp).clip(CircleShape).background(color)
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(color)
             ) {
                 Icon(
                     icon,
                     contentDescription = type,
-                    tint = Color.White,
-                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                    tint = MyAppTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
                 )
             }
         }
@@ -339,11 +365,15 @@ private fun CardFrontContent(
                 contentDescription = "Info",
                 modifier = Modifier
                     .size(32.dp)
-                    .clickable(onClick = onInfoClick), // Hacemos el icono clickeable
+                    .clickable(onClick = onInfoClick),
                 tint = MyAppTheme.colorScheme.secondary
             )
             IconButton(onClick = goTo) {
-                Icon(Icons.Default.ArrowForward, contentDescription = "Go to connection")
+                Icon(
+                    Icons.Default.ArrowForward,
+                    contentDescription = "Go to connection",
+                    tint = MyAppTheme.colorScheme.primary
+                )
             }
         }
     }
@@ -361,9 +391,10 @@ private fun CardBackContent(infoText: String) {
         Text(
             text = infoText,
             style = MaterialTheme.typography.bodySmall,
-            color = Color.Black
+            color = MyAppTheme.colorScheme.onSurface
         )
     }
 }
+
 
 
