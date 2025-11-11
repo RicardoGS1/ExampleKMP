@@ -2,7 +2,7 @@ package com.virtualworld.multiplatformiot.domain.conectionInternet.usecase
 
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
+import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseStatesDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -12,22 +12,22 @@ import kotlinx.coroutines.flow.map
 
 class GetArduinoActivateUseCase (private val repositoryInternet: RepositoryInternet) {
 
-    fun getArduinoActivate(usuario: String): Flow<ResponseState<Map<String,Int>>> {
+    fun getArduinoActivate(usuario: String): Flow<ResponseStatesDomain<Map<String,Int>>> {
 
         return repositoryInternet.getArduinoActivate(usuario).map {
 
             when (it) {
 
                 is NetworkResponseState.Loading -> {
-                    ResponseState.Loading
+                    ResponseStatesDomain.Loading
                 }
 
                 is NetworkResponseState.Error -> {
-                    ResponseState.Error(it.exception)
+                    ResponseStatesDomain.Error(it.exception)
                 }
 
                 is NetworkResponseState.Success -> {
-                    ResponseState.Success(contArduinoActivate(it.result))
+                    ResponseStatesDomain.Success(contArduinoActivate(it.result))
                 }
 
             }

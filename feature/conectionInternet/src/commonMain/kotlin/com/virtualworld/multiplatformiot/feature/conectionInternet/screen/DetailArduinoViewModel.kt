@@ -2,7 +2,7 @@ package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
+import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseStatesDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoUseCase
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
@@ -26,15 +26,15 @@ class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) :
                 getArduinoUseCase.getArduino("usuario1", arduinoName).collect { arduino ->
 
                     when (arduino) {
-                        is ResponseState.Error -> {
+                        is ResponseStatesDomain.Error -> {
                             ArduinosState.Error(exception = arduino.exception)
                         }
 
-                        is ResponseState.Loading -> {
+                        is ResponseStatesDomain.Loading -> {
                             ArduinosState.Loading
                         }
 
-                        is ResponseState.Success -> {
+                        is ResponseStatesDomain.Success -> {
 
                             val arduinocorrect = ArduinoDomainModel(
                                 name = arduino.result.name,
