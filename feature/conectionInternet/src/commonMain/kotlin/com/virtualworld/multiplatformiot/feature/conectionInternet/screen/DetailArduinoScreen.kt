@@ -22,7 +22,7 @@ fun DetailArduinoScreen(
     val arduinoDetail by viewModel.arduinosState.collectAsState()
 
     LaunchedEffect(arduinoName) {
-        viewModel.getArduino(arduinoName)
+        viewModel.getDetailArduino(arduinoName)
     }
 
     val updateState = { keyState: String -> viewModel.updateState(keyState) }

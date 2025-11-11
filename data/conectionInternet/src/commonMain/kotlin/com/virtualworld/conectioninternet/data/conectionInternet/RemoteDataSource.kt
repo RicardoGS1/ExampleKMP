@@ -18,9 +18,7 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
     suspend fun getAllArduino(usuario: String): NetworkResponseState<List<ArduinoData>> {
 
         return firestore.collection(NAME_DB_FIRESTORE).document(usuario)
-            .collection("arduinos")
-            .snapshots
-            .map { querySnapshot ->
+            .collection("arduinos").snapshots.map { querySnapshot ->
                 val listArduino = querySnapshot.documents.map { documentSnapshot ->
                     documentSnapshot.data<ArduinoData>().copy(nameArduino = documentSnapshot.id)
                 }
@@ -35,20 +33,14 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
     fun getArduino(usuario: String, name: String): Flow<NetworkResponseState<ArduinoData>> = flow {
         try {
-
-            emit(NetworkResponseState.Loading)
-
-            firestore.collection("usuarios").document(usuario)
-                .collection("arduinos").document(name)
-                .collection("objetos").snapshots.collect { querySnapshot ->
+            firestore.collection(NAME_DB_FIRESTORE).document(usuario).collection("arduinos")
+                .document(name).collection("objetos").snapshots.collect { querySnapshot ->
 
                     val objetos = querySnapshot.documents.map { documentSnapshot ->
 
-                        val stateObject =
-                            documentSnapshot.data<StateObject>() //.copy(keyObjeto = documentSnapshot.id)
+                        val stateObject = documentSnapshot.data<StateObject>()
 
                         Pair(documentSnapshot.id, stateObject)
-
                     }
 
                     val arduino = ArduinoData(nameArduino = name, objetos = objetos.toMap())
@@ -56,20 +48,22 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
                     emit(NetworkResponseState.Success(arduino))
                 }
 
-
         } catch (e: Exception) {
             emit(NetworkResponseState.Error(e))
         }
     }
 
-    suspend fun updateArduinoState(arduinoData: ArduinoData): NetworkResponseState<StateObject> {
+    suspend fun updateArduinoState(
+        usuario: String,
+        arduinoData: ArduinoData
+    ): NetworkResponseState<StateObject> {
         return try {
 
-            val objectStateRef = firestore.collection("usuarios").document("usuario1")
-                .collection("arduinos").document(arduinoData.nameArduino!!).collection("objetos")
-                .document(
-                    arduinoData.objetos?.keys!!.first()
-                )
+            val objectStateRef =
+                firestore.collection(NAME_DB_FIRESTORE).document(usuario).collection("arduinos")
+                    .document(arduinoData.nameArduino).collection("objetos").document(
+                        arduinoData.objetos?.keys!!.first()
+                    )
 
             val objectState = objectStateRef.get().data<StateObject>()
 
@@ -85,10 +79,9 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
     suspend fun addArduino(arduino: ArduinoDomainModel) {
 
-        val arduinoRef = firestore.collection("usuarios")
-            .document("usuario1")
-            .collection("arduinos")
-            .document(arduino.name!!)
+        val arduinoRef =
+            firestore.collection("usuarios").document("usuario1").collection("arduinos")
+                .document(arduino.name!!)
 
 
         // (Opcional) Guarda datos generales del Arduino
@@ -96,15 +89,14 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
 
         // Guarda cada estado como un documento en la subcolección "objetos"
-        arduino.state1?.forEach { (key, stateObject) ->
+        arduino.states?.forEach { (key, stateObject) ->
 
             println(arduinoRef)
 
             val objetoRef = arduinoRef.collection("objetos").document(key)
 
             val data = mapOf(
-                "nombre" to stateObject.nombre,
-                "estado" to stateObject.estado
+                "nombre" to stateObject.nombre, "estado" to stateObject.estado
             )
 
             objetoRef.set(data)

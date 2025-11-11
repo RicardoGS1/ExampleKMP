@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothDeviceDomain
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothRepository
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
@@ -199,7 +198,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
             val arduinoDomainModel = ArduinoDomainModel(
-                name = currentObservingArduinoName!!, active = true, state1 = states
+                name = currentObservingArduinoName!!, active = true, states = states
             )
             ResponseState.Success(arduinoDomainModel)
 

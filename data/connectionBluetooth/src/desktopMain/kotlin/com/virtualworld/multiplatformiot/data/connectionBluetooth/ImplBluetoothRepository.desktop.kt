@@ -162,7 +162,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
             val arduinoDomainModel = ArduinoDomainModel(
-                name = currentObservingArduinoName!!, active = true, state1 = states
+                name = currentObservingArduinoName!!, active = true, states = states
             )
             ResponseState.Success(arduinoDomainModel)
 

@@ -1,6 +1,5 @@
 package com.virtualworld.multiplatformiot.data.connectionBLE
 
-import com.virtualworld.connectionBLE.BLEDeviceDomain
 import com.virtualworld.connectionBLE.BLERepository
 import com.virtualworld.connectionBLE.ResponseState
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
@@ -246,7 +245,7 @@ actual class ImplBLERepository : BLERepository {
                     ArduinoDomainModel(
                         name = peripheral.name() ?: "Dispositivo",
                         active = !dataArduinoActual.active,
-                        state1 = allStates
+                        states = allStates
                     )
 
                 emit(ResponseState.Success( dataArduinoActual))
@@ -319,7 +318,7 @@ actual class ImplBLERepository : BLERepository {
             }
 
 
-            val stateActual = dataArduinoActual.state1?.entries?.firstOrNull() {
+            val stateActual = dataArduinoActual.states?.entries?.firstOrNull() {
                 println("[iOS] estado a buscar $stateNumber")
                 it.value.nombre == stateNumber
             }

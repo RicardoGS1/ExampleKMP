@@ -17,26 +17,26 @@ internal class MenuViewModel(private val getArduinoActivateUseCase: GetArduinoAc
 
     fun getStatesArduinosInternet() {
 
-        viewModelScope.launch {
-
-            getArduinoActivateUseCase.getArduinoActivate("usuario1").collect{ response->
-
-                when(response){
-                    is ResponseStatesDomain.Error -> {}
-                    is ResponseStatesDomain.Loading -> {StateScreenMenu.Loading}
-                    is ResponseStatesDomain.Success -> {
-                        _arduinoActivesInternet.update {
-                            StateScreenMenu.Success(response.result)
-                        }
-                    }
-                }
-
-
-
-
-            }
-
-        }
+//        viewModelScope.launch {
+//
+//            getArduinoActivateUseCase.getArduinoActivate("usuario1").collect{ response->
+//
+//                when(response){
+//                    is ResponseStatesDomain.Error -> {}
+//                    is ResponseStatesDomain.Loading -> {StateScreenMenu.Loading}
+//                    is ResponseStatesDomain.Success -> {
+//                        _arduinoActivesInternet.update {
+//                            StateScreenMenu.Success(response.result)
+//                        }
+//                    }
+//                }
+//
+//
+//
+//
+//            }
+//
+//        }
 
 
 

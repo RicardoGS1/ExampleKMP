@@ -1,8 +1,9 @@
 package com.virtualworld.multiplatformiot.feature.conectionInternet.id
 
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.AddArduinoUseCase
-import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoUseCase
+import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoDetailUseCase
 import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetListArduinosUseCase
+import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.SetStateArduinoUseCase
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.ConectionInternetViewModel
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.DetailArduinoViewModel
 import com.virtualworld.multiplatformiot.feature.conectionInternet.screen.AddArduinoViewModel
@@ -15,8 +16,9 @@ val featureConectionInternetModule = module {
 
 
     factoryOf(::GetListArduinosUseCase)
-    factoryOf(::GetArduinoUseCase)
+    factoryOf(::GetArduinoDetailUseCase)
     factoryOf(::AddArduinoUseCase)
+    factoryOf(::SetStateArduinoUseCase)
 
     viewModelOf(::ConectionInternetViewModel)
 

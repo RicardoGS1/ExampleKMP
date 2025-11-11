@@ -19,9 +19,9 @@ class RepositoryInternetImp ( private val remoteDataSource: RemoteDataSource): R
     }
 
     override suspend fun updateArduinoState(
-        arduinoData: ArduinoData,
+        usuario:String, arduinoData: ArduinoData,
     ): NetworkResponseState<StateObject> {
-        return remoteDataSource.updateArduinoState( arduinoData)
+        return remoteDataSource.updateArduinoState( usuario,arduinoData)
     }
 
     override suspend fun addArduino(arduino: ArduinoDomainModel) {
