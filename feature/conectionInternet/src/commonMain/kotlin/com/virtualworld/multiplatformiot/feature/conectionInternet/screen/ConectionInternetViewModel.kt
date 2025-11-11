@@ -27,6 +27,8 @@ class ConectionInternetViewModel(private val getListArduinosUseCase: GetListArdu
 
     private fun getAllArduinos() {
 
+        _arduinos.update { ArduinosState.Loading }
+
         viewModelScope.launch {
 
             val listArduinos = getListArduinosUseCase("usuario1")
@@ -36,9 +38,6 @@ class ConectionInternetViewModel(private val getListArduinosUseCase: GetListArdu
                     ArduinosState.Error(exception = listArduinos.exception)
                 }
 
-                is ResponseStatesDomain.Loading -> {
-                    ArduinosState.Loading
-                }
 
                 is ResponseStatesDomain.Success -> _arduinos.update {
                     ArduinosState.Success(
