@@ -6,10 +6,13 @@ import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 const val NAME_DB_FIRESTORE = "usuarios"
 
@@ -17,17 +20,24 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
     suspend fun getAllArduino(usuario: String): NetworkResponseState<List<ArduinoData>> {
 
-        return firestore.collection(NAME_DB_FIRESTORE).document(usuario)
-            .collection("arduinos").snapshots.map { querySnapshot ->
-                val listArduino = querySnapshot.documents.map { documentSnapshot ->
-                    documentSnapshot.data<ArduinoData>().copy(nameArduino = documentSnapshot.id)
-                }
-                if (listArduino.isEmpty()) {
-                    throw ProductEmptyException()
-                } else {
-                    NetworkResponseState.Success(listArduino)
-                }
-            }.first()
+        return withContext(Dispatchers.IO) {
+            try {
+                firestore.collection(NAME_DB_FIRESTORE).document(usuario)
+                    .collection("arduinos").snapshots.map { querySnapshot ->
+                        val listArduino = querySnapshot.documents.map { documentSnapshot ->
+                            documentSnapshot.data<ArduinoData>()
+                                .copy(nameArduino = documentSnapshot.id)
+                        }
+                        if (listArduino.isEmpty()) {
+                            throw ProductEmptyException()
+                        } else {
+                            NetworkResponseState.Success(listArduino)
+                        }
+                    }.first()
+            } catch (e: Exception) {
+                NetworkResponseState.Error(e)
+            }
+        }
     }
 
 
