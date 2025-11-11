@@ -29,7 +29,7 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
                                 .copy(nameArduino = documentSnapshot.id)
                         }
                         if (listArduino.isEmpty()) {
-                            throw ProductEmptyException()
+                            throw Exception("No se encontro ningun elemento")
                         } else {
                             NetworkResponseState.Success(listArduino)
                         }

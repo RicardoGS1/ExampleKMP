@@ -54,8 +54,6 @@ class DetailArduinoViewModel(
 
     fun updateState(key: String) {
 
-        _arduinos.update { ArduinosState.Loading }
-
         viewModelScope.launch {
 
             if (_arduinos.value is ArduinosState.Success) {
