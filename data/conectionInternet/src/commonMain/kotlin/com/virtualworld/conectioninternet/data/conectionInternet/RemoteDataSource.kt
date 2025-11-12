@@ -1,6 +1,5 @@
 package com.virtualworld.conectioninternet.data.conectionInternet
 
-import com.virtualworld.multiplatformiot.ProductEmptyException
 import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject

@@ -42,11 +42,14 @@ kotlin {
 
         val desktopMain by getting
 
+
         androidMain.dependencies {
 
             //FIREBASE
             implementation(project.dependencies.platform(libs.android.firebase.bom))
             implementation(libs.firebase.firestore.ktx)
+            implementation(libs.kotlinx.coroutines.test)
+
 
 
         }
@@ -83,6 +86,13 @@ kotlin {
 
 
         }
+
+        commonTest.dependencies {
+            implementation(libs.mockk)
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+        }
+
 
 
 
