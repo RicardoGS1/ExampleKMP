@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 class RepositoryInternetImp ( private val remoteDataSource: RemoteDataSource): RepositoryInternet {
 
 
-    override fun getAllArduinos(usuario: String): Flow<NetworkResponseState<List<ArduinoData>>> {
+    override suspend fun getAllArduinos(usuario: String): NetworkResponseState<List<ArduinoData>> {
        return remoteDataSource.getAllArduino(usuario)
     }
 
@@ -19,17 +19,17 @@ class RepositoryInternetImp ( private val remoteDataSource: RemoteDataSource): R
     }
 
     override suspend fun updateArduinoState(
-        arduinoData: ArduinoData,
+        usuario:String, arduinoData: ArduinoData,
     ): NetworkResponseState<StateObject> {
-        return remoteDataSource.updateArduinoState( arduinoData)
+        return remoteDataSource.updateArduinoState( usuario,arduinoData)
     }
 
     override suspend fun addArduino(arduino: ArduinoDomainModel) {
         remoteDataSource.addArduino(arduino)
     }
 
-    override fun getArduinoActivate(usuario: String): Flow<NetworkResponseState<List<ArduinoData>>> {
-       return remoteDataSource.getAllArduino(usuario)
-    }
+//    override fun getArduinoActivate(usuario: String): Flow<NetworkResponseState<List<ArduinoData>>> {
+//       return remoteDataSource.getAllArduino(usuario)
+//    }
 
 }

@@ -16,7 +16,7 @@ fun ArduinoData.mapperToDomain(): ArduinoDomainModel {
 
     return ArduinoDomainModel(
         name = this.nameArduino ?: "",
-        state1 = stateMap
+        states = stateMap
     )
 }
 
