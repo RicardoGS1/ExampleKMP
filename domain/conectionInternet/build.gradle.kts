@@ -39,6 +39,12 @@ kotlin {
             implementation(libs.kotlinx.serialization)
         }
 
+        commonTest.dependencies {
+            implementation("io.mockk:mockk:1.14.6") // O la versión más reciente
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+        }
+
 
     }
 }
