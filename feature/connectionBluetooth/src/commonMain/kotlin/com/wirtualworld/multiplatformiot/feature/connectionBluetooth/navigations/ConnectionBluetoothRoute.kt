@@ -34,21 +34,6 @@ fun NavGraphBuilder.connectionBluetoothGraph(
         )
     }
 
-//    composable(ConnectionBluetoothNavigation.ConnectionBluetoothLE.route) {
-//
-//        val viewModel: ConnectionBluetoothLEViewModel = koinViewModel()
-//
-//        ConnectionBluetoothScreenLE(
-//            popBackStack = { navController.popBackStack() },
-//            goToDetailArduino = { arduinoName, arduinoAddress ->
-//                navController.navigate(ConnectionBluetoothNavigation.DetailArduino(arduinoName,arduinoAddress).createRoute(arduinoName,arduinoAddress))
-//            },
-//            viewModel = viewModel,
-//            valueScroll = valueScroll
-//
-//        )
-//    }
-
 
     composable(
         route = ConnectionBluetoothNavigation.DetailArduino("","").route,
