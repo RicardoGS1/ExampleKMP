@@ -1,14 +1,12 @@
 package com.virtualworld.multiplatformiot.domain.conectionInternet.usecase
 
 
-import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.domain.conectionInternet.mapper.mapperToDomain
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseStatesDomain
 import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseStatesDomain.*
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class GetListArduinosUseCase(private val repositoryInternet: RepositoryInternet) {
 
@@ -18,11 +16,11 @@ class GetListArduinosUseCase(private val repositoryInternet: RepositoryInternet)
 
         return when (listArduinos) {
 
-            is NetworkResponseState.Error -> {
+            is ResponseStateData.Error -> {
                 Error(listArduinos.exception)
             }
 
-            is NetworkResponseState.Success -> {
+            is ResponseStateData.Success -> {
                 Success(listArduinos.result.map { it.mapperToDomain() })
             }
 

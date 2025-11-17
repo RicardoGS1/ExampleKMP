@@ -1,6 +1,6 @@
 package com.virtualworld.multiplatformiot.data.connectionBluetooth
 
-import com.virtualworld.multiplatformiot.dataCoreModule
+import com.virtualworld.multiplatformiot.data.core.dataCoreModule
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothRepository
 import org.koin.dsl.module
 

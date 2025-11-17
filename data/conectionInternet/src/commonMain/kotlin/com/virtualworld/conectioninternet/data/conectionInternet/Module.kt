@@ -1,6 +1,6 @@
 package com.virtualworld.conectioninternet.data.conectionInternet
 
-import com.virtualworld.multiplatformiot.dataCoreModule
+import com.virtualworld.multiplatformiot.data.core.dataCoreModule
 import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.RepositoryInternet
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore

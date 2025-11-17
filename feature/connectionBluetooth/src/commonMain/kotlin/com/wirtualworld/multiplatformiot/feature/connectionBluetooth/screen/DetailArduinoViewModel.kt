@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ConnectToArduinoUseCase
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.GetArduinoUseCase
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
+import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseStateDomain
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.SetChangerStateUseCase
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +31,11 @@ class DetailArduinoViewModelB(
             val arduinoConnect = connectToArduinoUseCase.connectToDevice(arduinoAddress)
 
             when (arduinoConnect) {
-                is ResponseState.Error -> {
+                is ResponseStateDomain.Error -> {
                     _arduinosState.value = ArduinosState.Error(arduinoConnect.exception)
                 }
 
-                is ResponseState.Success<Boolean> -> {
+                is ResponseStateDomain.Success<Boolean> -> {
 
                     if (arduinoConnect.result) {
 
@@ -47,11 +47,11 @@ class DetailArduinoViewModelB(
 
 
                             when (responseArduinoDetail) {
-                                is ResponseState.Error -> {
+                                is ResponseStateDomain.Error -> {
                                     _arduinosState.value = ArduinosState.Error(responseArduinoDetail.exception)
                                 }
 
-                                is ResponseState.Success<ArduinoDomainModel> -> {
+                                is ResponseStateDomain.Success<ArduinoDomainModel> -> {
 
                                     _arduinosState.value = ArduinosState.Success(responseArduinoDetail.result)
 

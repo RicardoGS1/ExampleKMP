@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 class GetArduinoUseCase(private val bluetoothRepository: BluetoothRepository) {
 
-    fun getArduino(): Flow<ResponseState<ArduinoDomainModel>> {
+    fun getArduino(): Flow<ResponseStateDomain<ArduinoDomainModel>> {
 
        return bluetoothRepository.getAllStatesFlow()
 

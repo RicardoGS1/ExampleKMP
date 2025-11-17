@@ -1,4 +1,4 @@
-package com.virtualworld.multiplatformiot
+package com.virtualworld.multiplatformiot.data.core
 
 import org.koin.dsl.module
 
