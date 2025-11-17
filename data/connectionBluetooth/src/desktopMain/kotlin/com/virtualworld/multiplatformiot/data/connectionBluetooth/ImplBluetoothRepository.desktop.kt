@@ -1,9 +1,10 @@
 package com.virtualworld.multiplatformiot.data.connectionBluetooth
 
 import com.fazecast.jSerialComm.SerialPort
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothDeviceDomain
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothRepository
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
+import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseStateDomain
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 import io.ktor.http.decodeURLPart
@@ -33,53 +34,50 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
     private var currentObservingArduinoName: String? = null
 
-    actual override suspend fun getPairedDevices(): List<ArduinoDomainModel> =
+    actual override suspend fun getPairedDevices(): ResponseStateData<List<ArduinoDomainModel>> =
         withContext(Dispatchers.IO) {
+
             try {
-                SerialPort.getCommPorts()
-//                    .filter {
-//                        val name = it.descriptivePortName.lowercase()
-//                        // Puedes hacer este filtro tan simple o complejo como necesites
-//                        name.contains("bluetooth") || name.contains("blth") || name.contains("hc-05") || name.contains("arduino")
-//                    }
-                    .map { port ->
+              val serialPort =  SerialPort.getCommPorts()
+
+                if(serialPort.isNullOrEmpty()){
+                    throw Exception("No se encontro ningun dispositivo verifique el estado del Bluetooth")
+                }
+
+                val mapSerialPort = serialPort.map { port ->
                         ArduinoDomainModel(
                             name = port.descriptivePortName,
                             address = port.systemPortPath.encodeURLParameter() // La dirección correcta para `connectToDevice` es codifica para evitar errores
                         )
                     }
+                ResponseStateData.Success(mapSerialPort)
+
             } catch (e: Exception) {
-                println("[Desktop] Error listando emparejados via system_profiler: ${e.message}")
-                emptyList()
+                ResponseStateData.Error(e)
             }
         }
 
-    actual override suspend fun connectToDevice(address: String): ResponseState<Boolean> =
+    actual override suspend fun connectToDevice(address: String): ResponseStateDomain<Boolean> =
         withContext(Dispatchers.IO) {
+
             try {
                SerialPort.getCommPorts().forEach {println( it.systemPortPath) }
                 // address esperado: ruta del puerto, p.ej. "/dev/tty.HC-05-DevB"
                 val port = SerialPort.getCommPorts()
                     .firstOrNull { (it.systemPortPath ) == address.decodeURLPart() }
-                    ?: return@withContext ResponseState.Error(Exception("Puerto serie no encontrado: $address"))
+                    ?: return@withContext ResponseStateDomain.Error(Exception("Puerto serie no encontrado: $address"))
 
-
-
-                // Configuración típica de HC-05: 9600-8-N-1 (ajusta si es diferente)
+                // Configuración típica de HC-05: 9600-8-N-1
                 port.baudRate = 9600
                 port.numDataBits = 8
                 port.numStopBits = SerialPort.ONE_STOP_BIT
                 port.parity = SerialPort.NO_PARITY
                 port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 5000, 2000)
 
-                println("todo listo para inciar puerto")
 
                 if (!port.openPort()) {
-                    println("puero no se pudo abrir")
-                    return@withContext ResponseState.Error(Exception("No se pudo abrir el puerto: $address"))
+                    return@withContext ResponseStateDomain.Error(Exception("No se pudo abrir el puerto: $address"))
                 }
-
-                println("puerto iniciado")
 
                 serialPort = port
                 inputStream = port.inputStream
@@ -87,20 +85,15 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
                 currentObservingArduinoName = port.descriptivePortName ?: address
 
-                ResponseState.Success(true)
+                ResponseStateDomain.Success(true)
             } catch (e: Exception) {
                 closeConnection()
-                ResponseState.Error(e)
+                ResponseStateDomain.Error(e)
             }
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    actual override fun getAllStatesFlow(): Flow<ResponseState<ArduinoDomainModel>> {
-
-        // flatMapLatest se usa para que si refreshTrigger emite un nuevo valor,
-        // la operación interna (fetchCurrentStates) se cancele y se reinicie.
-        // onStart emite un Unit para cargar los datos la primera vez que el Flow se colecta.
-
+    actual override fun getAllStatesFlow(): Flow<ResponseStateDomain<ArduinoDomainModel>> {
 
         return flow {
             while (true) {
@@ -109,12 +102,11 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                 // Creamos un Flow simple que emite el resultado de la función suspend
                 emit(currentState)
 
-                if (currentState is ResponseState.Error) {
+                if (currentState is ResponseStateDomain.Error) {
                     break
                 }
 
                 delay(1000)
-
 
             }
         }.flowOn(Dispatchers.IO).distinctUntilChanged()
@@ -134,12 +126,12 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
 
-    private suspend fun getAllStatesArduino(): ResponseState<ArduinoDomainModel> {
+    private suspend fun getAllStatesArduino(): ResponseStateDomain<ArduinoDomainModel> {
 
 
         if (serialPort == null || serialPort?.isOpen != true) {
 
-            return ResponseState.Error(Exception("Not connected to any Arduino device."))
+            return ResponseStateDomain.Error(Exception("Not connected to any Arduino device."))
 
         }
 
@@ -151,27 +143,16 @@ actual class ImplBluetoothRepository : BluetoothRepository {
             // El Arduino solo responde cuando se le pregunta:
             sendCommand("GET_STATES\n")
 
-            println("4")
-
-
-
-
             val states = readArduinoStates(inputStream) // Tu función de lectura existente
-
-            println("6")
-
 
             val arduinoDomainModel = ArduinoDomainModel(
                 name = currentObservingArduinoName!!, active = true, states = states
             )
-            ResponseState.Success(arduinoDomainModel)
+            ResponseStateDomain.Success(arduinoDomainModel)
 
         } catch (e: IOException) {
-            // Errores de IO específicos de la lectura/escritura
-            // Podrías querer cerrar la conexión aquí si el error es grave
-            // closeConnection() // Considera las implicaciones
 
-            ResponseState.Error(
+            ResponseStateDomain.Error(
                 Exception(
                     "Error reading Arduino states: ${e.message}", e
                 )
@@ -180,30 +161,6 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         }
     }
 
-
-
-
-//    private suspend fun getAllStatesArduino(): ResponseState<ArduinoDomain> {
-//        if (serialPort == null || serialPort?.isOpen != true) {
-//            return ResponseState.Error(Exception("No hay conexión con ningún dispositivo Arduino."))
-//        }
-//        return try {
-//            // Solicitar estados actuales al Arduino
-//            sendCommand("GET_STATES\n")
-//
-//            println("Comando enviado GET_STATES")
-//
-//            val states = readArduinoStates()
-//            val arduinoDomain = ArduinoDomain(
-//                name = currentObservingArduinoName, active = true, state1 = states
-//            )
-//            ResponseState.Success(arduinoDomain)
-//        } catch (e: IOException) {
-//            ResponseState.Error(Exception("Error leyendo estados del Arduino: ${e.message}", e))
-//        } catch (e: Exception) {
-//            ResponseState.Error(e)
-//        }
-//    }
 
     private suspend fun sendCommand(command: String) {
 
@@ -334,83 +291,6 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         // No hay API directa; inferimos si existen puertos Bluetooth disponibles
         SerialPort.getCommPorts().any { (it.systemPortPath ?: "").startsWith("/dev/tty") }
     }
-
-    private fun getPairedBluetoothDevicesOnMac(): List<BluetoothDeviceDomain> {
-        val result = mutableListOf<BluetoothDeviceDomain>()
-
-        val process = ProcessBuilder(
-            "/usr/sbin/system_profiler",
-            "SPBluetoothDataType"
-        )
-            .redirectErrorStream(true)
-            .start()
-
-        val output = process.inputStream.bufferedReader().use { it.readText() }
-        val exit = process.waitFor()
-        if (exit != 0) throw Exception("system_profiler devolvió código $exit")
-
-        // Parse simple: buscamos bloques que contengan "Paired: Yes" y extraemos Name/Address
-        // Ejemplos de líneas típicas:
-        //     Name: HC-06
-        //     Address: 98-DA-60-12-34-56
-        //     Paired: Yes
-        //     Manufacturer: ...
-        var currentName: String? = null
-        var currentAddress: String? = null
-        var currentPaired = false
-
-        fun flushIfValid() {
-            if (currentName != null || currentAddress != null) {
-//                val name = currentName ?: (currentAddress ?: "Dispositivo Bluetooth")
-//                val address = currentAddress ?: name
-                result.add(
-                    BluetoothDeviceDomain(
-                        name = currentName?:"error",
-                        address = currentAddress?:"error",
-                        isConnected = currentPaired
-                    )
-                )
-            }
-            currentName = null
-            currentAddress = null
-            currentPaired = false
-        }
-
-        output.lineSequence().forEach { rawLine ->
-            println("rawline"+rawLine)
-            val line = rawLine.trim()
-            // Los bloques de dispositivos suelen separarse por líneas en blanco o por encabezados
-//            if (line.isEmpty()) {
-//                flushIfValid()
-//                return@forEach
-//            }
-            when {
-//                line.startsWith("Name:") || line.startsWith("Nombre:") -> {
-//                    currentName = line.substringAfter(":").trim()
-//                }
-                line.startsWith("Address:") -> {
-                    // macOS usa guiones; mantenemos como address
-                    currentAddress = line.substringAfter(":").trim()
-                    flushIfValid()
-                }
-                line.startsWith("Paired:") || line.startsWith("Emparejado:") -> {
-                    val value = line.substringAfter(":").trim()
-                    currentPaired = value.equals("Yes", true) || value.equals("Sí", true) || value.equals("Si", true)
-                }
-                // Nuevo bloque detectado por encabezado "Devices:" u otro ⇒ vaciamos acumulado
-                line.endsWith(":") && line != "Bluetooth:" -> {
-                    currentName = line.substringBefore(":").trim()
-                }
-            }
-
-        }
-        // Último bloque
-        //flushIfValid()
-
-        return result
-    }
-
-
 
 
 }

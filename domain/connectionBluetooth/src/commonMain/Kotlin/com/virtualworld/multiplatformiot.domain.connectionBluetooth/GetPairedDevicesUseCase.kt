@@ -1,35 +1,36 @@
 package com.virtualworld.multiplatformiot.domain.connectionBluetooth
 
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 
 
 class GetPairedDevicesUseCase(
     private val bluetoothRepository: BluetoothRepository
 ) {
-    suspend operator fun invoke(): ResponseState<List<ArduinoDomainModel>> {
+    suspend operator fun invoke(): ResponseStateDomain<List<ArduinoDomainModel>> {
 
-        return try {
+        val allPairedDevices = bluetoothRepository.getPairedDevices()
 
-            val allPairedDevices = bluetoothRepository.getPairedDevices()
+        return when (allPairedDevices) {
 
-            if (allPairedDevices.isEmpty()) {
-                return ResponseState.Error(Exception("No se encontraron dispositivos Bluetooth emparejados. Verifique el permiso bluetooth o actuelmente no esta activo este modulo para este tipo de dispisitivo "))
+            is ResponseStateData.Error -> {
+                ResponseStateDomain.Error(allPairedDevices.exception)
             }
 
-            val filteredDevices = allPairedDevices.filter {
-                it.name.startsWith("Arduino", ignoreCase = true) ||
-                        it.name.startsWith("desktop", ignoreCase = true) ||
-                        it.name.contains("hc-05", ignoreCase = true)
+            is ResponseStateData.Success<List<ArduinoDomainModel>> -> {
+
+                val filteredDevices = allPairedDevices.result.filter {
+                    it.name.startsWith("Arduino", ignoreCase = true) ||
+                            it.name.startsWith("desktop", ignoreCase = true) ||
+                            it.name.contains("hc-05", ignoreCase = true)
+                }
+
+                if (!filteredDevices.isEmpty())
+                    ResponseStateDomain.Success(filteredDevices)
+                else
+                    ResponseStateDomain.Error(Exception("Los dispositivos encontrados no son compatibles o no estan correctamente configurados"))
             }
-
-//            if (filteredDevices.isEmpty()) {
-//                return ResponseState.Error(Exception("Ninguno de los dispositivos emparejados es compatible."))
-//            }
-
-            ResponseState.Success(filteredDevices)
-
-        } catch (e: Exception) {
-            ResponseState.Error(e)
         }
+
     }
 } 

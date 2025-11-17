@@ -11,8 +11,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.domain.connectionBluetooth.BluetoothRepository
-import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseState
+import com.virtualworld.multiplatformiot.domain.connectionBluetooth.ResponseStateDomain
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 import kotlinx.coroutines.Dispatchers
@@ -58,56 +59,67 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    actual override suspend fun getPairedDevices(): List<ArduinoDomainModel> {
+    actual override suspend fun getPairedDevices(): ResponseStateData<List<ArduinoDomainModel>> {
 
 
         return withContext(Dispatchers.IO) {
 
-            if (!hasBluetoothPermission()) {
-                return@withContext emptyList()
-            }
+            try {
 
-            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+                if (!hasBluetoothPermission()) {
+                    throw Exception("Bluetooth permissions not granted")
+                }
 
-            val devices = mutableListOf<ArduinoDomainModel>()
+                // Verificar si Bluetooth está habilitado
+                if (!isBluetoothEnabled()) {
+                    throw Exception("Bluetooth is not enabled")
+                }
+
+                val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+
+                if(pairedDevices.isNullOrEmpty()){
+                    throw Exception("No se encontro ningun dispositivo")
+                }
+
+                val devices = mutableListOf<ArduinoDomainModel>()
 
 
-            pairedDevices?.forEach { device ->
-                devices.add(
-                    ArduinoDomainModel(
-                        name = device.name ?: "Unknown Device",
-                        address = device.address,
-                        isConnected = true // Por ahora asumimos que no está conectado
+                pairedDevices.forEach { device ->
+                    devices.add(
+                        ArduinoDomainModel(
+                            name = device.name ?: "Unknown Device",
+                            address = device.address,
+                            isConnected = true // Por ahora asumimos que no está conectado
+                        )
                     )
-                )
+                }
+
+                ResponseStateData.Success(devices)
+
+            } catch (e: Exception) {
+                ResponseStateData.Error(e)
             }
 
-            devices
 
         }
     }
 
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    actual override suspend fun connectToDevice(address: String): ResponseState<Boolean> {
+    actual override suspend fun connectToDevice(address: String): ResponseStateDomain<Boolean> {
 
         return withContext(Dispatchers.IO) {
             try {
-                // Verificar permisos
-                if (!hasBluetoothPermission()) {
-                    return@withContext ResponseState.Error(Exception("Bluetooth permissions not granted"))
-                }
 
                 // Verificar si Bluetooth está habilitado
                 if (!isBluetoothEnabled()) {
-                    return@withContext ResponseState.Error(Exception("Bluetooth is not enabled"))
+                    return@withContext ResponseStateDomain.Error(Exception("Bluetooth is not enabled"))
                 }
 
                 // Obtener el dispositivo por dirección
                 val device = bluetoothAdapter?.getRemoteDevice(address)
-                    ?: return@withContext ResponseState.Error(Exception("Device not found"))
+                    ?: throw Exception("Device not found address incorrect")
 
-                println("paso ai algo raro")
 
                 // Crear socket Bluetooth
                 bluetoothSocket = device.createRfcommSocketToServiceRecord(SPP_UUID)
@@ -119,12 +131,11 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
                 currentObservingArduinoName = device.name ?: "Arduino Device"
 
-                ResponseState.Success(true)
+                ResponseStateDomain.Success(true)
 
             } catch (e: Exception) {
-                // Cerrar conexión en caso de error
                 closeConnection()
-                ResponseState.Error(e)
+                ResponseStateDomain.Error(e)
             }
         }
 
@@ -132,12 +143,11 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    actual override fun getAllStatesFlow(): Flow<ResponseState<ArduinoDomainModel>> {
+    actual override fun getAllStatesFlow(): Flow<ResponseStateDomain<ArduinoDomainModel>> {
 
         // flatMapLatest se usa para que si refreshTrigger emite un nuevo valor,
         // la operación interna (fetchCurrentStates) se cancele y se reinicie.
         // onStart emite un Unit para cargar los datos la primera vez que el Flow se colecta.
-
 
         return flow {
             while (true) {
@@ -146,7 +156,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                 // Creamos un Flow simple que emite el resultado de la función suspend
                 emit(currentState)
 
-                if (currentState is ResponseState.Error) {
+                if (currentState is ResponseStateDomain.Error) {
                     break
                 }
 
@@ -171,12 +181,12 @@ actual class ImplBluetoothRepository : BluetoothRepository {
     }
 
 
-    private suspend fun getAllStatesArduino(): ResponseState<ArduinoDomainModel> {
+    private suspend fun getAllStatesArduino(): ResponseStateDomain<ArduinoDomainModel> {
 
 
         if (bluetoothSocket == null || bluetoothSocket?.isConnected != true) {
 
-            return ResponseState.Error(Exception("Not connected to any Arduino device."))
+            return ResponseStateDomain.Error(Exception("Not connected to any Arduino device."))
 
         }
 
@@ -191,7 +201,6 @@ actual class ImplBluetoothRepository : BluetoothRepository {
             println("4")
 
 
-
             val states = readArduinoStates(inputStream) // Tu función de lectura existente
 
             println("6")
@@ -200,14 +209,14 @@ actual class ImplBluetoothRepository : BluetoothRepository {
             val arduinoDomainModel = ArduinoDomainModel(
                 name = currentObservingArduinoName!!, active = true, states = states
             )
-            ResponseState.Success(arduinoDomainModel)
+            ResponseStateDomain.Success(arduinoDomainModel)
 
         } catch (e: IOException) {
             // Errores de IO específicos de la lectura/escritura
             // Podrías querer cerrar la conexión aquí si el error es grave
             // closeConnection() // Considera las implicaciones
 
-            ResponseState.Error(
+            ResponseStateDomain.Error(
                 Exception(
                     "Error reading Arduino states: ${e.message}", e
                 )
@@ -235,7 +244,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
         if (inputStream == null) return emptyMap()
 
-        // 1. Envolver el InputStream para lectura de líneas
+        // Envolver el InputStream para lectura de líneas
         // Usamos InputStreamReader para manejar la codificación de caracteres (UTF-8 es común)
         // y BufferedReader para el método readLine()
         val reader = BufferedReader(InputStreamReader(inputStream))
@@ -245,15 +254,16 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         val startTime = System.currentTimeMillis()
 
         try {
-            // 2. Bucle principal de lectura línea por línea
+            // Bucle principal de lectura línea por línea
             while (System.currentTimeMillis() - startTime < timeout) {
                 // readLine() es un método bloqueante, pero es el más fiable
                 // para datos basados en texto con delimitadores de línea (\n).
                 // Lo hacemos no-bloqueante comprobando primero si hay datos.
 
-               println (inputStream.available())
+                println(inputStream.available())
                 if (inputStream.available() > 0 || readingStates) {
-                    val line = reader.readLine() // Esto bloqueará hasta que haya una línea completa o timeout (depende de la implementación subyacente)
+                    val line =
+                        reader.readLine() // Esto bloqueará hasta que haya una línea completa o timeout (depende de la implementación subyacente)
 
                     println((inputStream.available() > 0).toString() + "j" + "" + readingStates)
 
@@ -270,13 +280,18 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                             readingStates = true
                             continue // Saltar al inicio del bucle
                         }
+
                         "END_CURRENT_STATES" -> {
                             readingStates = false
                             break // Hemos terminado de leer, salir del bucle while
                         }
+
                         else -> {
-                            // 3. Parsing de la línea si estamos dentro de la sección
-                            if (readingStates && trimmedLine.contains("state") && trimmedLine.contains(":")) {
+                            //  Parsing de la línea si estamos dentro de la sección
+                            if (readingStates && trimmedLine.contains("state") && trimmedLine.contains(
+                                    ":"
+                                )
+                            ) {
                                 val parts = trimmedLine.split(":")
                                 if (parts.size == 2) {
                                     val stateName = parts[0].trim()
@@ -314,80 +329,6 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         println("Parsing complete. Read ${states.size} states.")
         return states
     }
-
-
-//    private fun readArduinoStates(): Map<String, StateObjectDomain> {
-//        val states = mutableMapOf<String, StateObjectDomain>()
-//        val response = StringBuilder()
-//
-//        try {
-//            // Leer respuesta línea por línea con timeout
-//            val buffer = ByteArray(1024)
-//            var bytesRead: Int
-//            var timeout = 5000 // 5 segundos de timeout
-//            var startTime = System.currentTimeMillis()
-//
-//            // Esperar a que llegue la respuesta completa
-//            Thread.sleep(500) // Dar tiempo al Arduino para responder
-//
-//            //(inputStream?.available() ?: 0) > 0 ||
-//
-//            while (
-//                (System.currentTimeMillis() - startTime) < timeout
-//            ) {
-//                if (inputStream?.available() ?: 0 > 0) {
-//                    bytesRead = inputStream?.read(buffer) ?: 0
-//                    if (bytesRead > 0) {
-//                        response.append(String(buffer, 0, bytesRead))
-//                        startTime =
-//                            System.currentTimeMillis() // Reset timeout cuando recibimos datos
-//                    }
-//                } else {
-//                    Thread.sleep(100) // Pequeña pausa para no saturar la CPU
-//                }
-//            }
-//
-//            // Parsear la respuesta
-//            val responseText = response.toString()
-//            println("Arduino response: $responseText")
-//
-//            // Buscar la sección de estados actuales
-//            val startIndex = responseText.indexOf("CURRENT_STATES")
-//            val endIndex = responseText.indexOf("END_CURRENT_STATES")
-//
-//            if (startIndex != -1 && endIndex != -1) {
-//                val statesSection = responseText.substring(startIndex, endIndex)
-//                val lines = statesSection.split("\n")
-//
-//                for (line in lines) {
-//                    if (line.contains("state") && line.contains(":")) {
-//                        val parts = line.split(":")
-//                        if (parts.size == 2) {
-//                            val stateName = parts[0].trim()
-//                            val stateValue = parts[1].trim().toIntOrNull()
-//
-//                            if (stateValue != null) {
-//                                states[stateName] = StateObjectDomain(
-//                                    nombre = stateName, //state1
-//                                    estado = stateValue == 1
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            } else {
-//
-//                throw Exception("Error de formato")
-//
-//            }
-//
-//        } catch (e: IOException) {
-//            throw Exception("Error reading Arduino response: ${e.message}")
-//        }
-//
-//        println("5")
-//        return states
-//    }
 
 
     private fun closeConnection() {
