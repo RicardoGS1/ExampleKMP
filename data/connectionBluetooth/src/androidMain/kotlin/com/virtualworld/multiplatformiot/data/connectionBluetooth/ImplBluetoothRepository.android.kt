@@ -135,7 +135,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
             } catch (e: Exception) {
                 closeConnection()
-                ResponseStateDomain.Error(e)
+                ResponseStateDomain.Error(Exception("No se pudo establecer connexion con el dispositivo.Error " + e.message) )
             }
         }
 

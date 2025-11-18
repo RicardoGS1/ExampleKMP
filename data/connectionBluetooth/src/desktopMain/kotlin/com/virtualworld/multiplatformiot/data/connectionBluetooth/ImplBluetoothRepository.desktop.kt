@@ -38,7 +38,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
         withContext(Dispatchers.IO) {
 
             try {
-              val serialPort =  SerialPort.getCommPorts()
+              val serialPort = SerialPort.getCommPorts()
 
                 if(serialPort.isNullOrEmpty()){
                     throw Exception("No se encontro ningun dispositivo verifique el estado del Bluetooth")
@@ -76,7 +76,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
 
 
                 if (!port.openPort()) {
-                    return@withContext ResponseStateDomain.Error(Exception("No se pudo abrir el puerto: $address"))
+                    return@withContext ResponseStateDomain.Error(Exception("No se pudo abrir el puerto: $address verifique que se encuantra a una distancia adecuada"))
                 }
 
                 serialPort = port
