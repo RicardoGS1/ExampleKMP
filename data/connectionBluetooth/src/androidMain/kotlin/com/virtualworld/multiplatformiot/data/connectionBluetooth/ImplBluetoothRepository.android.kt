@@ -89,7 +89,7 @@ actual class ImplBluetoothRepository : BluetoothRepository {
                         ArduinoDomainModel(
                             name = device.name ?: "Unknown Device",
                             address = device.address,
-                            isConnected = true // Por ahora asumimos que no está conectado
+                            active = null
                         )
                     )
                 }
