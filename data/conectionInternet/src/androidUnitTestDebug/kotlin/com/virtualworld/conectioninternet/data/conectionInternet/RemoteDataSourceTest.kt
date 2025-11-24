@@ -1,6 +1,6 @@
 package com.virtualworld.conectioninternet.data.conectionInternet
 
-import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.DocumentReference
@@ -80,9 +80,9 @@ class RemoteDataSourceTest {
         val result = remoteDataSource.getAllArduino("testUser")
 
         // 3. Assert (Verificación)
-        assertTrue(result is NetworkResponseState.Success, "El resultado debería ser Success")
+        assertTrue(result is ResponseStateData.Success, "El resultado debería ser Success")
 
-        val successResult = result as NetworkResponseState.Success
+        val successResult = result as ResponseStateData.Success
         assertEquals(2, successResult.result.size, "La lista debería contener 2 elementos")
 
         // Verificamos que los IDs de los documentos se han copiado correctamente
@@ -105,9 +105,9 @@ class RemoteDataSourceTest {
         val result = remoteDataSource.getAllArduino("testUser")
 
         // 3. Assert (Verificación)
-        assertTrue(result is NetworkResponseState.Error, "El resultado debería ser Error")
+        assertTrue(result is ResponseStateData.Error, "El resultado debería ser Error")
 
-        val errorResult = result as NetworkResponseState.Error
+        val errorResult = result as ResponseStateData.Error
         assertEquals("No se encontro ningun elemento", errorResult.exception.message)
     }
 
@@ -122,7 +122,7 @@ class RemoteDataSourceTest {
         val result = remoteDataSource.getAllArduino("testUser")
 
         // 3. Assert (Verificación)
-        assertTrue(result is NetworkResponseState.Error, "El resultado debería ser Error")
-        assertEquals(expectedException, (result as NetworkResponseState.Error).exception)
+        assertTrue(result is ResponseStateData.Error, "El resultado debería ser Error")
+        assertEquals(expectedException, (result as ResponseStateData.Error).exception)
     }
 }

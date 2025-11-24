@@ -55,7 +55,7 @@ fun ListViewArduinoStates(
         derivedStateOf {
             if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 140) listState.firstVisibleItemScrollOffset / 2
             else {
-                DEFAULT_RECT_HEIGHT_ARDUINOS-MIN_RECT_HEIGHT_ARDUINOS
+                DEFAULT_RECT_HEIGHT_ARDUINOS - MIN_RECT_HEIGHT_ARDUINOS
             }
         }
     }
@@ -102,14 +102,8 @@ fun ListViewArduinoStates(
 
             is ArduinosState.Success -> {
 
-
-                val pairNameState =
-                    stateArduino.arduinos.map {
-                        it.name.toString() to it.active
-                    }
-
                 ListArduinoSuccess(
-                    arduinos = pairNameState,
+                    arduinos = stateArduino.arduinos,
                     goToDetailArduino = goToDetailArduino,
                     listState = listState,
                 )
@@ -120,7 +114,7 @@ fun ListViewArduinoStates(
 
 @Composable
 fun ListArduinoSuccess(
-    arduinos: List<Pair<String, Boolean>>,
+    arduinos: List<ArduinoDomainModel>,
     goToDetailArduino: (String) -> Unit,
     listState: LazyListState
 ) {
@@ -141,7 +135,7 @@ fun ListArduinoSuccess(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-                    .clickable { goToDetailArduino(arduino.first) },
+                    .clickable { goToDetailArduino(arduino.name) },
                 elevation = CardDefaults.cardElevation(6.dp),
                 colors = CardDefaults.cardColors(containerColor = MyAppTheme.colorScheme.surface),
             ) {
@@ -151,29 +145,45 @@ fun ListArduinoSuccess(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = arduino.first,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.weight(1f),
-                        color = MyAppTheme.colorScheme.onSurface
-                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = arduino.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            //modifier = Modifier.weight(1f),
+                            color = MyAppTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = arduino.address,
+                            style = MaterialTheme.typography.titleSmall,
+                            //modifier = Modifier.weight(1f),
+                            color = MyAppTheme.colorScheme.onSurface
+                        )
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
+
+                    val textActive: Color = when (arduino.active) {
+                        true -> {
+                            Color(0xFF4CAF50)
+                        }
+
+                        false -> {
+                            Color(0xFFF44336)
+                        }
+
+                        null -> {
+                            Color.Gray
+                        }
+                    }
+
                     Box(
                         modifier = Modifier
                             .size(16.dp)
-                            .background(
-                                if (arduino.second) Color(0xFF4CAF50) else Color(
-                                    0xFFF44336
-                                ),
-                                shape = CircleShape
-                            )
+                            .background(textActive, shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = if (arduino.second == true) "Activo" else "Inactivo",
-                        color = if (arduino.second == true) Color(0xFF4CAF50) else Color(
-                            0xFFF44336
-                        ),
+                        text = if (arduino.active == true) "Activo" else if (arduino.active == false) "Inactivo" else "Desconocido",
+                        color = textActive,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }

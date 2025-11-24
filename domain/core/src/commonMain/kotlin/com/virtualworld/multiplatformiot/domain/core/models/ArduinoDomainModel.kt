@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ArduinoDomainModel(
     val name: String = "",
-    val address : String = "",
-    val active: Boolean = true,
+    val address: String = "",
+    val active: Boolean? = null,
     val isConnected: Boolean = false,
     val states: Map<String, StateObjectDomain>? = mapOf(),
 )

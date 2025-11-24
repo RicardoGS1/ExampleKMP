@@ -1,6 +1,6 @@
 package com.virtualworld.conectioninternet.data.conectionInternet
 
-import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
@@ -17,7 +17,7 @@ const val NAME_DB_FIRESTORE = "usuarios"
 
 class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
-    suspend fun getAllArduino(usuario: String): NetworkResponseState<List<ArduinoData>> {
+    suspend fun getAllArduino(usuario: String): ResponseStateData<List<ArduinoData>> {
 
         return withContext(Dispatchers.IO) {
             try {
@@ -30,17 +30,17 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
                         if (listArduino.isEmpty()) {
                             throw Exception("No se encontro ningun elemento")
                         } else {
-                            NetworkResponseState.Success(listArduino)
+                            ResponseStateData.Success(listArduino)
                         }
                     }.first()
             } catch (e: Exception) {
-                NetworkResponseState.Error(e)
+                ResponseStateData.Error(e)
             }
         }
     }
 
 
-    fun getArduino(usuario: String, name: String): Flow<NetworkResponseState<ArduinoData>> = flow {
+    fun getArduino(usuario: String, name: String): Flow<ResponseStateData<ArduinoData>> = flow {
         try {
             firestore.collection(NAME_DB_FIRESTORE).document(usuario).collection("arduinos")
                 .document(name).collection("objetos").snapshots.collect { querySnapshot ->
@@ -54,18 +54,18 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
                     val arduino = ArduinoData(nameArduino = name, objetos = objetos.toMap())
 
-                    emit(NetworkResponseState.Success(arduino))
+                    emit(ResponseStateData.Success(arduino))
                 }
 
         } catch (e: Exception) {
-            emit(NetworkResponseState.Error(e))
+            emit(ResponseStateData.Error(e))
         }
     }
 
     suspend fun updateArduinoState(
         usuario: String,
         arduinoData: ArduinoData
-    ): NetworkResponseState<StateObject> {
+    ): ResponseStateData<StateObject> {
         return try {
 
             val objectStateRef =
@@ -80,9 +80,9 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
             objectStateRef.update(updatedState)
 
-            NetworkResponseState.Success(updatedState)
+            ResponseStateData.Success(updatedState)
         } catch (e: Exception) {
-            NetworkResponseState.Error(e)
+            ResponseStateData.Error(e)
         }
     }
 

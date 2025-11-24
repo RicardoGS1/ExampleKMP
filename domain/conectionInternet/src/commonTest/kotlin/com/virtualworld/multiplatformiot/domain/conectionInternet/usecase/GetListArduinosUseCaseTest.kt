@@ -1,6 +1,6 @@
 package com.virtualworld.multiplatformiot.domain.conectionInternet.usecase
 
-import com.virtualworld.multiplatformiot.data.core.NetworkResponseState
+import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.conectionInternet.mapper.mapperToDomain
@@ -19,15 +19,15 @@ import kotlin.test.BeforeTest
 class FakeRepositoryInternet : RepositoryInternet {
 
     // 1. Variable para almacenar la respuesta que queremos simular
-    private lateinit var response: NetworkResponseState<List<ArduinoData>>
+    private lateinit var response: ResponseStateData<List<ArduinoData>>
 
     // 2. Método para configurar la respuesta desde nuestros tests
-    fun setAllArduinosResponse(response: NetworkResponseState<List<ArduinoData>>) {
+    fun setAllArduinosResponse(response: ResponseStateData<List<ArduinoData>>) {
         this.response = response
     }
 
     // 3. Implementación del método de la interfaz
-    override suspend fun getAllArduinos (user: String): NetworkResponseState<List<ArduinoData>> {
+    override suspend fun getAllArduinos (user: String): ResponseStateData<List<ArduinoData>> {
         // Simplemente devuelve la respuesta que hemos configurado
         return response
     }
@@ -36,14 +36,14 @@ class FakeRepositoryInternet : RepositoryInternet {
     override fun getArduinos(
         usuario: String,
         name: String
-    ): Flow<NetworkResponseState<ArduinoData>> {
+    ): Flow<ResponseStateData<ArduinoData>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun updateArduinoState(
         usuario: String,
         arduinoData: ArduinoData
-    ): NetworkResponseState<StateObject> {
+    ): ResponseStateData<StateObject> {
         TODO("Not yet implemented")
     }
 
@@ -67,7 +67,7 @@ class GetListArduinosUseCaseTest {
     fun `cuando el repositorio devuelve exito, el caso de uso devuelve exito con datos mapeados a dominio`() = runTest {
         // Preparamos los datos de la capa de DATOS (lo que el repo devuelve)
         val arduinoDataList = listOf(ArduinoData(nameArduino = "Arduino1", active = true))
-        fakeRepository.setAllArduinosResponse(NetworkResponseState.Success(arduinoDataList))
+        fakeRepository.setAllArduinosResponse(ResponseStateData.Success(arduinoDataList))
 
         //Acción (Act)
         val result = getListArduinosUseCase("usuario1")
@@ -86,7 +86,7 @@ class GetListArduinosUseCaseTest {
     fun `cuando el repositorio devuelve error, el caso de uso devuelve el mismo error`() = runTest {
         // Preparación
         val exception = Exception("Error de red")
-        fakeRepository.setAllArduinosResponse(NetworkResponseState.Error(exception))
+        fakeRepository.setAllArduinosResponse(ResponseStateData.Error(exception))
 
         // Acción (Act)
         val result = getListArduinosUseCase("usuario1")

@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
+import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
 import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 
 @Composable
@@ -39,8 +40,12 @@ fun ArduinoDetailContent(
 
         when (arduinoDetail) {
             is ArduinosState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(),contentAlignment = Alignment.Center) {
-                    Text(arduinoDetail.exception.message.toString(), fontSize = 16.sp)
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        arduinoDetail.exception.message.toString(),
+                        fontSize = 16.sp,
+                        color = MyAppTheme.colorScheme.onBackground,
+                    )
                 }
             }
 
@@ -61,7 +66,6 @@ fun ArduinoDetailContent(
                 )
             }
         }
-
 
 
 //        Box(
