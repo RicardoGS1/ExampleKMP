@@ -75,20 +75,20 @@ MultiplatformIoT/
 
 <table>
   <tr>
-    <td align="center"><strong>Home con Video</strong></td>
-    <td align="center"><strong>Cart</strong></td>
+    <td align="center"><strong>Video</strong></td>
+    <td align="center"><strong>Conexiones</strong></td>
   </tr>
   <tr>
     <td width="50%">
-      <video src="https://github.com/user-attachments/assets/caad5e71-6b95-4a8c-96fb-fb21f5754f02.mp4" autoplay loop muted playsinline width="100%"></video>
+      <img src="https://github.com/user-attachments/assets/11714ae7-c6d0-47e2-87b4-81594c94a70f" width="100%">
     </td>
     <td width="50%">
       <img src="https://github.com/user-attachments/assets/517de1c7-a34a-4d06-af34-8a906d2c3aad" width="100%">
     </td>
   </tr>
   <tr>
-    <td align="center"><strong>Orders</strong></td>
-    <td align="center"><strong>Sesion</strong></td>
+    <td align="center"><strong> </strong></td>
+    <td align="center"><strong> </strong></td>
   </tr>
   <tr>
     <td width="50%">
@@ -99,8 +99,8 @@ MultiplatformIoT/
     </td>
   </tr>
    <tr>
-    <td align="center"><strong>Date</strong></td>
-    <td align="center"><strong>Detail</strong></td>
+    <td align="center"><strong> </strong></td>
+    <td align="center"><strong> </strong></td>
   </tr>
   <tr>
     <td width="50%">
