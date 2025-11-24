@@ -5,12 +5,11 @@ import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import dev.gitlive.firebase.firestore.Source
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 const val NAME_DB_FIRESTORE = "usuarios"
@@ -21,18 +20,22 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
         return withContext(Dispatchers.IO) {
             try {
-                firestore.collection(NAME_DB_FIRESTORE).document(usuario)
-                    .collection("arduinos").snapshots.map { querySnapshot ->
-                        val listArduino = querySnapshot.documents.map { documentSnapshot ->
-                            documentSnapshot.data<ArduinoData>()
-                                .copy(nameArduino = documentSnapshot.id)
-                        }
-                        if (listArduino.isEmpty()) {
-                            throw Exception("No se encontro ningun elemento")
-                        } else {
-                            ResponseStateData.Success(listArduino)
-                        }
-                    }.first()
+                val querySnapshot = firestore.collection(NAME_DB_FIRESTORE)
+                    .document(usuario)
+                    .collection("arduinos")
+                    .get(Source.SERVER)
+
+                val listArduino = querySnapshot.documents.map { documentSnapshot ->
+                    documentSnapshot.data<ArduinoData>()
+                        .copy(nameArduino = documentSnapshot.id)
+                }
+
+                if (listArduino.isEmpty()) {
+                    throw Exception("No se encontro ningun elemento")
+                } else {
+                    ResponseStateData.Success(listArduino)
+                }
+
             } catch (e: Exception) {
                 ResponseStateData.Error(e)
             }
