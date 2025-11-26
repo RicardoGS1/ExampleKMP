@@ -6,13 +6,29 @@ plugins {
 
 kotlin {
 
-    jvm()
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "DomainConectionsInternet"
+            isStatic = true
+        }
+    }
 
     sourceSets {
 
         commonMain.dependencies {
 
             implementation(projects.data.core)
+            implementation(projects.domain.core)
 
             implementation(libs.kotlinx.coroutines.core)
 
@@ -21,6 +37,12 @@ kotlin {
 
             //SERIALISATION
             implementation(libs.kotlinx.serialization)
+        }
+
+        commonTest.dependencies {
+            implementation("io.mockk:mockk:1.14.6") // O la versión más reciente
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
         }
 
 

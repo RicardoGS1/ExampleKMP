@@ -1,79 +1,65 @@
 package com.virtualworld.multiplatformiot.feature.conectionInternet.screen
 
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ArduinoDomain
-import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseState
-import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoUseCase
-import com.virtualworld.multiplatformiot.feature.conectionInternet.models.ArduinosState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import com.virtualworld.multiplatformiot.domain.conectionInternet.model.ResponseStatesDomain
+import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.GetArduinoDetailUseCase
+import com.virtualworld.multiplatformiot.domain.conectionInternet.usecase.SetStateArduinoUseCase
+import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
+import com.virtualworld.multiplatformiot.ui.core.models.ArduinosState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.toMap
-import kotlin.collections.toMutableMap
 
 
-class DetailArduinoViewModel(private val getArduinoUseCase: GetArduinoUseCase) : ViewModel() {
+class DetailArduinoViewModel(
+    private val getArduinoDetailUseCase: GetArduinoDetailUseCase,
+    private val setStateArduinoUseCase: SetStateArduinoUseCase
+) :
+    ViewModel() {
 
 
-    private val _arduinos = MutableStateFlow<ArduinosState<ArduinoDomain>>(ArduinosState.Loading)
-    val arduinosState: StateFlow<ArduinosState<ArduinoDomain>> = _arduinos.asStateFlow()
+    private val _arduinos =
+        MutableStateFlow<ArduinosState<ArduinoDomainModel>>(ArduinosState.Loading)
+    val arduinosState: StateFlow<ArduinosState<ArduinoDomainModel>> = _arduinos.asStateFlow()
 
-    fun getArduino(arduinoName: String) {
+    fun getDetailArduino(arduinoName: String) {
+
+        _arduinos.update { ArduinosState.Loading }
+
         viewModelScope.launch {
-            try {
 
-                getArduinoUseCase.getArduino("usuario1", arduinoName).collect { arduino ->
+            getArduinoDetailUseCase.getArduino("usuario1", arduinoName).collect { arduino ->
 
-                    when (arduino) {
-                        is ResponseState.Error -> {
-                            ArduinosState.Error(exception = arduino.exception)
-                        }
-
-                        is ResponseState.Loading -> {
-                            ArduinosState.Loading
-                        }
-
-                        is ResponseState.Success -> {
-
-                            val arduinocorrect = ArduinoDomain(
-                                name = arduino.result.name,
-                                state1 = arduino.result.state1
-                            )
-
-                            _arduinos.update { ArduinosState.Success(arduinocorrect) }
-                        }
+                when (arduino) {
+                    is ResponseStatesDomain.Error -> {
+                        ArduinosState.Error(exception = arduino.exception)
                     }
 
+                    is ResponseStatesDomain.Success -> {
+                        val arduinocorrect = ArduinoDomainModel(
+                            name = arduino.result.name,
+                            address = arduino.result.address,
+                            states = arduino.result.states
+                        )
+                        _arduinos.update { ArduinosState.Success(arduinocorrect) }
+                    }
                 }
 
-            } catch (e: Exception) {
-                _arduinos.value = ArduinosState.Error(e)
             }
         }
     }
 
-    fun updateState (key: String) {
-
+    fun updateState(key: String) {
 
         viewModelScope.launch {
-            try {
-                when (val currentState = _arduinos.value) {
-                    is ArduinosState.Success -> {
-                        val currentArduino = currentState.arduinos
-                        getArduinoUseCase.updateArduinoState(currentArduino.name!!, key)
-                    }
-                    else -> {} // No hacemos nada si no estamos en estado Success
-                }
-            } catch (e: Exception) {
-                _arduinos.value = ArduinosState.Error(e)
+
+            if (_arduinos.value is ArduinosState.Success) {
+                val currentArduino =
+                    (_arduinos.value as ArduinosState.Success<ArduinoDomainModel>).arduinos
+                setStateArduinoUseCase.updateArduinoState("usuario1",currentArduino.name, key)
             }
         }
     }

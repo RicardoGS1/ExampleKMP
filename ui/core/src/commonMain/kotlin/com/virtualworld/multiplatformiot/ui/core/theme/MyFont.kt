@@ -50,7 +50,9 @@ fun typography() =
                     Res.font.my_font_primary,
                     FontWeight.Normal
                 )
-            )
+            ),
+            fontSize = 16.sp
+
         ),
         titleMedium = TextStyle(
             fontFamily = FontFamily(
@@ -58,7 +60,9 @@ fun typography() =
                     Res.font.my_font_primary,
                     FontWeight.Normal
                 )
-            )
+            ),
+            fontSize = 14.sp
+
         ),
         titleSmall = TextStyle(
             fontFamily = FontFamily(
@@ -66,7 +70,9 @@ fun typography() =
                     Res.font.my_font_primary,
                     FontWeight.Normal
                 )
-            )
+            ),
+            fontSize = 12.sp
+
         ),
 
         //BODY

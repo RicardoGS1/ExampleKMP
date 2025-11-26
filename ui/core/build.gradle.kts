@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
+
 }
 
 kotlin {
@@ -14,7 +17,7 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -29,7 +32,11 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
 
     sourceSets {
@@ -44,12 +51,26 @@ kotlin {
 
         commonMain.dependencies {
 
+            api(projects.domain.core)
+
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)
             api(compose.ui)
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
+
+            implementation(libs.kotlinx.serialization)
+
+            //ID
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.composeVM)
+
+            //VIEWMODEL
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
 
 
         }

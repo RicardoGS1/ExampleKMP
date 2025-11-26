@@ -5,7 +5,22 @@ plugins {
 
 kotlin {
 
-    jvm()
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "DomainConectionsLocal"
+            isStatic = true
+        }
+    }
 
     sourceSets {
 

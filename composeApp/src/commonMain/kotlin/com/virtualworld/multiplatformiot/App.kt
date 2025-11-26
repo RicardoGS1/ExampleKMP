@@ -11,7 +11,7 @@ import org.koin.core.module.Module
 
 @Composable
 @Preview
-fun App( platformModule: Module = Module()  ) {
+fun App(platformModule: Module = Module()) {
 
     KoinApplication(
         application = {
@@ -20,7 +20,6 @@ fun App( platformModule: Module = Module()  ) {
     ) {
 
         MyAppTheme {
-
 
             MainScreen()
 

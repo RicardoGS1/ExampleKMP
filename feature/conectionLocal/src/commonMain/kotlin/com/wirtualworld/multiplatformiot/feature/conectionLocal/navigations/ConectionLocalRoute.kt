@@ -1,5 +1,6 @@
 package com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations
 
+import androidx.compose.ui.unit.Dp
 import kotlinx.serialization.Serializable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -11,14 +12,14 @@ import org.koin.compose.viewmodel.koinViewModel
 data object ConectionLocal
 
 
-fun NavGraphBuilder.conectionLocalRoute(popBackStack: () -> Unit) {
+fun NavGraphBuilder.conectionLocalRoute(popBackStack: () -> Unit, valueScroll: (Dp) -> Unit) {
 
-    composable <ConectionLocal> {
+    composable(ConectionLocalNavigation.ConectionLocal.route) {
 
         val viewModel: ConectionLocalViewModel = koinViewModel()
 
         ConectionLocalScreen(
-            viewModel = viewModel,popBackStack
+            viewModel = viewModel, popBackStack, valueScroll = valueScroll
         )
 
     }

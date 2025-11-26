@@ -8,23 +8,28 @@ import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
-data object Menu
+sealed class MenuNavigation(val route: String) {
+
+    @Serializable
+    data object Menu : MenuNavigation("menu")
+}
 
 
-fun NavGraphBuilder.menuRoutes(
+fun NavGraphBuilder.menuRoutesGraph(
     goToLocalConection: () -> Unit,
     goToInternetConection: () -> Unit,
-    goToBluetoothConection: () -> Unit,) {
+    goToBluetoothConection: () -> Unit,
+    goToBluetoothLEConection: () -> Unit,) {
 
-    composable <Menu> {
+    composable(MenuNavigation.Menu.route) {
 
         val viewModel: MenuViewModel = koinViewModel()
-        
+
         MenuScreen(
             goToLocalConection = goToLocalConection,
-            goToInternetConection=goToInternetConection,
-            goToBluetoothConection=goToBluetoothConection,
-            menuViewModel = viewModel
+            goToInternetConection = goToInternetConection,
+            goToBluetoothConection = goToBluetoothConection,
+            goToBluetoothLEConection = goToBluetoothLEConection,
         )
 
     }

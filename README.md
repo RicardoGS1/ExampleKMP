@@ -1,12 +1,12 @@
 # MultiplatformIoT 🌐
 
-Una aplicación multiplataforma moderna para el control y monitoreo de dispositivos IoT basados en Arduino, desarrollada con Kotlin Multiplatform (KMP). Esta solución permite gestionar tus dispositivos Arduino de manera eficiente a través de diferentes plataformas: Android, iOS, Desktop y Web.
+Una aplicación multiplataforma moderna para el control y monitoreo de dispositivos IoT basados en Arduino, desarrollada con Kotlin Multiplatform (KMP). Esta solución permite gestionar tus dispositivos Arduino y ESP32 de manera eficiente a través de diferentes plataformas: Android, iOS, Desktop y Web.
 
 ## 🚀 Características Principales
 
-- 📱 Conexión multiplataforma con dispositivos Arduino
-- 🔄 Sincronización en tiempo real
-- 🌐 Soporte para conexiones locales y remotas
+- 📱 Conexión multiplataforma con dispositivos Arduino y ESP32
+- 🔄 Sincronización en tiempo real 
+- 🌐 Soporte para conexiones wifi local, Internet, Bluetooth classic, Blurtooth LE
 - 🔐 Gestión segura de dispositivos
 - 📊 Monitoreo en tiempo real
 - 🎨 Interfaz de usuario moderna y atractiva
@@ -62,7 +62,6 @@ MultiplatformIoT/
 - Soporte para conexión Bluetooth
 
 ### 🍎 iOS
-- UI nativa con SwiftUI
 - Integración con servicios de Apple
 - Optimización para dispositivos iOS
 
@@ -70,11 +69,53 @@ MultiplatformIoT/
 - Interfaz adaptada para escritorio
 - Soporte para múltiples ventanas
 - Atajos de teclado personalizados
-
-### 🌐 Web
-- Interfaz web responsive
-- Optimización para navegadores modernos
-- PWA support
+- 
 
 ## 📱 Capturas de Pantalla
+
+<table>
+  <tr>
+    <td align="center"><strong>Video</strong></td>
+    <td align="center"><strong>Conexiones</strong></td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/11714ae7-c6d0-47e2-87b4-81594c94a70f" width="100%">
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/517de1c7-a34a-4d06-af34-8a906d2c3aad" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><strong> </strong></td>
+    <td align="center"><strong> </strong></td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/da4e2f96-cc5f-4d05-b949-abbb73b6bfea" width="100%">
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/08cff33a-dcb6-4bf1-a5c7-8a18dd6a5fdf" width="100%">
+    </td>
+  </tr>
+   <tr>
+    <td align="center"><strong> </strong></td>
+    <td align="center"><strong> </strong></td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/3a653c70-e90f-46bf-9b6a-214ada60d06a" width="100%">
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/6cc53ecb-d1e3-45a5-8ac0-e73d675eefa3" width="100%">
+    </td>
+  </tr>
+</table>
+
+
+
+
+
+
+
 

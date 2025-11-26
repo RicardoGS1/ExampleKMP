@@ -9,23 +9,26 @@ androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.2.1"
 androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
-androidx-lifecycle = "2.8.4"
+androidxLifecycleCompose = "2.8.2"
 androidx-material = "1.12.0"
 coreTesting = "2.2.0"
+
+
 foundationAndroid = "1.8.0"
 androidx-test-junit = "1.2.1"
 androidx-arch-core-testing = "2.2.0"
 
 compose-multiplatform = "1.7.3"
 junit = "4.13.2"
-kotlin = "2.1.20-RC"
+kotlin = "2.1.21"
 kotlinx-coroutines = "1.10.1"
 kotlinxCoroutinesTest = "1.10.1"
 kotlinxSerializationJson = "1.6.3"
 
 coroutines = "1.10.1"
 
-mockk = "1.13.8"
+mockk = "1.14.6"
+mockkVersion = "1.14.6"
 navigation-compose = "2.8.0-alpha10"
 
 koin = "4.0.2"
@@ -41,12 +44,13 @@ kstore = "0.9.1"
 firebase-bom = "33.12.0"
 gservice = "4.4.2"
 gitlive = "1.13.0"
+firebaseJavaSdk = "0.6.2"
 
 
 
-ksp = "2.1.20-1.0.31"
+ksp = "2.1.21-2.0.1"
 buildConfig = "5.5.4"
-kotlinStdlib = "2.1.20-RC"
+kotlinStdlib = "2.1.20"
 runner = "1.5.2"
 core = "1.5.0"
 runtimeAndroid = "1.7.8"
@@ -57,6 +61,7 @@ uiTextGoogleFonts = "1.7.8"
 [libraries]
 #TEST
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -74,8 +79,10 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+#lifecycle
+androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycleCompose" }
+androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycleCompose" }
 
 
 
@@ -133,6 +140,12 @@ kstore-storage = { module = "io.github.xxfast:kstore-storage", version.ref = "ks
 android-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 gitlive-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
+firebase-java-sdk = { module = "dev.gitlive:firebase-java-sdk", version.ref = "firebaseJavaSdk" }
+firebase-app = { module = "dev.gitlive:firebase-app", version.ref = "gitlive" }
+
+#ANDROID BLUETOOTH
+android-bluetooth = { group = "android.bluetooth", name = "bluetooth", version = "1.0.0" }
+mockk-v1146 = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
 
 
 

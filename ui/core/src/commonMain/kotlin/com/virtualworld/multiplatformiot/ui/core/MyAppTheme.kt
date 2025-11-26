@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.virtualworld.multiplatformiot.ui.core.theme.MyColorScheme
 import com.virtualworld.multiplatformiot.ui.core.theme.MyIconSize
+import com.virtualworld.multiplatformiot.ui.core.theme.MyIcons
 import com.virtualworld.multiplatformiot.ui.core.theme.MyPadding
 import com.virtualworld.multiplatformiot.ui.core.theme.MyShape
 import com.virtualworld.multiplatformiot.ui.core.theme.MyTypography
@@ -14,9 +15,11 @@ import com.virtualworld.multiplatformiot.ui.core.theme.colorScheme
 import com.virtualworld.multiplatformiot.ui.core.theme.iconSize
 import com.virtualworld.multiplatformiot.ui.core.theme.localMyAppColorScheme
 import com.virtualworld.multiplatformiot.ui.core.theme.localMyAppIconSize
+import com.virtualworld.multiplatformiot.ui.core.theme.localMyAppIcons
 import com.virtualworld.multiplatformiot.ui.core.theme.localMyAppPadding
 import com.virtualworld.multiplatformiot.ui.core.theme.localMyAppShape
 import com.virtualworld.multiplatformiot.ui.core.theme.localMyAppTypography
+import com.virtualworld.multiplatformiot.ui.core.theme.myIconsDefault
 import com.virtualworld.multiplatformiot.ui.core.theme.padding
 import com.virtualworld.multiplatformiot.ui.core.theme.shape
 import com.virtualworld.multiplatformiot.ui.core.theme.typography
@@ -36,6 +39,8 @@ fun MyAppTheme(
     CompositionLocalProvider(
 
         localMyAppColorScheme provides colorScheme(isDarkTheme),
+
+        localMyAppIcons provides myIconsDefault,
 
         localMyAppTypography provides typography(),
 
@@ -57,6 +62,10 @@ object MyAppTheme {
     val typography: MyTypography
         @Composable
         get() = localMyAppTypography.current
+
+    val myIcons: MyIcons
+        @Composable
+        get() = localMyAppIcons.current
 
     val colorScheme: MyColorScheme
         @Composable

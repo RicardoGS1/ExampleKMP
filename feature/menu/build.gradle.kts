@@ -17,7 +17,7 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -32,7 +32,11 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 
 
     sourceSets {
@@ -47,6 +51,7 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.ui.core)
+            implementation(projects.domain.conectionInternet)
 
             //KOIN
             implementation(project.dependencies.platform(libs.koin.bom))
