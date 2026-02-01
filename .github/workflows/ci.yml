@@ -2,9 +2,9 @@ name: android CI
 
 on:
   push:
-    branches: ["CICD"]
+    branches: ["CICD", "develop"]
   pull_request:
-    branches: ["CICD"]
+    branches: ["CICD", "develop"]
 
 jobs:
   build:
@@ -16,10 +16,44 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17' #update17
+          java-version: '17'
           cache: gradle
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Create dummy google-services.json for CI/CD
+        run: |
+          mkdir -p composeApp
+          cat > composeApp/google-services.json << 'EOF'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "dummy-project",
+              "storage_bucket": "dummy-project.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.virtualworld.multiplatformiot"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  {
+                    "current_key": "dummy-api-key"
+                  }
+                ],
+                "services": {
+                  "appinvite_service": {
+                    "other_platform_oauth_client": []
+                  }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
       - name: Build app
         run: ./gradlew assemble
