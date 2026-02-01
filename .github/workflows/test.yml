@@ -1,4 +1,4 @@
-name: Android CI Testv3
+name: Android CI Testv4
 
 on: [push]
 
@@ -14,6 +14,41 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: gradle
+
+      - name: Create dummy google-services.json for CI/CD
+        run: |
+          mkdir -p composeApp
+          cat > composeApp/google-services.json << 'EOF'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "dummy-project",
+              "storage_bucket": "dummy-project.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.virtualworld.multiplatformiot"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  {
+                    "current_key": "dummy-api-key"
+                  }
+                ],
+                "services": {
+                  "appinvite_service": {
+                    "other_platform_oauth_client": []
+                  }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
 
       # Execute unit tests
       - name: Unit Test
