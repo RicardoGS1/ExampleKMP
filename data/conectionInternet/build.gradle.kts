@@ -88,12 +88,16 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(libs.mockk)
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
         }
 
-
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.mockk)
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
 
 
 //        androidUnitTest.dependencies {
