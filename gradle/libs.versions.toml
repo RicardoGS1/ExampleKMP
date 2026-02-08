@@ -139,9 +139,11 @@ kstore-storage = { module = "io.github.xxfast:kstore-storage", version.ref = "ks
 #FIREBASE
 android-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "21.3.0" }
 gitlive-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
 firebase-java-sdk = { module = "dev.gitlive:firebase-java-sdk", version.ref = "firebaseJavaSdk" }
 firebase-app = { module = "dev.gitlive:firebase-app", version.ref = "gitlive" }
+gitlive-firebase-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitlive" }
 
 #ANDROID BLUETOOTH
 android-bluetooth = { group = "android.bluetooth", name = "bluetooth", version = "1.0.0" }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MultiplatformIoT</string>
+    <!-- Web Client ID para Google Sign-In (OAuth client type 3 en google-services.json) -->
+    <string name="default_web_client_id">909972065182-kr7kra75ee47bupl3sognt46a8cio3s3.apps.googleusercontent.com</string>
 </resources>

@@ -11,7 +11,10 @@ import org.koin.core.module.Module
 
 @Composable
 @Preview
-fun App(platformModule: Module = Module()) {
+fun App(
+    platformModule: Module = Module(),
+    onGoogleSignInRequest: ((String) -> Unit) -> Unit = {},
+) {
 
     KoinApplication(
         application = {
@@ -21,8 +24,7 @@ fun App(platformModule: Module = Module()) {
 
         MyAppTheme {
 
-            MainScreen()
-
+            MainScreen(onGoogleSignInRequest = onGoogleSignInRequest)
 
         }
     }
