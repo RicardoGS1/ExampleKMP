@@ -55,7 +55,7 @@ fun ListViewArduinoStates(
         derivedStateOf {
             if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 140) listState.firstVisibleItemScrollOffset / 2
             else {
-                DEFAULT_RECT_HEIGHT_ARDUINOS - MIN_RECT_HEIGHT_ARDUINOS
+                RECT_HMEDIUM - RECT_SMALL
             }
         }
     }
@@ -63,7 +63,7 @@ fun ListViewArduinoStates(
 
     val canvasSize = remember {
         derivedStateOf {
-            (DEFAULT_RECT_HEIGHT_ARDUINOS - scrollValue).dp
+            (RECT_HMEDIUM - scrollValue.toFloat()).dp
         }
     }
 
@@ -73,7 +73,7 @@ fun ListViewArduinoStates(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = (MIN_RECT_HEIGHT_ARDUINOS).dp)
+            .padding(top = (RECT_SMALL).dp)
     ) {
 
         when (stateArduino) {

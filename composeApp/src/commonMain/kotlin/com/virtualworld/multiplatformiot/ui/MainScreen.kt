@@ -26,16 +26,16 @@ import com.virtualworld.multiplatformiot.feature.login.AuthStateViewModel
 import com.virtualworld.multiplatformiot.feature.login.navigations.LoginNavigation
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.navigation.AppNavHost
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_ARC_HEIGHT_ARDUINOS
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_ARC_HEIGHT_DETAIL
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_ARC_HEIGHT_MENU
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_ARDUINOS
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_DETAIL
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_MENU
+import com.virtualworld.multiplatformiot.ui.core.component.ARC_NULL
+import com.virtualworld.multiplatformiot.ui.core.component.ARC_HEIGHT
+import com.virtualworld.multiplatformiot.ui.core.component.RECT_HMEDIUM
+import com.virtualworld.multiplatformiot.ui.core.component.RECT_HEIGHT
+import com.virtualworld.multiplatformiot.ui.core.component.RECT_SMALL
 import com.virtualworld.multiplatformiot.ui.core.component.TopBarCanva
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocalNavigation
 import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.ConnectionBLENavigation
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.navigations.ConnectionBluetoothNavigation
+import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -54,21 +54,21 @@ fun MainScreen(
 
     val paddingSinBarValues = WindowInsets.waterfall.asPaddingValues()
 
-    var defaultArcSize by remember { mutableStateOf(DEFAULT_ARC_HEIGHT_MENU.dp) }
-    var defaultRectSize by remember { mutableStateOf(DEFAULT_RECT_HEIGHT_DETAIL.dp) }
+
+    var defaultArcSize by remember { mutableStateOf(ARC_NULL) }
+    var defaultRectSize by remember { mutableStateOf(RECT_SMALL) }
 
     var animateRect by remember { mutableStateOf(true) }
 
     val valueScroll = { valueSize: Dp ->
-        defaultRectSize = valueSize
-        if (valueSize != DEFAULT_RECT_HEIGHT_ARDUINOS.dp)
+        defaultRectSize = valueSize.value
+        if (valueSize != RECT_HMEDIUM.dp)
             animateRect = false
     }
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
     val startDestination = remember { mutableStateOf<String?>(null) }
-
 
 
     // 2. Efecto para decidir el destino INICIAL
@@ -83,98 +83,78 @@ fun MainScreen(
     }
 
 
-
-
-
-//    LaunchedEffect(user,isReady, currentRoute) {
-//
-//        if (!isReady) return@LaunchedEffect
-//
-//        if (user == null && currentRoute != LoginNavigation.Login.route && currentRoute != LoginNavigation.Register.route) {
-//
-////            navController.navigate(LoginNavigation.Login.route) {
-////                popUpTo(navController.graph.startDestDisplayName) { inclusive = true }
-////            }
-//            startDestination.value = LoginNavigation.Login.route
-//
-//        } else if (user != null && (currentRoute == LoginNavigation.Login.route || currentRoute == LoginNavigation.Register.route)) {
-////            navController.navigate(MenuNavigation.Menu.route) {
-////                popUpTo(LoginNavigation.Login.route) { inclusive = true }
-////            }
-//            startDestination.value = MenuNavigation.Menu.route
-//
-//        }
-//    }
-
     LaunchedEffect(currentRoute) {
 
         if (currentRoute != null) {
 
-            if (user == null)
-                when (currentRoute) {
 
-                    LoginNavigation.Login.route, LoginNavigation.Register.route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
-                        defaultRectSize = DEFAULT_RECT_HEIGHT_MENU.dp
-                    }
+            when (currentRoute) {
 
-                    MenuNavigation.Menu.route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_MENU.dp
-                        defaultRectSize = DEFAULT_RECT_HEIGHT_MENU.dp
-                    }
-
-                    ConectionInternetNavigation.ConectionInternet.route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
-                    }
-
-                    ConnectionBluetoothNavigation.ConnectionBluetooth.route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
-                    }
-
-                    ConnectionBLENavigation.ConnectionBluetoothLE.route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
-                    }
-
-                    ConectionLocalNavigation.ConectionLocal.route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_ARDUINOS.dp
-                    }
-
-                    ConectionInternetNavigation.DetailArduino("").route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
-                        defaultRectSize = DEFAULT_RECT_HEIGHT_DETAIL.dp
-                    }
-
-                    ConnectionBluetoothNavigation.DetailArduino("", "").route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
-                        defaultRectSize = DEFAULT_RECT_HEIGHT_DETAIL.dp
-                    }
-
-                    ConnectionBLENavigation.DetailArduino("", "").route -> {
-                        animateRect = true
-                        defaultArcSize = DEFAULT_ARC_HEIGHT_DETAIL.dp
-                        defaultRectSize = DEFAULT_RECT_HEIGHT_DETAIL.dp
-                    }
+                LoginNavigation.Login.route, LoginNavigation.Register.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                    defaultRectSize = RECT_HEIGHT
                 }
+
+                MenuNavigation.Menu.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_HEIGHT
+                    defaultRectSize = RECT_HEIGHT
+                }
+
+                ConectionInternetNavigation.ConectionInternet.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                }
+
+                ConnectionBluetoothNavigation.ConnectionBluetooth.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                }
+
+                ConnectionBLENavigation.ConnectionBluetoothLE.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                }
+
+                ConectionLocalNavigation.ConectionLocal.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                }
+
+                ConectionInternetNavigation.DetailArduino("").route -> {
+                    animateRect = true
+
+                    defaultArcSize = ARC_NULL
+                    defaultRectSize = RECT_HEIGHT
+                }
+
+                ConnectionBluetoothNavigation.DetailArduino("", "").route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                    defaultRectSize = RECT_HEIGHT
+                }
+
+                ConnectionBLENavigation.DetailArduino("", "").route -> {
+                    animateRect = true
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                    defaultRectSize = RECT_HEIGHT
+                }
+            }
         }
+
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
         if (startDestination.value.isNullOrEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
-        }else {
+        } else {
 
-            TopBarCanva(defaultArcSize, defaultRectSize, animateRect)
+            TopBarCanva(defaultArcSize.dp, defaultRectSize.dp, animateRect)
 
 
             AppNavHost(
@@ -185,7 +165,13 @@ fun MainScreen(
                 showGoogleSignIn = showGoogleSignIn,
                 onGoogleSignInRequest = onGoogleSignInRequest,
             )
+
+
         }
 
     }
+
+
+
+
 }

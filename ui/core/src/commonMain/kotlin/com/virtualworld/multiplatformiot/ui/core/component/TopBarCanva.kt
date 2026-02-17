@@ -1,7 +1,7 @@
 package com.virtualworld.multiplatformiot.ui.core.component
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -30,15 +30,12 @@ import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
  * @param animateRec Determina si la animación del cambio de tamaño del rectángulo debe ejecutarse. Si es `false`, el cambio de tamaño es instantáneo (duración 0).
  */
 
-const val DEFAULT_RECT_HEIGHT_MENU = 300
-const val DEFAULT_ARC_HEIGHT_MENU = 120
+const val RECT_HEIGHT = 300F
+const val RECT_HMEDIUM = 200F
+const val RECT_SMALL = 120F
 
-const val DEFAULT_RECT_HEIGHT_ARDUINOS = 200
-const val MIN_RECT_HEIGHT_ARDUINOS = 120
-const val DEFAULT_ARC_HEIGHT_ARDUINOS = 0
-
-const val DEFAULT_RECT_HEIGHT_DETAIL = 130
-const val DEFAULT_ARC_HEIGHT_DETAIL = 0
+const val ARC_HEIGHT = 120F
+const val ARC_NULL = 0F
 
 
 @Composable
@@ -48,7 +45,12 @@ fun TopBarCanva(
     animateRec: Boolean = true,
 ) {
 
-    println(defaultRectSize)
+    // Mismo Animatable en todas las recomposiciones: al cambiar defaultRectSize/defaultArcSize,
+    // LaunchedEffect dispara la animación desde el valor actual al nuevo.
+    val startArcSize = remember { Animatable(ARC_NULL.toFloat()) }
+    val startRectSize = remember { Animatable(RECT_SMALL.toFloat()) }
+
+    println("defaultRectSize: $defaultRectSize")
 
     // Obtenemos los colores necesarios del tema de forma dinámica
     val primaryColor = MyAppTheme.colorScheme.primary
@@ -64,25 +66,30 @@ fun TopBarCanva(
 
     val durationMillis = if (animateRec) 1500 else 0
 
-    val sizeRectAnimated by animateFloatAsState(
-        targetValue = defaultRectSize.value,
-        animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
-    )
 
-    val sizeArcAnimated by animateFloatAsState(
-        targetValue = defaultArcSize.value,
-        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing)
-    )
+    LaunchedEffect(defaultRectSize) {
+        startRectSize.animateTo(
+            targetValue = defaultRectSize.value,
+            animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
+        )
+    }
+
+    LaunchedEffect(defaultArcSize) {
+        startArcSize.animateTo(
+            targetValue = defaultArcSize.value,
+            animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing)
+        )
+    }
 
     Box(Modifier.fillMaxSize().background(MyAppTheme.colorScheme.background)) {
 
-        Box(modifier = Modifier.fillMaxWidth().height(sizeRectAnimated.dp).background(brush)) {}
+        Box(modifier = Modifier.fillMaxWidth().height(startRectSize.value.dp).background(brush)) {}
 
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = sizeRectAnimated.dp - 3.dp - (sizeArcAnimated.dp / 2))
-                .height(sizeArcAnimated.dp)
+                .padding(top = startRectSize.value.dp - 3.dp - (startArcSize.value.dp / 2))
+                .height(startArcSize.value.dp)
         ) {
             drawArc(
                 brush = brush,

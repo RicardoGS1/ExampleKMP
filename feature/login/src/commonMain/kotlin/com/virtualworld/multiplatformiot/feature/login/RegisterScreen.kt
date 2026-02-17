@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.virtualworld.multiplatformiot.ui.core.MyAppTheme
-import com.virtualworld.multiplatformiot.ui.core.component.DEFAULT_RECT_HEIGHT_MENU
+import com.virtualworld.multiplatformiot.ui.core.component.RECT_HEIGHT
 import multiplatformiot.ui.core.generated.resources.Res
 import multiplatformiot.ui.core.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -77,7 +77,7 @@ internal fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = DEFAULT_RECT_HEIGHT_MENU.dp-64.dp)
+            .padding(top = RECT_HEIGHT.dp-64.dp)
             .padding(horizontal = 32.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
