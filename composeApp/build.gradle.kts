@@ -97,6 +97,7 @@ kotlin {
             implementation(projects.feature.connectionBluetooth)
             implementation(projects.feature.connectionBLE)
             implementation(projects.feature.menu)
+            implementation(projects.feature.profile)
 
             implementation(projects.data.conectionInternet)
             implementation(projects.data.connectionBluetooth)

@@ -19,7 +19,9 @@ fun NavGraphBuilder.menuRoutesGraph(
     goToLocalConection: () -> Unit,
     goToInternetConection: () -> Unit,
     goToBluetoothConection: () -> Unit,
-    goToBluetoothLEConection: () -> Unit,) {
+    goToBluetoothLEConection: () -> Unit,
+    goToProfile: () -> Unit = {},
+) {
 
     composable(MenuNavigation.Menu.route) {
 
@@ -30,6 +32,7 @@ fun NavGraphBuilder.menuRoutesGraph(
             goToInternetConection = goToInternetConection,
             goToBluetoothConection = goToBluetoothConection,
             goToBluetoothLEConection = goToBluetoothLEConection,
+            goToProfile = goToProfile,
         )
 
     }

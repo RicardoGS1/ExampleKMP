@@ -25,6 +25,7 @@ import com.virtualworld.multiplatformiot.feature.conectionInternet.navigations.C
 import com.virtualworld.multiplatformiot.feature.login.AuthStateViewModel
 import com.virtualworld.multiplatformiot.feature.login.navigations.LoginNavigation
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
+import com.virtualworld.multiplatformiot.feature.profile.navigations.ProfileNavigation
 import com.virtualworld.multiplatformiot.navigation.AppNavHost
 import com.virtualworld.multiplatformiot.ui.core.component.ARC_NULL
 import com.virtualworld.multiplatformiot.ui.core.component.ARC_HEIGHT
@@ -82,6 +83,16 @@ fun MainScreen(
         }
     }
 
+    // Al cerrar sesión, navegar al login y limpiar el back stack
+    LaunchedEffect(user, isReady, currentRoute) {
+        if (isReady && user == null && currentRoute != null &&
+            currentRoute != LoginNavigation.Login.route && currentRoute != LoginNavigation.Register.route
+        ) {
+            navController.navigate(LoginNavigation.Login.route) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+    }
 
     //LaunchedEffect(currentRoute) {
 
@@ -118,6 +129,11 @@ fun MainScreen(
                 }
 
                 ConectionLocalNavigation.ConectionLocal.route -> {
+                    animateRect = true
+                    defaultArcSize = ARC_NULL
+                }
+
+                ProfileNavigation.Profile.route -> {
                     animateRect = true
                     defaultArcSize = ARC_NULL
                 }

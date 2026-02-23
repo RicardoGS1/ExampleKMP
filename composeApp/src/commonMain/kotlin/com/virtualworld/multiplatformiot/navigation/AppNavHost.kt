@@ -13,6 +13,8 @@ import com.virtualworld.multiplatformiot.feature.login.navigations.LoginNavigati
 import com.virtualworld.multiplatformiot.feature.login.navigations.loginRoutesGraph
 import com.virtualworld.multiplatformiot.feature.menu.navigations.MenuNavigation
 import com.virtualworld.multiplatformiot.feature.menu.navigations.menuRoutesGraph
+import com.virtualworld.multiplatformiot.feature.profile.navigations.ProfileNavigation
+import com.virtualworld.multiplatformiot.feature.profile.navigations.profileRoutesGraph
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.ConectionLocalNavigation
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.navigations.conectionLocalRoute
 import com.wirtualworld.multiplatformiot.feature.connectionBLE.navigations.ConnectionBLENavigation
@@ -52,8 +54,13 @@ fun AppNavHost(
         menuRoutesGraph(
             goToLocalConection = { navController.navigate(ConectionLocalNavigation.ConectionLocal.route) },
             goToInternetConection = { navController.navigate(ConectionInternetNavigation.ConectionInternet.route) },
-            goToBluetoothConection = {navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetooth.route)},
-            goToBluetoothLEConection = {navController.navigate(ConnectionBLENavigation.ConnectionBluetoothLE.route)}
+            goToBluetoothConection = { navController.navigate(ConnectionBluetoothNavigation.ConnectionBluetooth.route) },
+            goToBluetoothLEConection = { navController.navigate(ConnectionBLENavigation.ConnectionBluetoothLE.route) },
+            goToProfile = { navController.navigate(ProfileNavigation.Profile.route) },
+        )
+
+        profileRoutesGraph(
+            onNavigateBack = { navController.popBackStack() },
         )
 
         conectionLocalRoute(

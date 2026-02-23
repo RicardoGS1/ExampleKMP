@@ -7,6 +7,7 @@ import com.virtualworld.multiplatformiot.data.login.dataLoginModule
 import com.virtualworld.multiplatformiot.feature.conectionInternet.id.featureConectionInternetModule
 import com.virtualworld.multiplatformiot.feature.login.id.featureLoginModule
 import com.virtualworld.multiplatformiot.feature.menu.id.featureMenuModule
+import com.virtualworld.multiplatformiot.feature.profile.id.featureProfileModule
 import com.wirtualworld.multiplatformiot.feature.conectionLocal.featureConectionLocalModule
 import com.wirtualworld.multiplatformiot.feature.connectionBLE.id.featureConnectionBLEModule
 import com.wirtualworld.multiplatformiot.feature.connectionBluetooth.id.featureConnectionBluetoothModule
@@ -17,6 +18,7 @@ val appModule = module {
         dataLoginModule,
         featureLoginModule,
         featureMenuModule,
+        featureProfileModule,
         featureConectionLocalModule,
         featureConectionInternetModule,
         featureConnectionBluetoothModule,

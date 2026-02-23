@@ -105,7 +105,16 @@ fun typography() =
         ),
 
         //LABEL
-        labelLarge = TextStyle.Default,
-        labelMedium = TextStyle.Default,
-        labelSmall = TextStyle.Default,
+        labelLarge = TextStyle(
+            fontFamily = FontFamily.Default,
+            fontSize = 18.sp
+        ),
+        labelMedium = TextStyle(
+            fontFamily = FontFamily.Default,
+            fontSize = 14.sp
+        ),
+        labelSmall = TextStyle(
+            fontFamily = FontFamily.Default,
+            fontSize = 12.sp
+        ),
     )
