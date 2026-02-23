@@ -83,7 +83,7 @@ fun MainScreen(
     }
 
 
-    LaunchedEffect(currentRoute) {
+    //LaunchedEffect(currentRoute) {
 
         if (currentRoute != null) {
 
@@ -137,14 +137,13 @@ fun MainScreen(
 
                 ConnectionBLENavigation.DetailArduino("", "").route -> {
                     animateRect = true
-                    animateRect = true
                     defaultArcSize = ARC_NULL
                     defaultRectSize = RECT_HEIGHT
                 }
             }
         }
 
-    }
+    //}
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
