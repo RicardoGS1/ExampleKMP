@@ -88,8 +88,10 @@ fun MainScreen(
         if (isReady && user == null && currentRoute != null &&
             currentRoute != LoginNavigation.Login.route && currentRoute != LoginNavigation.Register.route
         ) {
-            navController.navigate(LoginNavigation.Login.route) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            startDestination.value?.let { startRoute ->
+                navController.navigate(LoginNavigation.Login.route) {
+                    popUpTo(startRoute) { inclusive = true }
+                }
             }
         }
     }
