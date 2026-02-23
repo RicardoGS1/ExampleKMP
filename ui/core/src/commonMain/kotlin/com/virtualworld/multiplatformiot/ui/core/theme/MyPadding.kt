@@ -9,7 +9,8 @@ data class MyPadding(
     val small: Dp,
     val normal: Dp,
     val big: Dp,
-    val large: Dp
+    val large: Dp,
+    val barNotifications: Dp
 )
 
 val localMyAppPadding = staticCompositionLocalOf {
@@ -19,7 +20,8 @@ val localMyAppPadding = staticCompositionLocalOf {
         small = Dp.Unspecified,
         normal = Dp.Unspecified,
         big = Dp.Unspecified,
-        large = Dp.Unspecified
+        large = Dp.Unspecified,
+        barNotifications = Dp.Unspecified
     )
 }
 
@@ -28,5 +30,6 @@ val padding = MyPadding(
     small = 12.dp,
     normal = 16.dp,
     big = 20.dp,
-    large = 24.dp
+    large = 24.dp,
+    barNotifications = 64.dp
 )

@@ -56,6 +56,7 @@ internal fun MenuScreen(
     goToInternetConection: () -> Unit,
     goToBluetoothConection: () -> Unit,
     goToBluetoothLEConection: () -> Unit,
+    goToProfile: () -> Unit = {},
 ) {
 
 
@@ -64,7 +65,7 @@ internal fun MenuScreen(
             .padding(vertical = 32.dp)
     ) {
 
-        ContainerTopBarMenu()
+        ContainerTopBarMenu(onProfileClick = goToProfile)
 
         AllConnections(
             goToInternetConection,
@@ -77,7 +78,7 @@ internal fun MenuScreen(
 
 
 @Composable
-fun ContainerTopBarMenu() {
+fun ContainerTopBarMenu(onProfileClick: () -> Unit = {}) {
 
     val canvasSize = 300.dp
 
@@ -103,14 +104,14 @@ fun ContainerTopBarMenu() {
                 modifier = Modifier.size(48.dp) // Tamaño del círculo
                     .clip(CircleShape)
                     .background(Color.White) // Color de fondo del círculo
-
+                    .clickable(onClick = onProfileClick),
             ) {
                 Icon(
                     imageVector = MyAppTheme.myIcons.person,
-                    contentDescription = "",
+                    contentDescription = "Ver perfil",
                     tint = Color.DarkGray,
                     modifier = Modifier.fillMaxSize()
-                        .padding(1.dp) // Espaciado interno del icono dentro del círculo
+                        .padding(4.dp) // Espaciado interno del icono dentro del círculo
                 )
             }
         }

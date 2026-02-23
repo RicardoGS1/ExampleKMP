@@ -80,6 +80,8 @@ kotlin {
             //FIREBASE
             implementation(project.dependencies.platform(libs.android.firebase.bom))
             implementation(libs.firebase.firestore.ktx)
+            implementation("com.google.firebase:firebase-auth-ktx")
+            implementation(libs.play.services.auth)
 
         }
 
@@ -90,15 +92,20 @@ kotlin {
             implementation(projects.ui.core)
 
             implementation(projects.feature.conectionLocal)
+            implementation(projects.feature.login)
             implementation(projects.feature.conectionInternet)
             implementation(projects.feature.connectionBluetooth)
             implementation(projects.feature.connectionBLE)
             implementation(projects.feature.menu)
+            implementation(projects.feature.profile)
 
             implementation(projects.data.conectionInternet)
             implementation(projects.data.connectionBluetooth)
             implementation(projects.data.conectionLocal)
             implementation(projects.data.connectionBLE)
+            implementation(projects.data.login)
+
+            implementation(projects.domain.login)
 
             implementation(libs.kotlinx.coroutines.core)
 
@@ -130,6 +137,7 @@ kotlin {
 
             //FIREBASE
             implementation(libs.gitlive.firebase.firestore)
+            implementation(libs.gitlive.firebase.auth)
            // implementation(libs.firebase.app)
 
 
@@ -248,7 +256,3 @@ compose.desktop {
         }
     }
 }
-
-
-
-

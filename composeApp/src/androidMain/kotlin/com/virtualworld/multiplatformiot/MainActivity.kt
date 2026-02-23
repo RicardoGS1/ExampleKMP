@@ -1,11 +1,7 @@
 package com.virtualworld.multiplatformiot
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,27 +11,52 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.Firebase
 import com.google.firebase.initialize
 import org.koin.dsl.module
 
 class MainActivity : ComponentActivity() {
 
+    private var pendingGoogleSignInCallback: ((String) -> Unit)? = null
+
+    private lateinit var googleSignInClient: GoogleSignInClient
+
     private val requestBluetoothConnectPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
-                // Permission granted, you can now perform Bluetooth operations
-                // that require BLUETOOTH_CONNECT
                 Log.d("BluetoothPermission", "BLUETOOTH_CONNECT permission granted")
-                // Initialize your Bluetooth related functionality here
             } else {
-                // Permission denied. Handle this gracefully.
-                // You might want to explain to the user why the permission is needed
-                // or disable Bluetooth functionality.
                 Log.w("BluetoothPermission", "BLUETOOTH_CONNECT permission denied")
-                // Show a message to the user or disable features
             }
         }
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data = result.data
+        val callback = pendingGoogleSignInCallback
+        pendingGoogleSignInCallback = null
+        if (result.resultCode == RESULT_OK && data != null) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val idToken = account?.idToken
+                if (!idToken.isNullOrBlank()) {
+                    callback?.invoke(idToken)
+                } else {
+                    Log.e(TAG, "Google Sign-In: idToken es null o vacío")
+                }
+            } catch (e: ApiException) {
+                Log.e(TAG, "Google Sign-In falló: ${e.statusCode} - ${e.message}")
+            }
+        } else {
+            Log.d(TAG, "Google Sign-In cancelado por el usuario")
+        }
+    }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,50 +64,57 @@ class MainActivity : ComponentActivity() {
 
         Firebase.initialize(this)
 
+        val webClientId = getString(R.string.default_web_client_id)
+        if (webClientId.isBlank()) {
+            Log.e(TAG, "default_web_client_id no configurado en strings.xml")
+        }
+        googleSignInClient = GoogleSignIn.getClient(
+            this,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(webClientId)
+                .requestEmail()
+                .build()
+        )
+
         checkAndRequestBluetoothConnectPermission()
 
+        val onGoogleSignInRequest: ((String) -> Unit) -> Unit = { submitToken: (String) -> Unit ->
+            pendingGoogleSignInCallback = submitToken
+            googleSignInLauncher.launch(googleSignInClient.signInIntent)
+        }
 
         setContent {
-
             enableEdgeToEdge()
-
-            App(platformModule = module { single<Context> { applicationContext } })
+            App(
+                platformModule = module { single<android.content.Context> { applicationContext } },
+                onGoogleSignInRequest = onGoogleSignInRequest
+            )
         }
     }
 
     private fun checkAndRequestBluetoothConnectPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // BLUETOOTH_CONNECT is for Android 12+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             when {
                 ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.BLUETOOTH_CONNECT
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    // Permission is already granted
+                ) == android.content.pm.PackageManager.PERMISSION_GRANTED -> {
                     Log.d("BluetoothPermission", "BLUETOOTH_CONNECT permission already granted")
-                    // Initialize your Bluetooth related functionality here
                 }
                 shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_CONNECT) -> {
-                    // Explain to the user why you need this permission.
-                    // Then, request the permission.
                     Log.i("BluetoothPermission", "Showing rationale for BLUETOOTH_CONNECT permission")
-                    // You could show a dialog here explaining the need for the permission
                     requestBluetoothConnectPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
                 }
                 else -> {
-                    // Directly request the permission
                     requestBluetoothConnectPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
                 }
             }
         } else {
-            // For older Android versions (below Android 12),
-            // BLUETOOTH and BLUETOOTH_ADMIN permissions declared in the manifest are sufficient
-            // and are granted at install time.
-            // However, the error specifically mentions BLUETOOTH_CONNECT,
-            // so this 'else' branch might not be strictly necessary for THIS error,
-            // but it's good practice for handling Bluetooth permissions across API levels.
-            Log.d("BluetoothPermission", "BLUETOOTH_CONNECT not required for this API level or already handled by older permissions.")
-            // Initialize your Bluetooth related functionality here
+            Log.d("BluetoothPermission", "BLUETOOTH_CONNECT not required for this API level")
         }
     }
-}
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+}

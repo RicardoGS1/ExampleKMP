@@ -7,12 +7,12 @@ import dev.gitlive.firebase.firestore.DocumentReference
 import dev.gitlive.firebase.firestore.DocumentSnapshot
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.QuerySnapshot
+import dev.gitlive.firebase.firestore.Source
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -70,10 +70,10 @@ class RemoteDataSourceTest {
         }
 
         // c. Simular la cadena de llamadas de la API de Firestore
-        every { firestore.collection("usuarios") } returns arduinosColRef // Cambiado, la colección de usuarios es el primer nivel
+        every { firestore.collection("usuarios") } returns arduinosColRef
         every { arduinosColRef.document("testUser") } returns userDocRef
         every { userDocRef.collection("arduinos") } returns arduinosColRef
-        every { arduinosColRef.snapshots } returns flowOf(querySnapshot)
+        coEvery { arduinosColRef.get(Source.SERVER) } returns querySnapshot
         every { querySnapshot.documents } returns listOf(docSnapshot1, docSnapshot2)
 
         // 2. Act (Acción)
@@ -98,7 +98,7 @@ class RemoteDataSourceTest {
         every { firestore.collection("usuarios") } returns arduinosColRef
         every { arduinosColRef.document("testUser") } returns userDocRef
         every { userDocRef.collection("arduinos") } returns arduinosColRef
-        every { arduinosColRef.snapshots } returns flowOf(querySnapshot)
+        coEvery { arduinosColRef.get(Source.SERVER) } returns querySnapshot
         every { querySnapshot.documents } returns emptyList()
 
         // 2. Act (Acción)
@@ -115,14 +115,17 @@ class RemoteDataSourceTest {
     fun `getAllArduino cuando Firestore lanza una excepcion, retorna Error`() = runTest {
         // 1. Arrange (Preparación)
         val expectedException = RuntimeException("Error de red simulado")
-        // Simulamos que la llamada a .snapshots lanza una excepción
-        coEvery { firestore.collection(any()).document(any()).collection(any()).snapshots } throws expectedException
+        // Simulamos que la llamada a .get(Source.SERVER) lanza una excepción
+        every { firestore.collection("usuarios") } returns arduinosColRef
+        every { arduinosColRef.document("testUser") } returns userDocRef
+        every { userDocRef.collection("arduinos") } returns arduinosColRef
+        coEvery { arduinosColRef.get(Source.SERVER) } throws expectedException
 
         // 2. Act (Acción)
         val result = remoteDataSource.getAllArduino("testUser")
 
         // 3. Assert (Verificación)
         assertTrue(result is ResponseStateData.Error, "El resultado debería ser Error")
-        assertEquals(expectedException, (result as ResponseStateData.Error).exception)
+        assertEquals(expectedException.message, (result as ResponseStateData.Error).exception.message)
     }
 }
