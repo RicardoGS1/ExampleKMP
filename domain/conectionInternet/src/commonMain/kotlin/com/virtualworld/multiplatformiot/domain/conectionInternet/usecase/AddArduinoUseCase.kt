@@ -14,7 +14,7 @@ class AddArduinoUseCase(private val repositoryInternet: RepositoryInternet) {
             mapStates[it.key] = StateObjectDomain(it.key, it.value)
         }
 
-        val addArduino = ArduinoDomainModel(name, states = mapStates)
+        val addArduino = ArduinoDomainModel(name, active = true, states = mapStates)
 
         repositoryInternet.addArduino(addArduino)
 
