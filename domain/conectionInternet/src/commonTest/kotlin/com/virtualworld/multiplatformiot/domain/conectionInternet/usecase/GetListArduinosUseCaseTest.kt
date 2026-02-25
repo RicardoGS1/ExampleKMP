@@ -27,23 +27,17 @@ class FakeRepositoryInternet : RepositoryInternet {
     }
 
     // 3. Implementación del método de la interfaz
-    override suspend fun getAllArduinos (user: String): ResponseStateData<List<ArduinoData>> {
+    override suspend fun getAllArduinos(): ResponseStateData<List<ArduinoData>> {
         // Simplemente devuelve la respuesta que hemos configurado
         return response
     }
 
 
-    override fun getArduinos(
-        usuario: String,
-        name: String
-    ): Flow<ResponseStateData<ArduinoData>> {
+    override fun getArduinos(name: String): Flow<ResponseStateData<ArduinoData>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateArduinoState(
-        usuario: String,
-        arduinoData: ArduinoData
-    ): ResponseStateData<StateObject> {
+    override suspend fun updateArduinoState(arduinoData: ArduinoData): ResponseStateData<StateObject> {
         TODO("Not yet implemented")
     }
 
@@ -70,7 +64,7 @@ class GetListArduinosUseCaseTest {
         fakeRepository.setAllArduinosResponse(ResponseStateData.Success(arduinoDataList))
 
         //Acción (Act)
-        val result = getListArduinosUseCase("usuario1")
+        val result = getListArduinosUseCase()
 
         // Verificación (Assert)
         assertTrue(result is ResponseStatesDomain.Success, "El resultado debería ser de tipo Success")
@@ -89,7 +83,7 @@ class GetListArduinosUseCaseTest {
         fakeRepository.setAllArduinosResponse(ResponseStateData.Error(exception))
 
         // Acción (Act)
-        val result = getListArduinosUseCase("usuario1")
+        val result = getListArduinosUseCase()
 
         // Verificación (Assert)
         assertTrue(result is ResponseStatesDomain.Error, "El resultado debería ser de tipo Error")

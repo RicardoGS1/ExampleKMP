@@ -10,11 +10,11 @@ import com.virtualworld.multiplatformiot.domain.core.models.StateObjectDomain
 
 class SetStateArduinoUseCase(private val repositoryInternet: RepositoryInternet) {
 
-    suspend fun updateArduinoState(usuario: String, arduinoName: String, key: String): ResponseStatesDomain<StateObjectDomain> {
+    suspend fun updateArduinoState(arduinoName: String, key: String): ResponseStatesDomain<StateObjectDomain> {
 
         val arduinoData = ArduinoData(nameArduino = arduinoName, objetos = mapOf(key to StateObject()))
 
-        return when (val response = repositoryInternet.updateArduinoState(usuario,arduinoData)) {
+        return when (val response = repositoryInternet.updateArduinoState(arduinoData)) {
             is ResponseStateData.Error -> ResponseStatesDomain.Error(response.exception)
             is ResponseStateData.Success -> ResponseStatesDomain.Success(response.result.mapperToStateObjectDomain())
         }

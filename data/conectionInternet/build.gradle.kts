@@ -59,6 +59,7 @@ kotlin {
             implementation(projects.data.core)
             implementation(projects.domain.conectionInternet)
             implementation(projects.domain.core)
+            implementation(projects.domain.login)
 
             api(libs.ktor.client.core)
             api("io.ktor:ktor-http:2.3.11")

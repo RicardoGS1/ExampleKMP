@@ -4,6 +4,7 @@ import com.virtualworld.multiplatformiot.data.core.ResponseStateData
 import com.virtualworld.multiplatformiot.data.core.dto.ArduinoData
 import com.virtualworld.multiplatformiot.data.core.dto.StateObject
 import com.virtualworld.multiplatformiot.domain.core.models.ArduinoDomainModel
+import com.virtualworld.multiplatformiot.domain.login.repository.AuthRepository
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.Source
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +15,21 @@ import kotlinx.coroutines.withContext
 
 const val NAME_DB_FIRESTORE = "usuarios"
 
-class RemoteDataSource(private val firestore: FirebaseFirestore) {
+class RemoteDataSource(
+    private val firestore: FirebaseFirestore,
+    private val authRepository: AuthRepository
+) {
 
-    suspend fun getAllArduino(usuario: String): ResponseStateData<List<ArduinoData>> {
+    private fun currentUid(): String =
+        authRepository.currentUser?.uid ?: throw Exception("Usuario no autenticado")
+
+    suspend fun getAllArduino(): ResponseStateData<List<ArduinoData>> {
 
         return withContext(Dispatchers.IO) {
             try {
+                val uid = currentUid()
                 val querySnapshot = firestore.collection(NAME_DB_FIRESTORE)
-                    .document(usuario)
+                    .document(uid)
                     .collection("arduinos")
                     .get(Source.SERVER)
 
@@ -30,11 +38,7 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
                         .copy(nameArduino = documentSnapshot.id)
                 }
 
-                if (listArduino.isEmpty()) {
-                    throw Exception("No se encontro ningun elemento")
-                } else {
-                    ResponseStateData.Success(listArduino)
-                }
+                ResponseStateData.Success(listArduino)
 
             } catch (e: Exception) {
                 ResponseStateData.Error(e)
@@ -43,9 +47,10 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
     }
 
 
-    fun getArduino(usuario: String, name: String): Flow<ResponseStateData<ArduinoData>> = flow {
+    fun getArduino(name: String): Flow<ResponseStateData<ArduinoData>> = flow {
         try {
-            firestore.collection(NAME_DB_FIRESTORE).document(usuario).collection("arduinos")
+            val uid = currentUid()
+            firestore.collection(NAME_DB_FIRESTORE).document(uid).collection("arduinos")
                 .document(name).collection("objetos").snapshots.collect { querySnapshot ->
 
                     val objetos = querySnapshot.documents.map { documentSnapshot ->
@@ -65,14 +70,11 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
         }
     }
 
-    suspend fun updateArduinoState(
-        usuario: String,
-        arduinoData: ArduinoData
-    ): ResponseStateData<StateObject> {
+    suspend fun updateArduinoState(arduinoData: ArduinoData): ResponseStateData<StateObject> {
         return try {
-
+            val uid = currentUid()
             val objectStateRef =
-                firestore.collection(NAME_DB_FIRESTORE).document(usuario).collection("arduinos")
+                firestore.collection(NAME_DB_FIRESTORE).document(uid).collection("arduinos")
                     .document(arduinoData.nameArduino).collection("objetos").document(
                         arduinoData.objetos?.keys!!.first()
                     )
@@ -91,8 +93,9 @@ class RemoteDataSource(private val firestore: FirebaseFirestore) {
 
     suspend fun addArduino(arduino: ArduinoDomainModel) {
 
+        val uid = currentUid()
         val arduinoRef =
-            firestore.collection("usuarios").document("usuario1").collection("arduinos")
+            firestore.collection(NAME_DB_FIRESTORE).document(uid).collection("arduinos")
                 .document(arduino.name!!)
 
 

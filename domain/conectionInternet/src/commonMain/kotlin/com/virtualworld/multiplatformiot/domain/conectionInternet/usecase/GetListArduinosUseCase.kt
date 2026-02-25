@@ -10,9 +10,9 @@ import com.virtualworld.multiplatformiot.domain.conectionInternet.repository.Rep
 
 class GetListArduinosUseCase(private val repositoryInternet: RepositoryInternet) {
 
-    suspend operator fun invoke(usuario: String): ResponseStatesDomain<List<ArduinoDomainModel>> {
+    suspend operator fun invoke(): ResponseStatesDomain<List<ArduinoDomainModel>> {
 
-        val listArduinos = repositoryInternet.getAllArduinos(usuario)
+        val listArduinos = repositoryInternet.getAllArduinos()
 
         return when (listArduinos) {
 

@@ -31,7 +31,7 @@ class DetailArduinoViewModel(
 
         viewModelScope.launch {
 
-            getArduinoDetailUseCase.getArduino("usuario1", arduinoName).collect { arduino ->
+            getArduinoDetailUseCase.getArduino(arduinoName).collect { arduino ->
 
                 when (arduino) {
                     is ResponseStatesDomain.Error -> {
@@ -59,7 +59,7 @@ class DetailArduinoViewModel(
             if (_arduinos.value is ArduinosState.Success) {
                 val currentArduino =
                     (_arduinos.value as ArduinosState.Success<ArduinoDomainModel>).arduinos
-                setStateArduinoUseCase.updateArduinoState("usuario1",currentArduino.name, key)
+                setStateArduinoUseCase.updateArduinoState(currentArduino.name, key)
             }
         }
     }

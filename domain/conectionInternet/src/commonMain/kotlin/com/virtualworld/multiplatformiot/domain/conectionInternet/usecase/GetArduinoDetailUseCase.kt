@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.map
 
 class GetArduinoDetailUseCase (private val repositoryInternet: RepositoryInternet){
 
-    fun getArduino(usuario:String, name:String): Flow<ResponseStatesDomain<ArduinoDomainModel>> {
+    fun getArduino(name: String): Flow<ResponseStatesDomain<ArduinoDomainModel>> {
 
-        return repositoryInternet.getArduinos(usuario, name).map {
+        return repositoryInternet.getArduinos(name).map {
 
             when (it) {
 

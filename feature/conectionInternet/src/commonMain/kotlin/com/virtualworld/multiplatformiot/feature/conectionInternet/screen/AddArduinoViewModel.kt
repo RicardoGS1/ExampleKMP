@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+const val MAX_STATE_OBJECTS = 5
+
 class AddArduinoViewModel(private val addArduinoUseCase: AddArduinoUseCase) : ViewModel() {
 
     var name = MutableStateFlow("")
-    var state1 = MutableStateFlow(mapOf<String, Boolean>())
+    var stateObjects = MutableStateFlow<Map<String, Boolean>>(emptyMap())
 
     private val _saveState = MutableStateFlow<ArduinosState<Unit>>(ArduinosState.Loading)
     val saveState: StateFlow<ArduinosState<Unit>> = _saveState.asStateFlow()
@@ -21,16 +23,30 @@ class AddArduinoViewModel(private val addArduinoUseCase: AddArduinoUseCase) : Vi
         name.value = newName
     }
 
-    fun onState1Change(key: String, value: Boolean) {
-        state1.value = state1.value.toMutableMap().apply { put(key, value) }
+    fun addStateObject(key: String, value: Boolean) {
+        if (key.isBlank()) return
+        if (stateObjects.value.size >= MAX_STATE_OBJECTS) return
+        stateObjects.value = stateObjects.value.toMutableMap().apply { put(key.trim(), value) }
     }
+
+    fun updateStateObjectValue(key: String, value: Boolean) {
+        if (key !in stateObjects.value) return
+        stateObjects.value = stateObjects.value.toMutableMap().apply { put(key, value) }
+    }
+
+    fun removeStateObject(key: String) {
+        stateObjects.value = stateObjects.value.toMutableMap().apply { remove(key) }
+    }
+
+    fun canAddMoreStateObjects(): Boolean = stateObjects.value.size < MAX_STATE_OBJECTS
 
     fun saveArduino() {
         viewModelScope.launch {
+            _saveState.value = ArduinosState.Loading
             try {
                 addArduinoUseCase.addArduino(
-                    name = name.value,
-                    states = state1.value
+                    name = name.value.trim(),
+                    states = stateObjects.value
                 )
                 _saveState.value = ArduinosState.Success(Unit)
             } catch (e: Exception) {
@@ -38,4 +54,4 @@ class AddArduinoViewModel(private val addArduinoUseCase: AddArduinoUseCase) : Vi
             }
         }
     }
-} 
+}

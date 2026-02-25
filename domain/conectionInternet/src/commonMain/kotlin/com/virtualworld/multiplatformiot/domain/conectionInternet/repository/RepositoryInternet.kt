@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface RepositoryInternet {
 
-    suspend fun getAllArduinos(usuario: String): ResponseStateData<List<ArduinoData>>
+    suspend fun getAllArduinos(): ResponseStateData<List<ArduinoData>>
 
-    fun getArduinos(usuario: String, name: String): Flow<ResponseStateData<ArduinoData>>
+    fun getArduinos(name: String): Flow<ResponseStateData<ArduinoData>>
 
-    suspend fun updateArduinoState(usuario:String, arduinoData: ArduinoData): ResponseStateData<StateObject>
+    suspend fun updateArduinoState(arduinoData: ArduinoData): ResponseStateData<StateObject>
 
     suspend fun addArduino(arduino: ArduinoDomainModel)
 

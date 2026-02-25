@@ -130,6 +130,23 @@ fun ListArduinoSuccess(
             Spacer(modifier = Modifier.height(100.dp).fillMaxWidth())
         }
 
+        if (arduinos.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No tienes Arduinos. Añade uno para comenzar.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MyAppTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                }
+            }
+        } else {
         items(arduinos) { arduino ->
             Card(
                 modifier = Modifier
@@ -188,6 +205,7 @@ fun ListArduinoSuccess(
                     )
                 }
             }
+        }
         }
         item {
             Spacer(modifier = Modifier.height(64.dp))
